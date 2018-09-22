@@ -1,4 +1,4 @@
-require("./config/config");
+const config = require("./config/config");
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
@@ -15,17 +15,17 @@ const kakaoRoutes = require("./routes/kakaoRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 
 // connect to db
-mongoose.connect(process.env.MONGODB_URI, {useNewUrlParser: true});
+mongoose.connect(config.MONGODB_URI, {useNewUrlParser: true});
 
 // app config
 app.use(bodyParser.json());
 app.use(cors());
 
-firebase.initializeApp(JSON.parse(process.env.FIREBASE_CONFIG));
+firebase.initializeApp(config.FIREBASE_CONFIG);
 
 admin.initializeApp({
-    credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_ADMIN_CONFIG)),
-    databaseURL: JSON.parse(process.env.FIREBASE_CONFIG).databaseURL
+    credential: admin.credential.cert(config.FIREBASE_ADMIN_CONFIG),
+    databaseURL: config.FIREBASE_CONFIG.databaseURL
 });
 
 
@@ -36,6 +36,5 @@ app.use("/recruits/:id/reviews", reviewRoutes);
 app.use("/recruits", recruitRoutes);
 app.use("/reservations", reservationRoutes);
 app.use("/kakao_login", kakaoRoutes);
-
 
 module.exports = {app};
