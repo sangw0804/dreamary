@@ -1,0 +1,31 @@
+{
+  "name": "dreamary",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "NODE_ENV=test jest --runInBand --detectOpenHandles test/*.test.js",
+    "test-cover": "NODE_ENV=test jest --runInBand --detectOpenHandles --coverage test/*.test.js",
+    "start": "node server.js"
+  },
+  "author": "NEXT",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "firebase": "^5.5.0",
+    "firebase-admin": "^6.0.0",
+    "lodash": "^4.17.11",
+    "mongodb": "^3.1.4",
+    "mongoose": "^5.2.14",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
+  },
+  "devDependencies": {
+    "expect": "^23.6.0",
+    "jest": "^23.6.0",
+    "supertest": "^3.3.0"
+  }
+}
