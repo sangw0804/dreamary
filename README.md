@@ -13,10 +13,11 @@
 
 ---
 
-1. git clone || git pull 을 한다.
-2. npm install 로 패키지들을 설치한다.
-3. mongodb 를 27017 번 포트에 실행한다.
-4. node seeds.js 로 development db 에 더미데이터를 심을 수 있다.
+1. config/ 디렉토리 밑에 development.json , test.json 파일들은 credentials 정보를 담고 있으므로 따로 전달하겠습니다.
+2. git clone || git pull 을 한다.
+3. npm install 로 패키지들을 설치한다.
+4. mongodb 를 27017 번 포트에 실행한다.
+5. node seeds.js 로 development db 에 더미데이터를 심을 수 있다.
 
 ## 3. 실행방법(Run, Test)
 
