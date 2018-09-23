@@ -1,7 +1,7 @@
 const expect = require('expect');
-const app = require('../app').app;
 const request = require('supertest');
 const { ObjectID } = require('mongodb');
+const { app } = require('../app');
 const { recruits, populateRecruits } = require('./seed/recruitSeed');
 const { users, populateUsers } = require('./seed/userSeed');
 const { populateReview } = require('./seed/reviewSeed');
@@ -14,7 +14,7 @@ beforeEach(populateReview);
 describe('Review', () => {
   describe('POST /recruits/:id/reviews', () => {
     it('should create new review with valid data', done => {
-      let data = {
+      const data = {
         _user: users[0]._id,
         score: 1.0,
         content: '아주 엉망이네요'
@@ -38,7 +38,7 @@ describe('Review', () => {
     });
 
     it('should not create new review with invalid data', done => {
-      let invalidData = {
+      const invalidData = {
         _user: users[0]._id,
         content: '아주 엉망이네요'
       };
@@ -61,7 +61,7 @@ describe('Review', () => {
     });
 
     it('should not create new review with invalid recruit id param', done => {
-      let data = {
+      const data = {
         _user: users[0]._id,
         score: 1.0,
         content: '아주 엉망이네요'
