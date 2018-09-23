@@ -17,7 +17,6 @@
     "express": "^4.16.3",
     "firebase": "^5.5.0",
     "firebase-admin": "^6.0.0",
-    "lodash": "^4.17.11",
     "mongodb": "^3.1.4",
     "mongoose": "^5.2.14",
     "request": "^2.88.0",

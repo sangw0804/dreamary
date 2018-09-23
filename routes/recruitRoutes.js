@@ -1,7 +1,6 @@
 const express = require('express');
 
 const router = express.Router();
-const _ = require('lodash');
 const { Recruit } = require('../model/recruit');
 
 // GET /recruits
@@ -39,9 +38,8 @@ router.get('/:id', async (req, res) => {
 // TODO: 한명의 디자이너가 한개의 recruit만을 가지게 하려면 어떻게 할까?
 router.post('/', async (req, res) => {
   try {
-    const createdUser = await Recruit.create(
-      _.pick(req.body, ['title', '_designer'])
-    );
+    const { title, _desinger } = req.body;
+    const createdUser = await Recruit.create({ title, _desinger });
     res.status(200).send(createdUser);
   } catch (e) {
     res.status(400).send(e);
@@ -51,10 +49,10 @@ router.post('/', async (req, res) => {
 // PATCH /recruits/:id
 router.patch('/:id', async (req, res) => {
   try {
-    const body = _.pick(req.body, ['title', 'ableDates']);
+    const { title, ableDates } = req.body;
     const updatedRecruit = await Recruit.findByIdAndUpdate(
       req.params.id,
-      { $set: body },
+      { $set: { title, ableDates } },
       { new: true }
     );
     if (!updatedRecruit) {
