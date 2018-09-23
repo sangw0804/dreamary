@@ -1,7 +1,6 @@
 const express = require('express');
 
 const router = express.Router({ mergeParams: true });
-const _ = require('lodash');
 const { User } = require('../model/user');
 const { Ticket } = require('../model/ticket');
 
@@ -26,11 +25,14 @@ router.post('/', async (req, res) => {
     if (!user) {
       throw new Error('user not found!!');
     }
-    const data = _.pick(req.body, ['isD', 'price']);
-    data._user = req.params.id;
-    data.purchasedAt = new Date().getTime();
 
-    const createdTicket = await Ticket.create(data);
+    const { isD, price } = req.body;
+    const createdTicket = await Ticket.create({
+      isD,
+      price,
+      _user: req.params.id,
+      purchasedAt: new Date().getTime()
+    });
 
     user._tickets.push(createdTicket._id);
 
@@ -50,8 +52,7 @@ router.patch('/:ticket_id', async (req, res) => {
     if (!foundUser) {
       throw new Error('user not found!!');
     }
-    const body = _.pick(req.body, ['expiredAt']);
-    body.expiredAt = new Date().getTime();
+    const body = { expiredAt: new Date().getTime() };
     const updatedTicket = await Ticket.findOneAndUpdate(
       { _id: req.params.ticket_id },
       { $set: body },

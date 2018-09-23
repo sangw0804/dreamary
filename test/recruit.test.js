@@ -54,7 +54,13 @@ describe('Recruit', () => {
     it('should make recruit with valid params', done => {
       const data = {
         _designer: users[2]._id,
-        title: '두번째 디자이너의 모집글'
+        title: '두번째 디자이너의 모집글',
+        ableDates: [
+          {
+            since: 20180910123412,
+            until: 20180910142344
+          }
+        ]
       };
       request(app)
         .post('/recruits')

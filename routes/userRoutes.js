@@ -1,7 +1,6 @@
 const express = require('express');
 
 const router = express.Router();
-const _ = require('lodash');
 const { User } = require('../model/user');
 
 // GET /users
@@ -17,9 +16,15 @@ router.get('/', async (req, res) => {
 // POST /users
 router.post('/', async (req, res) => {
   try {
-    const body = _.pick(req.body, ['_uid', 'isD', 'phone', 'name']); // 더 추가하면 됨
-    body._tickets = [];
-    body._reservations = [];
+    const { isD, phone, _uid, name } = req.body;
+    const body = {
+      _uid,
+      isD,
+      phone,
+      name,
+      _tickets: [],
+      _reservations: []
+    };
     const createdUser = await User.create(body);
 
     res.status(200).send(createdUser);
