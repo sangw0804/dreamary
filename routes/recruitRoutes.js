@@ -24,6 +24,7 @@ router.get('/:id', async (req, res) => {
         path: '_reviews',
         populate: { path: '_user' }
       })
+      .populate('_cards')
       .exec();
     if (!foundRecruit) {
       throw new Error('recruit not found!!');
@@ -38,8 +39,8 @@ router.get('/:id', async (req, res) => {
 // TODO: 한명의 디자이너가 한개의 recruit만을 가지게 하려면 어떻게 할까?
 router.post('/', async (req, res) => {
   try {
-    const { title, _designer, ableDates } = req.body;
-    const createdUser = await Recruit.create({ title, _designer, ableDates });
+    const { title, _designer, _cards } = req.body;
+    const createdUser = await Recruit.create({ title, _designer, _cards });
     res.status(200).send(createdUser);
   } catch (e) {
     res.status(400).send(e);
@@ -49,10 +50,10 @@ router.post('/', async (req, res) => {
 // PATCH /recruits/:id
 router.patch('/:id', async (req, res) => {
   try {
-    const { title, ableDates } = req.body;
+    const { title, _cards } = req.body;
     const updatedRecruit = await Recruit.findByIdAndUpdate(
       req.params.id,
-      { $set: { title, ableDates } },
+      { $set: { title, _cards } },
       { new: true }
     );
     if (!updatedRecruit) {

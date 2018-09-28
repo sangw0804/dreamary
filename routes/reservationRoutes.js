@@ -3,8 +3,11 @@ const express = require('express');
 const router = express.Router({ mergeParams: true });
 const { Reservation } = require('../model/reservation');
 const { User } = require('../model/user');
+const { Card } = require('../model/card');
+const { Recruit } = require('../model/recruit');
+const logger = require('../log');
 
-// GET /reservations
+// GET /recruits/:id/cards/:card_id/reservations
 router.get('/', async (req, res) => {
   try {
     const foundReservations = await Reservation.find({});
@@ -14,7 +17,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /reservations/:user_id
+// GET /recruits/:id/cards/:card_id/reservations/:user_id
 router.get('/:user_id', async (req, res) => {
   try {
     const { user_id } = req.params;
@@ -30,26 +33,32 @@ router.get('/:user_id', async (req, res) => {
   }
 });
 
-// POST /reservations
+// POST /recruits/:id/cards/:card_id/reservations
 router.post('/', async (req, res) => {
   try {
-    const { _user, _designer, time } = req.body;
+    const { _user, _designer, time, _card } = req.body;
     const user = await User.findById(_user);
     const designer = await User.findById(_designer);
-    if (!user || !designer) {
-      throw new Error('user not found!!');
+    const card = await Card.findById(_card);
+    const recruit = await Recruit.findById(req.params.id);
+
+    if (!user || !designer || !card || !recruit) {
+      throw new Error('user || card || recruit not found!!');
     }
     const createdReservation = await Reservation.create({
       _user,
       _designer,
+      _card,
       time
     });
 
     user._reservations.push(createdReservation._id);
     designer._reservations.push(createdReservation._id);
+    card.reservedTimes.push(time);
 
     await user.save();
     await designer.save();
+    await card.save();
 
     res.status(200).send(createdReservation);
   } catch (e) {
@@ -57,7 +66,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// DELETE /reservations/:id
+// DELETE /recruits/:id/cards/:card_id/reservations/:id
 router.delete('/:id', async (req, res) => {
   try {
     const reservation = await Reservation.findByIdAndRemove(req.params.id);

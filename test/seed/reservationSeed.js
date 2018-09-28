@@ -1,7 +1,9 @@
 const { ObjectID } = require('mongodb');
 const { User } = require('../../model/user');
 const { Reservation } = require('../../model/reservation');
+const { Card } = require('../../model/card');
 const { users } = require('../seed/userSeed');
+const { cards } = require('../seed/cardSeed');
 
 const reservations = [
   {
@@ -19,17 +21,16 @@ const populateReservation = async done => {
   try {
     await Reservation.deleteMany({});
     await Reservation.insertMany(reservations);
-    await User.findByIdAndUpdate(
-      users[0]._id,
-      { $set: { reservations: [reservations[0]._id] } },
-      { new: true }
-    );
-    await User.findByIdAndUpdate(
-      users[1]._id,
-      { $set: { reservations: [reservations[0]._id] } },
-      { new: true }
-    );
-    done();
+    await User.findByIdAndUpdate(users[0]._id, {
+      $set: { reservations: [reservations[0]._id] }
+    });
+    await User.findByIdAndUpdate(users[1]._id, {
+      $set: { reservations: [reservations[0]._id] }
+    });
+    await Card.findByIdAndUpdate(cards[0]._id, {
+      $set: { reservedTimes: [reservations[0].time] }
+    });
+    await done();
   } catch (e) {
     done(e);
   }

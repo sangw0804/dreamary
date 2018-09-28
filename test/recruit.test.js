@@ -159,19 +159,9 @@ describe('Recruit', () => {
   describe('PATCH /recruits/:id', () => {
     it('should update recruit with exist id', done => {
       const title = '수정된 타이틀';
-      const ableDates = [
-        {
-          since: new Date().getTime(),
-          until: new Date().getTime() + 6000000
-        },
-        {
-          since: new Date().getTime(),
-          until: new Date().getTime() + 6000000
-        }
-      ];
       request(app)
         .patch(`/recruits/${recruits[0]._id}`)
-        .send({ title, ableDates })
+        .send({ title })
         .expect(200)
         .expect(res => {
           expect(res.body.title).toBe(title);
@@ -183,9 +173,6 @@ describe('Recruit', () => {
             Recruit.findById(recruits[0]._id)
               .then(foundRecruit => {
                 expect(foundRecruit.title).toBe(title);
-                expect(foundRecruit.ableDates[1].since).toBe(
-                  ableDates[1].since
-                );
                 done();
               })
               .catch(e => {

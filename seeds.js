@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { ObjectID } = require('mongodb');
+const logger = require('./log');
 
 mongoose.connect(
   'mongodb://localhost:27017/dreamary',
@@ -55,12 +56,7 @@ const recruits = [
     _id: new ObjectID(),
     _designer: users[1]._id,
     title: '뎅겅잘라드립니다',
-    ableDates: [
-      {
-        since: new Date().getTime(),
-        until: new Date().getTime() + 10000000
-      }
-    ],
+    _cards: [],
     portfolios: [
       'https://picsum.photos/300/200/?image=5',
       'https://picsum.photos/300/200/?image=8',
@@ -113,6 +109,20 @@ const reservations = [
   }
 ];
 
+const cards = [
+  {
+    _id: new ObjectID(),
+    _recruit: recruits[0]._id,
+    date: 20180923,
+    ableTimes: [
+      {
+        since: new Date().getTime(),
+        until: new Date().getTime() + 4000000
+      }
+    ]
+  }
+];
+
 recruits[0]._reviews = [reviews[0]._id, reviews[1]._id];
 
 const seedUsersDB = async () => {
@@ -141,9 +151,9 @@ const seedDB = async () => {
     await seedRecruitsDB();
     await seedReviewsDB();
     await seedReservationsDB();
-    console.log('successfully seeded DB!');
+    logger.info('successfully seeded DB!');
   } catch (e) {
-    console.log(e);
+    logger.error(e);
   }
 };
 

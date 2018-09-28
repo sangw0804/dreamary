@@ -9,6 +9,10 @@ const reservationSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
+  _card: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Card'
+  },
   time: {
     since: {
       type: Number,

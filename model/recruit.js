@@ -10,16 +10,10 @@ const recruitSchema = new mongoose.Schema({
     required: true,
     type: String
   },
-  ableDates: [
+  _cards: [
     {
-      since: {
-        type: Number,
-        required: true
-      },
-      until: {
-        type: Number,
-        required: true
-      }
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Card'
     }
   ],
   portfolios: [

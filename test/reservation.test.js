@@ -4,17 +4,22 @@ const { ObjectID } = require('mongodb');
 const { app } = require('../app');
 const { User } = require('../model/user');
 const { Reservation } = require('../model/reservation');
+const { Card } = require('../model/card');
 const { users, populateUsers } = require('./seed/userSeed');
 const { reservations, populateReservation } = require('./seed/reservationSeed');
+const { cards, populateCards } = require('./seed/cardSeed');
+const { recruits, populateRecruits } = require('./seed/recruitSeed');
 
 beforeEach(populateUsers);
+beforeEach(populateRecruits);
+beforeEach(populateCards);
 beforeEach(populateReservation);
 
 describe('Reservation', () => {
-  describe('GET /reservations', () => {
+  describe('GET /recruits/:id/cards/:card_id/reservations', () => {
     it('should get every reservations', done => {
       request(app)
-        .get('/reservations')
+        .get(`/recruits/${recruits[0]._id}/cards/${cards[0]._id}/reservations`)
         .expect(200)
         .expect(res => {
           expect(res.body[0]._id).toBe(reservations[0]._id.toHexString());
@@ -23,43 +28,40 @@ describe('Reservation', () => {
     });
   });
 
-  describe('POST /reservations', () => {
+  describe('POST /recruits/:id/cards/:card_id/reservations', () => {
     it('should create new reservation with valid data', done => {
       const data = {
         _user: users[0]._id,
         _designer: users[2]._id,
+        _card: cards[0]._id,
         time: {
           since: new Date().getTime(),
           until: new Date().getTime()
         }
       };
       request(app)
-        .post('/reservations')
+        .post(`/recruits/${recruits[0]._id}/cards/${cards[0]._id}/reservations`)
         .send(data)
         .expect(200)
         .expect(res => {
           expect(res.body._id).toBeTruthy();
         })
-        .end((err, res) => {
-          if (err) {
-            return done(err);
+        .end(async (err, res) => {
+          try {
+            if (err) {
+              throw new Error(err);
+            }
+            const foundReservation = await Reservation.findById(res.body._id);
+            expect(foundReservation).toBeTruthy();
+            const foundUser = await User.findById(foundReservation._designer);
+            expect(foundUser).toBeTruthy();
+            expect(foundUser._reservations[0].toHexString()).toBe(res.body._id);
+            const foundCard = await Card.findById(res.body._card);
+            expect(foundCard.reservedTimes[1].since).toBe(res.body.time.since);
+            done();
+          } catch (e) {
+            done(e);
           }
-
-          Reservation.findById(res.body._id)
-            .then(foundReservation => {
-              expect(foundReservation).toBeTruthy();
-              return User.findById(foundReservation._designer);
-            })
-            .then(foundUser => {
-              expect(foundUser).toBeTruthy();
-              expect(foundUser._reservations[0].toHexString()).toBe(
-                res.body._id
-              );
-              done();
-            })
-            .catch(e => {
-              done(e);
-            });
         });
     });
 
@@ -73,7 +75,7 @@ describe('Reservation', () => {
         }
       };
       request(app)
-        .post('/reservations')
+        .post(`/recruits/${recruits[0]._id}/cards/${cards[0]._id}/reservations`)
         .send(invalidData)
         .expect(400)
         .end((err, res) => {
@@ -93,10 +95,14 @@ describe('Reservation', () => {
     });
   });
 
-  describe('DELETE /reservations/:id', () => {
+  describe('DELETE /recruits/:id/cards/:card_id/reservations/:id', () => {
     it('should remove reservation with exist id', done => {
       request(app)
-        .delete(`/reservations/${reservations[0]._id}`)
+        .delete(
+          `/recruits/${recruits[0]._id}/cards/${cards[0]._id}/reservations/${
+            reservations[0]._id
+          }`
+        )
         .expect(200)
         .end((err, res) => {
           if (err) {
@@ -116,7 +122,11 @@ describe('Reservation', () => {
 
     it('should not remove reservation with absent id', done => {
       request(app)
-        .delete(`/reservations/${new ObjectID()}`)
+        .delete(
+          `/recruits/${recruits[0]._id}/cards/${
+            cards[0]._id
+          }/reservations/${new ObjectID()}`
+        )
         .expect(400)
         .end((err, res) => {
           if (err) {
@@ -135,10 +145,14 @@ describe('Reservation', () => {
     });
   });
 
-  describe('GET /reservations/:user_id', () => {
+  describe('GET /recruits/:id/cards/:card_id/reservations/:user_id', () => {
     it('should get reservations with exist designer id', done => {
       request(app)
-        .get(`/reservations/${users[1]._id}`)
+        .get(
+          `/recruits/${recruits[0]._id}/cards/${cards[0]._id}/reservations/${
+            users[1]._id
+          }`
+        )
         .expect(200)
         .expect(res => {
           expect(res.body[0]._user).toBe(users[0]._id.toHexString());
@@ -148,7 +162,11 @@ describe('Reservation', () => {
 
     it('should get reservations with exist user id', done => {
       request(app)
-        .get(`/reservations/${users[0]._id}`)
+        .get(
+          `/recruits/${recruits[0]._id}/cards/${cards[0]._id}/reservations/${
+            users[0]._id
+          }`
+        )
         .expect(200)
         .expect(res => {
           expect(res.body[0]._designer._id).toBe(users[1]._id.toHexString());
@@ -158,7 +176,9 @@ describe('Reservation', () => {
 
     it('should get 400 with invalid user id', done => {
       request(app)
-        .get('/reservations/142')
+        .get(
+          `/recruits/${recruits[0]._id}/cards/${cards[0]._id}/reservations/142`
+        )
         .expect(400)
         .end(done);
     });

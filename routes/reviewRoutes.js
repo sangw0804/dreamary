@@ -12,7 +12,6 @@ router.post('/', async (req, res) => {
     if (!recruit) {
       throw new Error('recruit not found!');
     }
-    // let body = _.pick(req.body, ['_user', 'content', 'score']);
     const { _user, content, score } = req.body;
     const body = {
       _user,
