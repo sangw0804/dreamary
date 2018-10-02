@@ -89,27 +89,6 @@ const reviews = [
   }
 ];
 
-const reservations = [
-  {
-    _id: new ObjectID(),
-    _user: users[0]._id,
-    _designer: users[1]._id,
-    time: {
-      since: new Date().getTime(),
-      until: new Date().getTime() + 10000000
-    }
-  },
-  {
-    _id: new ObjectID(),
-    _user: users[2]._id,
-    _designer: users[1]._id,
-    time: {
-      since: new Date().getTime() + 50000000,
-      until: new Date().getTime() + 90000000
-    }
-  }
-];
-
 const cards = [
   {
     _id: new ObjectID(),
@@ -132,6 +111,11 @@ const cards = [
       perm: 20000,
       dye: 30000
     },
+    requireTime: {
+      cut: 90,
+      perm: 180,
+      dye: 120
+    },
     must: {
       cut: false,
       perm: true,
@@ -146,7 +130,7 @@ const cards = [
   {
     _id: new ObjectID(),
     _recruit: recruits[0]._id,
-    date: new Date().getTime(),
+    date: new Date().setHours(6, 0, 0, 0),
     ableTimes: [
       {
         since: 800,
@@ -164,6 +148,11 @@ const cards = [
       perm: 20000,
       dye: 30000
     },
+    requireTime: {
+      cut: 60,
+      perm: 240,
+      dye: 90
+    },
     must: {
       cut: false,
       perm: false,
@@ -177,8 +166,41 @@ const cards = [
   }
 ];
 
+const reservations = [
+  {
+    _id: new ObjectID(),
+    _user: users[0]._id,
+    _designer: users[1]._id,
+    _card: cards[0]._id,
+    date: new Date().setHours(6, 0, 0, 0),
+    time: {
+      since: 900,
+      until: 1030
+    },
+    services: {
+      cut: 3000
+    }
+  },
+  {
+    _id: new ObjectID(),
+    _user: users[2]._id,
+    _designer: users[1]._id,
+    _card: cards[1]._id,
+    date: new Date().setHours(6, 0, 0, 0),
+    time: {
+      since: 2000,
+      until: 2130
+    },
+    services: {
+      dye: 30000
+    }
+  }
+];
+
 recruits[0]._reviews = [reviews[0]._id, reviews[1]._id];
 recruits[0]._cards = [cards[0]._id, cards[1]._id];
+cards[0].reservedTimes.push(reservations[0].time);
+cards[1].reservedTimes.push(reservations[1].time);
 
 const seedUsersDB = async () => {
   await User.remove({});

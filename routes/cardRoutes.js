@@ -56,6 +56,15 @@ router.post('/recruits/:id/cards', async (req, res) => {
   }
 });
 
+// PATCH /recruits/:id/cards/:card_id
+// router.patch('/recruits/:id/cards/:card_id', async (req, res) => {
+//   try {
+//     const updatedCard = await Card.findByIdAndUpdate(req.params.card_id, );
+//   } catch (e) {
+
+//   }
+// });
+
 // DELETE /recruits/:id/cards/:card_id
 router.delete('/recruits/:id/cards/:card_id', async (req, res) => {
   try {

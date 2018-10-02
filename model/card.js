@@ -31,6 +31,11 @@ const cardSchema = new mongoose.Schema({
     perm: Number,
     dye: Number
   },
+  requireTime: {
+    cut: Number,
+    perm: Number,
+    dye: Number
+  },
   must: {
     cut: Boolean,
     perm: Boolean,

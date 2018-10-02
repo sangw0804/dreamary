@@ -9,10 +9,15 @@ const reservations = [
   {
     _id: new ObjectID(),
     _user: users[0]._id,
+    _card: cards[0]._id,
     _designer: users[1]._id,
+    date: new Date().setHours(6, 0, 0, 0),
+    services: {
+      cut: 3000
+    },
     time: {
-      since: new Date().getTime(),
-      until: new Date().getTime()
+      since: 1000,
+      until: 1100
     }
   }
 ];
@@ -30,7 +35,7 @@ const populateReservation = async done => {
     await Card.findByIdAndUpdate(cards[0]._id, {
       $set: { reservedTimes: [reservations[0].time] }
     });
-    await done();
+    done();
   } catch (e) {
     done(e);
   }

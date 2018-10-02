@@ -25,6 +25,11 @@ const cards = [
       perm: 20000,
       dye: 30000
     },
+    requireTime: {
+      cut: 90,
+      perm: 180,
+      dye: 120
+    },
     must: {
       cut: false,
       perm: true,
@@ -39,7 +44,7 @@ const cards = [
   {
     _id: new ObjectID(),
     _recruit: recruits[0]._id,
-    date: new Date().getTime(),
+    date: new Date().setHours(6, 0, 0, 0),
     ableTimes: [
       {
         since: 800,
@@ -56,6 +61,11 @@ const cards = [
       cut: 3000,
       perm: 20000,
       dye: 30000
+    },
+    requireTime: {
+      cut: 60,
+      perm: 240,
+      dye: 90
     },
     must: {
       cut: false,

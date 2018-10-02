@@ -13,6 +13,10 @@ const reservationSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Card'
   },
+  date: {
+    type: Number,
+    required: true
+  },
   time: {
     since: {
       type: Number,
@@ -22,6 +26,11 @@ const reservationSchema = new mongoose.Schema({
       type: Number,
       required: true
     }
+  },
+  services: {
+    cut: Number,
+    perm: Number,
+    dye: Number
   },
   isCanceled: {
     type: Boolean,
