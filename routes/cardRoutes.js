@@ -25,6 +25,9 @@ router.get('/cards', async (req, res) => {
 router.get('/recruits/:id/cards', async (req, res) => {
   try {
     const { date, cut, perm, dye } = req.query;
+    if (!(cut in checker) || !(perm in checker) || !(dye in checker)) {
+      throw new Error('invalid query!!');
+    }
     const cards = await Card.find({
       _recruit: req.params.id,
       ...generateCondition(date, { cut, perm, dye })

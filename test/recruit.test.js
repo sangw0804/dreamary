@@ -5,10 +5,12 @@ const { app } = require('../app');
 const { Recruit } = require('../model/recruit');
 const { recruits, populateRecruits } = require('./seed/recruitSeed');
 const { users, populateUsers } = require('./seed/userSeed');
+const { cards, populateCards } = require('./seed/cardSeed');
 
 // seed Recruit db
 beforeEach(populateUsers);
 beforeEach(populateRecruits);
+beforeEach(populateCards);
 
 // test Recruit
 describe('Recruit', () => {
