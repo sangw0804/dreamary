@@ -36,8 +36,8 @@ admin.initializeApp({
 
 // routes
 app.use('/users/:id/tickets', ticketRoutes);
+app.use('/users/:user_id/reservations', reservationRoutes);
 app.use('/users', userRoutes);
-app.use('/recruits/:id/cards/:card_id/reservations', reservationRoutes);
 app.use('/', cardRoutes);
 app.use('/recruits/:id/reviews', reviewRoutes);
 app.use('/recruits', recruitRoutes);

@@ -16,10 +16,10 @@ beforeEach(populateCards);
 beforeEach(populateReservation);
 
 describe('Reservation', () => {
-  describe('GET /recruits/:id/cards/:card_id/reservations', () => {
+  describe('GET /users/:user_id/reservations/all', () => {
     it('should get every reservations', done => {
       request(app)
-        .get(`/recruits/${recruits[0]._id}/cards/${cards[0]._id}/reservations`)
+        .get(`/users/${users[0]._id}/reservations/all`)
         .expect(200)
         .expect(res => {
           expect(res.body[0]._id).toBe(reservations[0]._id.toHexString());
@@ -28,19 +28,23 @@ describe('Reservation', () => {
     });
   });
 
-  describe('POST /recruits/:id/cards/:card_id/reservations', () => {
+  describe('POST /users/:user_id/reservations', () => {
     it('should create new reservation with valid data', done => {
       const data = {
         _user: users[0]._id,
         _designer: users[2]._id,
         _card: cards[0]._id,
+        date: new Date().setHours(6, 0, 0, 0),
         time: {
-          since: new Date().getTime(),
-          until: new Date().getTime()
+          since: 2000,
+          until: 2200
+        },
+        services: {
+          perm: 30000
         }
       };
       request(app)
-        .post(`/recruits/${recruits[0]._id}/cards/${cards[0]._id}/reservations`)
+        .post(`/users/${users[0]._id}/reservations`)
         .send(data)
         .expect(200)
         .expect(res => {
@@ -75,7 +79,7 @@ describe('Reservation', () => {
         }
       };
       request(app)
-        .post(`/recruits/${recruits[0]._id}/cards/${cards[0]._id}/reservations`)
+        .post(`/users/${users[0]._id}/reservations`)
         .send(invalidData)
         .expect(400)
         .end((err, res) => {
@@ -95,14 +99,10 @@ describe('Reservation', () => {
     });
   });
 
-  describe('DELETE /recruits/:id/cards/:card_id/reservations/:id', () => {
+  describe('DELETE /users/:user_id/reservations/:id', () => {
     it('should remove reservation with exist id', done => {
       request(app)
-        .delete(
-          `/recruits/${recruits[0]._id}/cards/${cards[0]._id}/reservations/${
-            reservations[0]._id
-          }`
-        )
+        .delete(`/users/${users[0]._id}/reservations/${reservations[0]._id}`)
         .expect(200)
         .end((err, res) => {
           if (err) {
@@ -122,11 +122,7 @@ describe('Reservation', () => {
 
     it('should not remove reservation with absent id', done => {
       request(app)
-        .delete(
-          `/recruits/${recruits[0]._id}/cards/${
-            cards[0]._id
-          }/reservations/${new ObjectID()}`
-        )
+        .delete(`/users/${users[0]._id}}/reservations/${new ObjectID()}`)
         .expect(400)
         .end((err, res) => {
           if (err) {
@@ -145,28 +141,10 @@ describe('Reservation', () => {
     });
   });
 
-  describe('GET /recruits/:id/cards/:card_id/reservations/:user_id', () => {
+  describe('GET /users/:user_id/reservations', () => {
     it('should get reservations with exist designer id', done => {
       request(app)
-        .get(
-          `/recruits/${recruits[0]._id}/cards/${cards[0]._id}/reservations/${
-            users[1]._id
-          }`
-        )
-        .expect(200)
-        .expect(res => {
-          expect(res.body[0]._user).toBe(users[0]._id.toHexString());
-        })
-        .end(done);
-    });
-
-    it('should get reservations with exist user id', done => {
-      request(app)
-        .get(
-          `/recruits/${recruits[0]._id}/cards/${cards[0]._id}/reservations/${
-            users[0]._id
-          }`
-        )
+        .get(`/users/${users[1]._id}/reservations`)
         .expect(200)
         .expect(res => {
           expect(res.body[0]._designer._id).toBe(users[1]._id.toHexString());
@@ -174,11 +152,19 @@ describe('Reservation', () => {
         .end(done);
     });
 
+    it('should get reservations with exist user id', done => {
+      request(app)
+        .get(`/users/${users[0]._id}/reservations`)
+        .expect(200)
+        .expect(res => {
+          expect(res.body[0]._user).toBe(users[0]._id.toHexString());
+        })
+        .end(done);
+    });
+
     it('should get 400 with invalid user id', done => {
       request(app)
-        .get(
-          `/recruits/${recruits[0]._id}/cards/${cards[0]._id}/reservations/142`
-        )
+        .get('/users/1234/reservations')
         .expect(400)
         .end(done);
     });

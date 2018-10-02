@@ -12,7 +12,9 @@ router.get('/cards', async (req, res) => {
     if (!(cut in checker) || !(perm in checker) || !(dye in checker)) {
       throw new Error('invalid query!!');
     }
-    const cards = await Card.find(generateCondition(date, { cut, perm, dye }));
+    const cards = await Card.find(
+      generateCondition(date, { cut, perm, dye })
+    ).populate('_recruit');
     res.status(200).send(cards);
   } catch (e) {
     res.status(400).send(e);
@@ -22,7 +24,11 @@ router.get('/cards', async (req, res) => {
 // GET /recruits/:id/cards
 router.get('/recruits/:id/cards', async (req, res) => {
   try {
-    const cards = await Card.find({ _recruit: req.params.id });
+    const { date, cut, perm, dye } = req.query;
+    const cards = await Card.find({
+      _recruit: req.params.id,
+      ...generateCondition(date, { cut, perm, dye })
+    });
     res.status(200).send(cards);
   } catch (e) {
     res.status(400).send(e);
