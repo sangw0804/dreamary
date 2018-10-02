@@ -3,9 +3,24 @@ const express = require('express');
 const router = express.Router({ mergeParams: true });
 const { Recruit } = require('../model/recruit');
 const { Card } = require('../model/card');
+const { generateCondition, checker } = require('./helpers');
+
+// GET /cards
+router.get('/cards', async (req, res) => {
+  try {
+    const { date, cut, perm, dye } = req.query;
+    if (!(cut in checker) || !(perm in checker) || !(dye in checker)) {
+      throw new Error('invalid query!!');
+    }
+    const cards = await Card.find(generateCondition(date, { cut, perm, dye }));
+    res.status(200).send(cards);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
 
 // GET /recruits/:id/cards
-router.get('/', async (req, res) => {
+router.get('/recruits/:id/cards', async (req, res) => {
   try {
     const cards = await Card.find({ _recruit: req.params.id });
     res.status(200).send(cards);
@@ -15,7 +30,7 @@ router.get('/', async (req, res) => {
 });
 
 // POST /recruits/:id/cards
-router.post('/', async (req, res) => {
+router.post('/recruits/:id/cards', async (req, res) => {
   try {
     const { _recruit, date, ableTimes, price, must, no } = req.body;
     const recruit = await Recruit.findById(_recruit);
@@ -42,7 +57,7 @@ router.post('/', async (req, res) => {
 });
 
 // DELETE /recruits/:id/cards/:card_id
-router.delete('/:card_id', async (req, res) => {
+router.delete('/recruits/:id/cards/:card_id', async (req, res) => {
   try {
     const recruit = await Recruit.findById(req.params.id);
     if (!recruit) {

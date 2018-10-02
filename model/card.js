@@ -22,6 +22,10 @@ const cardSchema = new mongoose.Schema({
       until: Number
     }
   ],
+  reservable: {
+    type: Boolean,
+    default: true
+  },
   price: {
     cut: Number,
     perm: Number,

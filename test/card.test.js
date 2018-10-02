@@ -13,6 +13,35 @@ beforeEach(populateRecruits);
 beforeEach(populateCards);
 
 describe('Card', () => {
+  describe('GET /cards', () => {
+    it('should get right cards with query', done => {
+      request(app)
+        .get('/cards?perm=1&dye=2')
+        .expect(200)
+        .expect(res => {
+          expect(res.body.length).toBe(1);
+        })
+        .end(done);
+    });
+
+    it('should get every cards with no query', done => {
+      request(app)
+        .get('/cards')
+        .expect(200)
+        .expect(res => {
+          expect(res.body.length).toBe(2);
+        })
+        .end(done);
+    });
+
+    it('should return 400 with invalid query', done => {
+      request(app)
+        .get('/cards?perm=3')
+        .expect(400)
+        .end(done);
+    });
+  });
+
   describe('GET /recruits/:id/cards', () => {
     it('should get every cards of this recruit', done => {
       request(app)
@@ -76,9 +105,9 @@ describe('Card', () => {
               throw new Error(err);
             }
             const foundCards = await Card.find({ _recruit: recruits[0]._id });
-            expect(foundCards.length).toBe(2);
+            expect(foundCards.length).toBe(3);
             const foundRecruit = await Recruit.findById(recruits[0]._id);
-            expect(foundRecruit._cards.length).toBe(2);
+            expect(foundRecruit._cards.length).toBe(3);
             done();
           } catch (e) {
             done(e);
@@ -100,7 +129,7 @@ describe('Card', () => {
               throw new Error(err);
             }
             const foundCards = await Card.find({ _recruit: recruits[0]._id });
-            expect(foundCards.length).toBe(1);
+            expect(foundCards.length).toBe(2);
             done();
           } catch (e) {
             done(e);
@@ -150,7 +179,7 @@ describe('Card', () => {
               throw new Error(err);
             }
             const foundCards = await Card.find({});
-            expect(foundCards.length).toBe(1);
+            expect(foundCards.length).toBe(2);
             done();
           } catch (e) {
             done(e);
@@ -170,9 +199,9 @@ describe('Card', () => {
               throw new Error(err);
             }
             const foundCards = await Card.find({});
-            expect(foundCards.length).toBe(0);
+            expect(foundCards.length).toBe(1);
             const foundRecruit = await Recruit.findById(recruits[0]._id);
-            expect(foundRecruit._cards.length).toBe(0);
+            expect(foundRecruit._cards.length).toBe(1);
             done();
           } catch (e) {
             done(e);
@@ -190,7 +219,7 @@ describe('Card', () => {
               throw new Error(err);
             }
             const foundCards = await Card.find({});
-            expect(foundCards.length).toBe(1);
+            expect(foundCards.length).toBe(2);
             done();
           } catch (e) {
             done(e);
@@ -208,7 +237,7 @@ describe('Card', () => {
               throw new Error(err);
             }
             const foundCards = await Card.find({});
-            expect(foundCards.length).toBe(1);
+            expect(foundCards.length).toBe(2);
             done();
           } catch (e) {
             done(e);
