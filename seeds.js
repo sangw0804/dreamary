@@ -10,6 +10,7 @@ mongoose.connect(
 const { User } = require('./model/user');
 const { Recruit } = require('./model/recruit');
 const { Review } = require('./model/review');
+const { Card } = require('./model/card');
 const { Reservation } = require('./model/reservation');
 
 const users = [
@@ -113,17 +114,71 @@ const cards = [
   {
     _id: new ObjectID(),
     _recruit: recruits[0]._id,
-    date: 20180923,
+    date: new Date().setHours(6, 0, 0, 0),
     ableTimes: [
       {
-        since: new Date().getTime(),
-        until: new Date().getTime() + 4000000
+        since: 800,
+        until: 1400
+      },
+      {
+        since: 2000,
+        until: 2200
       }
-    ]
+    ],
+    reservedTimes: [],
+    reservable: true,
+    price: {
+      cut: 3000,
+      perm: 20000,
+      dye: 30000
+    },
+    must: {
+      cut: false,
+      perm: true,
+      dye: false
+    },
+    no: {
+      cut: false,
+      perm: false,
+      dye: true
+    }
+  },
+  {
+    _id: new ObjectID(),
+    _recruit: recruits[0]._id,
+    date: new Date().getTime(),
+    ableTimes: [
+      {
+        since: 800,
+        until: 1400
+      },
+      {
+        since: 2000,
+        until: 2200
+      }
+    ],
+    reservedTimes: [],
+    reservable: true,
+    price: {
+      cut: 3000,
+      perm: 20000,
+      dye: 30000
+    },
+    must: {
+      cut: false,
+      perm: false,
+      dye: true
+    },
+    no: {
+      cut: false,
+      perm: true,
+      dye: false
+    }
   }
 ];
 
 recruits[0]._reviews = [reviews[0]._id, reviews[1]._id];
+recruits[0]._cards = [cards[0]._id, cards[1]._id];
 
 const seedUsersDB = async () => {
   await User.remove({});
@@ -145,12 +200,18 @@ const seedReservationsDB = async () => {
   await Reservation.insertMany(reservations);
 };
 
+const seedCardsDB = async () => {
+  await Card.remove({});
+  await Card.insertMany(cards);
+};
+
 const seedDB = async () => {
   try {
     await seedUsersDB();
     await seedRecruitsDB();
-    await seedReviewsDB();
+    await seedCardsDB();
     await seedReservationsDB();
+    await seedReviewsDB();
     logger.info('successfully seeded DB!');
   } catch (e) {
     logger.error(e);
