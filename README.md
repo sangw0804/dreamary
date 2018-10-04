@@ -50,8 +50,11 @@
 
   > GET /cards <br>
   > GET /recruits/:recruit_id/cards <br>
-  > POST /recruits/:recruit_id/cards <br>
-  > DELETE /recruits/:recruit_id/cards/:id
+
+위의 두 요청은 query parameter 로 cut , perm , dye 를 받을수 있고 1 은 꼭 받아야 함, 2 는 받기 싫음, param 이 없으면 상관없음이다.
+
+> POST /recruits/:recruit_id/cards <br>
+> DELETE /recruits/:recruit_id/cards/:id
 
 - reservations
 
