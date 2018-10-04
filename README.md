@@ -35,7 +35,7 @@
 
 - users
 
-  > GET /users
+  > GET /users <br>
   > POST /users
 
 - recruits
