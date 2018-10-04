@@ -80,8 +80,9 @@ function updateReservable(next) {
 }
 
 cardSchema.pre('save', sortTimes);
-cardSchema.pre('findOneAndUpdate', sortTimes);
-cardSchema.pre('update', sortTimes);
+cardSchema.pre('save', updateReservable);
+cardSchema.pre('remove', sortTimes);
+cardSchema.pre('remove', updateReservable);
 
 const Card = mongoose.model('Card', cardSchema);
 
