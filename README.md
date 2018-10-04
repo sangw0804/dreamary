@@ -48,17 +48,17 @@
 
 - cards
 
-> GET /cards <br>
-> GET /recruits/:recruit_id/cards <br>
-> POST /recruits/:recruit_id/cards <br>
-> DELETE /recruits/:recruit_id/cards/:id
+  > GET /cards <br>
+  > GET /recruits/:recruit_id/cards <br>
+  > POST /recruits/:recruit_id/cards <br>
+  > DELETE /recruits/:recruit_id/cards/:id
 
 - reservations
 
-> GET /users/:user_id/reservations/all <br>
-> GET /users/:user_id/reservations <br>
-> POST /users/:user_id/reservations <br>
-> DELETE /users/:user_id/reservations/:id
+  > GET /users/:user_id/reservations/all <br>
+  > GET /users/:user_id/reservations <br>
+  > POST /users/:user_id/reservations <br>
+  > DELETE /users/:user_id/reservations/:id
 
 - tickets (사용 X)
   > GET /users/:id/tickets <br>
