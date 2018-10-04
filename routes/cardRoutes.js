@@ -21,15 +21,15 @@ router.get('/cards', async (req, res) => {
   }
 });
 
-// GET /recruits/:id/cards
-router.get('/recruits/:id/cards', async (req, res) => {
+// GET /recruits/:recruit_id/cards
+router.get('/recruits/:recruit_id/cards', async (req, res) => {
   try {
     const { date, cut, perm, dye } = req.query;
     if (!(cut in checker) || !(perm in checker) || !(dye in checker)) {
       throw new Error('invalid query!!');
     }
     const cards = await Card.find({
-      _recruit: req.params.id,
+      _recruit: req.params.recruit_id,
       ...generateCondition(date, { cut, perm, dye })
     });
     res.status(200).send(cards);
@@ -38,16 +38,17 @@ router.get('/recruits/:id/cards', async (req, res) => {
   }
 });
 
-// POST /recruits/:id/cards
-router.post('/recruits/:id/cards', async (req, res) => {
+// POST /recruits/:recruit_id/cards
+router.post('/recruits/:recruit_id/cards', async (req, res) => {
   try {
-    const { _recruit, date, ableTimes, price, must, no } = req.body;
-    const recruit = await Recruit.findById(_recruit);
+    const { date, ableTimes, price, must, no } = req.body;
+    const { recruit_id } = req.params;
+    const recruit = await Recruit.findById(recruit_id);
     if (!recruit) {
       throw new Error('recruit not found!');
     }
     const createdCard = await Card.create({
-      _recruit,
+      _recruit: recruit_id,
       date,
       ableTimes,
       price,
@@ -74,17 +75,17 @@ router.post('/recruits/:id/cards', async (req, res) => {
 //   }
 // });
 
-// DELETE /recruits/:id/cards/:card_id
-router.delete('/recruits/:id/cards/:card_id', async (req, res) => {
+// DELETE /recruits/:recruit_id/cards/:id
+router.delete('/recruits/:recruit_id/cards/:id', async (req, res) => {
   try {
-    const recruit = await Recruit.findById(req.params.id);
+    const recruit = await Recruit.findById(req.params.recruit_id);
     if (!recruit) {
       throw new Error('recruit not found!');
     }
-    const { card_id } = req.params;
-    await Card.remove({ _id: card_id });
+    const { id } = req.params;
+    await Card.remove({ _id: id });
     recruit._cards = recruit._cards.filter(
-      card => card._id.toHexString() !== card_id
+      card => card._id.toHexString() !== id
     );
     await recruit.save();
 

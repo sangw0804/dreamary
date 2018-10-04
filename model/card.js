@@ -60,9 +60,23 @@ function sortTimes(next) {
 function updateReservable(next) {
   const card = this;
   const { reservedTimes, ableTimes } = card;
+  let largestAbleTime = 0;
   ableTimes.forEach(time => {
-    const reserveds = reservedTimes.filter(rt => rt.);
-  })
+    const reserveds = reservedTimes.filter(rt => rt.until <= time.until);
+    if (!reserveds.length) {
+      largestAbleTime = Math.max(largestAbleTime, time.until - time.since);
+      return;
+    }
+    let endPoint = time.since;
+    let tempLargest = 0;
+    reserveds.forEach(reserved => {
+      tempLargest = Math.max(tempLargest, reserved.since - endPoint);
+      endPoint = reserved.until;
+    });
+    largestAbleTime = Math.max(largestAbleTime, tempLargest);
+  });
+
+  next();
 }
 
 cardSchema.pre('save', sortTimes);

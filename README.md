@@ -36,23 +36,31 @@
 - users
 
   > GET /users
+  > POST /users
 
 - recruits
 
   > GET /recruits <br>
   > GET /recruits/:id <br>
   > PATCH /recruits/:id <br>
-  > POST /recruits --body {\_designer: "디자이너 유저 id 값"} <br>
+  > POST /recruits <br>
   > DELETE /recruits/:id
+
+- cards
+
+> GET /cards <br>
+> GET /recruits/:recruit_id/cards <br>
+> POST /recruits/:recruit_id/cards <br>
+> DELETE /recruits/:recruit_id/cards/:id
 
 - reservations
 
-  > GET /reservations <br>
-  > GET /reservations/:user_id 유저나 디자이너 id 에 해당하는 모든 예약을 돌려줌 <br>
-  > POST /reservations --body {\_user: "일반 유저 id 값", \_designer: "디자이너 유저 id 값"} <br>
-  > DELETE /reservations/:id
+> GET /users/:user_id/reservations/all <br>
+> GET /users/:user_id/reservations <br>
+> POST /users/:user_id/reservations <br>
+> DELETE /users/:user_id/reservations/:id
 
-- tickets
+- tickets (사용 X)
   > GET /users/:id/tickets <br>
   > POST /users/:id/tickets --body {isD: 구매유저 디자이너 여부 불린값} <br>
   > PATCH /users/:id/tickets/:ticket_id
