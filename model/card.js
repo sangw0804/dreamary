@@ -48,6 +48,27 @@ const cardSchema = new mongoose.Schema({
   }
 });
 
+const sortHelper = (a, b) => a.since - b.since;
+
+function sortTimes(next) {
+  const card = this;
+  card.ableTimes.sort(sortHelper);
+  card.reservedTimes.sort(sortHelper);
+  next();
+}
+
+function updateReservable(next) {
+  const card = this;
+  const { reservedTimes, ableTimes } = card;
+  ableTimes.forEach(time => {
+    const reserveds = reservedTimes.filter(rt => rt.);
+  })
+}
+
+cardSchema.pre('save', sortTimes);
+cardSchema.pre('findOneAndUpdate', sortTimes);
+cardSchema.pre('update', sortTimes);
+
 const Card = mongoose.model('Card', cardSchema);
 
 module.exports = { Card };

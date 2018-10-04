@@ -10,12 +10,12 @@ const cards = [
     date: new Date().setHours(6, 0, 0, 0),
     ableTimes: [
       {
-        since: 800,
-        until: 1400
+        since: 480,
+        until: 840
       },
       {
-        since: 2000,
-        until: 2200
+        since: 1200,
+        until: 1320
       }
     ],
     reservedTimes: [],
@@ -47,12 +47,12 @@ const cards = [
     date: new Date().setHours(6, 0, 0, 0),
     ableTimes: [
       {
-        since: 800,
-        until: 1400
+        since: 480,
+        until: 840
       },
       {
-        since: 2000,
-        until: 2200
+        since: 1200,
+        until: 1320
       }
     ],
     reservedTimes: [],

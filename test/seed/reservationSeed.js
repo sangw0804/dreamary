@@ -16,8 +16,8 @@ const reservations = [
       cut: 3000
     },
     time: {
-      since: 1000,
-      until: 1100
+      since: 600,
+      until: 660
     }
   }
 ];
