@@ -174,7 +174,7 @@ const reservations = [
     _card: cards[0]._id,
     date: new Date().setHours(6, 0, 0, 0),
     time: {
-      since: 540
+      since: 540,
       until: 630
     },
     services: {
