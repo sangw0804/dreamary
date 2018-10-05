@@ -168,4 +168,28 @@ describe('Reservation', () => {
         .end(done);
     });
   });
+
+  describe('PATCH /users/:user_id/reservations/:id', () => {
+    it('should cancel reservation and remove from card reservedTime', done => {
+      request(app)
+        .patch(`/users/${users[0]._id}/reservations/${reservations[0]._id}`)
+        .expect(200)
+        .expect(res => {
+          expect(res.body.isCanceled).toBe(true);
+        })
+        .end(async (err, res) => {
+          try {
+            if (err) {
+              throw new Error(err);
+            }
+
+            const card = await Card.findById(res.body._card);
+            expect(card.reservedTimes.length).toBe(0);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+    });
+  });
 });

@@ -52,6 +52,14 @@ async function updateRelationalDBs(doc, next) {
       throw new Error('user || card || recruit not found!!');
     }
 
+    const temp = user._reservations.map(r => r.toHexString());
+    if (temp.includes(reservation._id.toHexString())) {
+      card.reservedTimes = card.reservedTimes.filter(
+        reservedTime => reservedTime.since !== reservation.time.since
+      );
+      await card.save();
+      return next();
+    }
     user._reservations.push(reservation._id);
     designer._reservations.push(reservation._id);
     card.reservedTimes.push(reservation.time);

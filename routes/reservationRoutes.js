@@ -54,6 +54,21 @@ router.post('/', async (req, res) => {
   }
 });
 
+// PATCH /users/:user_id/reservations/:id 무조건 예약 취소
+router.patch('/:id', async (req, res) => {
+  try {
+    // const { isCanceled } = req.body;
+    const reservation = await Reservation.findById(req.params.id);
+    reservation.isCanceled = true;
+    await reservation.save();
+
+    res.status(200).send(reservation);
+  } catch (e) {
+    console.log(e);
+    res.status(400).send(e);
+  }
+});
+
 // DELETE /users/:user_id/reservations/:id
 router.delete('/:id', async (req, res) => {
   try {

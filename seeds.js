@@ -22,7 +22,7 @@ const users = [
     locations: null,
     _uid: '123',
     tickets: [],
-    reservations: []
+    _reservations: []
   },
   {
     _id: new ObjectID(),
@@ -38,7 +38,7 @@ const users = [
     ],
     _uid: '456',
     tickets: [],
-    reservations: []
+    _reservations: []
   },
   {
     _id: new ObjectID(),
@@ -48,7 +48,7 @@ const users = [
     locations: null,
     _uid: '789',
     tickets: [],
-    reservations: []
+    _reservations: []
   }
 ];
 
@@ -196,6 +196,11 @@ const reservations = [
     }
   }
 ];
+
+users[0]._reservations.push(reservations[0]._id);
+users[1]._reservations.push(reservations[0]._id);
+users[1]._reservations.push(reservations[1]._id);
+users[2]._reservations.push(reservations[1]._id);
 
 recruits[0]._reviews = [reviews[0]._id, reviews[1]._id];
 recruits[0]._cards = [cards[0]._id, cards[1]._id];

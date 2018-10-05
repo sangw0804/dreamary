@@ -108,6 +108,7 @@ async function updateRelationalDBs(doc, next) {
 async function removeRelationalDBs(doc, next) {
   try {
     const recruit = await Recruit.findById(doc._recruit);
+    // console.log(recruit);
     recruit._cards = recruit._cards.filter(
       _card => _card._id.toHexString() !== doc._id.toHexString()
     );
