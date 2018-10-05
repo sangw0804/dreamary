@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const { User } = require('./user');
 const { Card } = require('./card');
+const { updateIdArray, updateTimeArray } = require('./helpers/updateArray');
 
 const reservationSchema = new mongoose.Schema({
   _user: {
@@ -60,9 +61,12 @@ async function updateRelationalDBs(doc, next) {
       await card.save();
       return next();
     }
-    user._reservations.push(reservation._id);
-    designer._reservations.push(reservation._id);
-    card.reservedTimes.push(reservation.time);
+    user._reservations = updateIdArray(user._reservations, reservation._id);
+    designer._reservations = updateIdArray(
+      designer._reservations,
+      reservation._id
+    );
+    card.reservedTimes = updateTimeArray(card.reservedTimes, reservation.time);
 
     await user.save();
     await designer.save();

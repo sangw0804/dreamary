@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const { Recruit } = require('./recruit');
+const { updateIdArray } = require('./helpers/updateArray');
 
 const cardSchema = new mongoose.Schema({
   _recruit: {
@@ -97,7 +98,7 @@ async function validateRecruit(next) {
 async function updateRelationalDBs(doc, next) {
   try {
     const recruit = await Recruit.findById(doc._recruit);
-    recruit._cards.push(doc._id);
+    recruit._cards = updateIdArray(recruit._cards, doc._id);
     await recruit.save();
     next();
   } catch (e) {

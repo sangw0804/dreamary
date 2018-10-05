@@ -50,6 +50,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).send(createdReservation);
   } catch (e) {
+    console.log(e);
     res.status(400).send(e);
   }
 });
@@ -64,7 +65,6 @@ router.patch('/:id', async (req, res) => {
 
     res.status(200).send(reservation);
   } catch (e) {
-    console.log(e);
     res.status(400).send(e);
   }
 });
