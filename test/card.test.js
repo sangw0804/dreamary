@@ -48,7 +48,7 @@ describe('Card', () => {
         .get(`/recruits/${recruits[0]._id}/cards`)
         .expect(200)
         .expect(res => {
-          expect(res.body.length).toBe(2);
+          expect(res.body.length).toBe(1);
         })
         .end(done);
     });
@@ -115,9 +115,9 @@ describe('Card', () => {
               throw new Error(err);
             }
             const foundCards = await Card.find({ _recruit: recruits[0]._id });
-            expect(foundCards.length).toBe(3);
+            expect(foundCards.length).toBe(2);
             const foundRecruit = await Recruit.findById(recruits[0]._id);
-            expect(foundRecruit._cards.length).toBe(3);
+            expect(foundRecruit._cards.length).toBe(2);
             done();
           } catch (e) {
             done(e);
@@ -139,7 +139,7 @@ describe('Card', () => {
               throw new Error(err);
             }
             const foundCards = await Card.find({ _recruit: recruits[0]._id });
-            expect(foundCards.length).toBe(2);
+            expect(foundCards.length).toBe(1);
             done();
           } catch (e) {
             done(e);
@@ -211,7 +211,7 @@ describe('Card', () => {
             const foundCards = await Card.find({});
             expect(foundCards.length).toBe(1);
             const foundRecruit = await Recruit.findById(recruits[0]._id);
-            expect(foundRecruit._cards.length).toBe(1);
+            expect(foundRecruit._cards.length).toBe(0);
             done();
           } catch (e) {
             done(e);
@@ -240,7 +240,7 @@ describe('Card', () => {
     it('should not remove card with absent id', done => {
       request(app)
         .delete(`/recruits/${recruits[0]._id}/cards/${new ObjectID()}`)
-        .expect(200)
+        .expect(400)
         .end(async (err, res) => {
           try {
             if (err) {

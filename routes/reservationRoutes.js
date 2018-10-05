@@ -37,14 +37,8 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { _user, _designer, time, _card, date, services } = req.body;
-    const user = await User.findById(_user);
-    const designer = await User.findById(_designer);
-    const card = await Card.findById(_card);
-    // const recruit = await Recruit.findById(req.params.id);
 
-    if (!user || !designer || !card) {
-      throw new Error('user || card || recruit not found!!');
-    }
+    // const recruit = await Recruit.findById(req.params.id);
     const createdReservation = await Reservation.create({
       _user,
       _designer,
@@ -53,14 +47,6 @@ router.post('/', async (req, res) => {
       services,
       time
     });
-
-    user._reservations.push(createdReservation._id);
-    designer._reservations.push(createdReservation._id);
-    card.reservedTimes.push(time);
-
-    await user.save();
-    await designer.save();
-    await card.save();
 
     res.status(200).send(createdReservation);
   } catch (e) {
@@ -71,26 +57,11 @@ router.post('/', async (req, res) => {
 // DELETE /users/:user_id/reservations/:id
 router.delete('/:id', async (req, res) => {
   try {
-    const reservation = await Reservation.findByIdAndRemove(req.params.id);
+    const reservation = await Reservation.findById(req.params.id);
     if (!reservation) {
       throw new Error('reservation not found!!');
     }
-    const user = await User.findById(reservation._user);
-    user._reservations = user._reservations.filter(
-      reserve => reserve.toHexString() !== req.params.id
-    );
-    const designer = await User.findById(reservation._designer);
-    designer._reservations = designer._reservations.filter(
-      reserve => reserve.toHexString() !== req.params.id
-    );
-    const card = await Card.findById(reservation._card);
-    card.reservedTimes = card.reservedTimes.filter(
-      time => time.since !== reservation.time.since
-    );
-
-    await user.save();
-    await designer.save();
-    await card.save();
+    await reservation.remove();
 
     res.status(200).send();
   } catch (e) {

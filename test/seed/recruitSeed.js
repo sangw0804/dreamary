@@ -10,6 +10,13 @@ const recruits = [
     _designer: users[1]._id,
     _reviews: [],
     _cards: []
+  },
+  {
+    _id: new ObjectID(),
+    title: '컷컷컷',
+    _designer: users[2]._id,
+    _reviews: [],
+    _cards: []
   }
 ];
 

@@ -43,10 +43,7 @@ router.post('/recruits/:recruit_id/cards', async (req, res) => {
   try {
     const { date, ableTimes, price, must, no } = req.body;
     const { recruit_id } = req.params;
-    const recruit = await Recruit.findById(recruit_id);
-    if (!recruit) {
-      throw new Error('recruit not found!');
-    }
+
     const createdCard = await Card.create({
       _recruit: recruit_id,
       date,
@@ -56,9 +53,6 @@ router.post('/recruits/:recruit_id/cards', async (req, res) => {
       no,
       reservedTimes: []
     });
-
-    recruit._cards.push(createdCard._id);
-    await recruit.save();
 
     res.status(200).send(createdCard);
   } catch (e) {
@@ -78,16 +72,8 @@ router.post('/recruits/:recruit_id/cards', async (req, res) => {
 // DELETE /recruits/:recruit_id/cards/:id
 router.delete('/recruits/:recruit_id/cards/:id', async (req, res) => {
   try {
-    const recruit = await Recruit.findById(req.params.recruit_id);
-    if (!recruit) {
-      throw new Error('recruit not found!');
-    }
-    const { id } = req.params;
-    await Card.remove({ _id: id });
-    recruit._cards = recruit._cards.filter(
-      card => card._id.toHexString() !== id
-    );
-    await recruit.save();
+    const card = await Card.findById(req.params.id);
+    card.remove();
 
     res.status(200).send({});
   } catch (e) {

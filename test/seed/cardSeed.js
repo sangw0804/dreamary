@@ -11,7 +11,7 @@ const cards = [
     ableTimes: [
       {
         since: 480,
-        until: 840
+        until: 810
       },
       {
         since: 1200,
@@ -43,7 +43,7 @@ const cards = [
   },
   {
     _id: new ObjectID(),
-    _recruit: recruits[0]._id,
+    _recruit: recruits[1]._id,
     date: new Date().setHours(6, 0, 0, 0),
     ableTimes: [
       {
@@ -85,7 +85,10 @@ const populateCards = async done => {
     await Card.remove({});
     await Card.insertMany(cards);
     await Recruit.findByIdAndUpdate(recruits[0]._id, {
-      $set: { _cards: [cards[0]._id, cards[1]._id] }
+      $set: { _cards: [cards[0]._id] }
+    });
+    await Recruit.findByIdAndUpdate(recruits[1]._id, {
+      $set: { _cards: [cards[1]._id] }
     });
     done();
   } catch (e) {

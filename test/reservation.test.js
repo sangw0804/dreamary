@@ -32,12 +32,12 @@ describe('Reservation', () => {
     it('should create new reservation with valid data', done => {
       const data = {
         _user: users[0]._id,
-        _designer: users[2]._id,
+        _designer: users[1]._id,
         _card: cards[0]._id,
-        date: new Date().setHours(6, 0, 0, 0),
+        date: cards[0].date,
         time: {
-          since: 2000,
-          until: 2200
+          since: 560,
+          until: 740
         },
         services: {
           perm: 30000
@@ -59,9 +59,10 @@ describe('Reservation', () => {
             expect(foundReservation).toBeTruthy();
             const foundUser = await User.findById(foundReservation._designer);
             expect(foundUser).toBeTruthy();
-            expect(foundUser._reservations[0].toHexString()).toBe(res.body._id);
+            expect(foundUser._reservations.length).toBe(2);
             const foundCard = await Card.findById(res.body._card);
-            expect(foundCard.reservedTimes[1].since).toBe(res.body.time.since);
+            expect(foundCard.reservedTimes[0].since).toBe(res.body.time.since);
+            expect(foundCard.reservable).toBe(false);
             done();
           } catch (e) {
             done(e);
@@ -104,19 +105,17 @@ describe('Reservation', () => {
       request(app)
         .delete(`/users/${users[0]._id}/reservations/${reservations[0]._id}`)
         .expect(200)
-        .end((err, res) => {
-          if (err) {
-            return done(err);
+        .end(async (err, res) => {
+          try {
+            if (err) {
+              throw new Error(err);
+            }
+            const foundReservations = await Reservation.find({});
+            expect(foundReservations.length).toBe(0);
+            done();
+          } catch (e) {
+            done(e);
           }
-
-          Reservation.find({})
-            .then(foundReservations => {
-              expect(foundReservations.length).toBe(0);
-              done();
-            })
-            .catch(e => {
-              done(e);
-            });
         });
     });
 

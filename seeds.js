@@ -172,7 +172,7 @@ const reservations = [
     _user: users[0]._id,
     _designer: users[1]._id,
     _card: cards[0]._id,
-    date: new Date().setHours(6, 0, 0, 0),
+    date: cards[0].date,
     time: {
       since: 540,
       until: 630
@@ -186,7 +186,7 @@ const reservations = [
     _user: users[2]._id,
     _designer: users[1]._id,
     _card: cards[1]._id,
-    date: new Date().setHours(6, 0, 0, 0),
+    date: cards[1].date,
     time: {
       since: 1200,
       until: 1290

@@ -75,7 +75,7 @@ describe('Recruit', () => {
 
           Recruit.find()
             .then(foundRecruits => {
-              expect(foundRecruits.length).toBe(2);
+              expect(foundRecruits.length).toBe(3);
               done();
             })
             .catch(e => {
@@ -99,7 +99,7 @@ describe('Recruit', () => {
 
           Recruit.find()
             .then(foundRecruits => {
-              expect(foundRecruits.length).toBe(1);
+              expect(foundRecruits.length).toBe(2);
               done();
             })
             .catch(e => {
@@ -121,7 +121,7 @@ describe('Recruit', () => {
 
           Recruit.find()
             .then(foundRecruits => {
-              expect(foundRecruits.length).toBe(0);
+              expect(foundRecruits.length).toBe(1);
               done();
             })
             .catch(e => {
@@ -141,7 +141,7 @@ describe('Recruit', () => {
 
           Recruit.find()
             .then(foundRecruits => {
-              expect(foundRecruits.length).toBe(1);
+              expect(foundRecruits.length).toBe(2);
               done();
             })
             .catch(e => {
