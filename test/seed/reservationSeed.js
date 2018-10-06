@@ -32,6 +32,7 @@ const populateReservation = async done => {
     await User.findByIdAndUpdate(users[1]._id, {
       $set: { _reservations: [reservations[0]._id] }
     });
+    await Card.findByIdAndUpdate(cards[0]._id, { $set: { reservedTimes: [reservations[0].time] } });
     done();
   } catch (e) {
     done(e);

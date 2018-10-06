@@ -163,6 +163,43 @@ const cards = [
       perm: true,
       dye: false
     }
+  },
+  {
+    _id: new ObjectID(),
+    _recruit: recruits[0]._id,
+    date: new Date(18, 9, 10).setHours(6, 0, 0, 0),
+    ableTimes: [
+      {
+        since: 480,
+        until: 840
+      },
+      {
+        since: 1200,
+        until: 1320
+      }
+    ],
+    reservedTimes: [],
+    reservable: true,
+    price: {
+      cut: 3000,
+      perm: 20000,
+      dye: 30000
+    },
+    requireTime: {
+      cut: 90,
+      perm: 180,
+      dye: 120
+    },
+    must: {
+      cut: false,
+      perm: true,
+      dye: false
+    },
+    no: {
+      cut: false,
+      perm: false,
+      dye: true
+    }
   }
 ];
 
@@ -194,18 +231,31 @@ const reservations = [
     services: {
       dye: 30000
     }
+  },
+  {
+    _id: new ObjectID(),
+    _user: users[0]._id,
+    _designer: users[1]._id,
+    _card: cards[2]._id,
+    date: cards[2].date,
+    time: {
+      since: 1200,
+      until: 1290
+    },
+    services: {
+      cut: 3000
+    }
   }
 ];
 
-users[0]._reservations.push(reservations[0]._id);
-users[1]._reservations.push(reservations[0]._id);
-users[1]._reservations.push(reservations[1]._id);
-users[2]._reservations.push(reservations[1]._id);
+users[0]._reservations = [reservations[0]._id, reservations[2]._id];
+users[1]._reservations = [reservations[0]._id, reservations[1]._id, reservations[2]._id];
+users[2]._reservations = [reservations[1]._id];
 
 recruits[0]._reviews = [reviews[0]._id, reviews[1]._id];
 recruits[0]._cards = [cards[0]._id, cards[1]._id];
-cards[0].reservedTimes.push(reservations[0].time);
-cards[1].reservedTimes.push(reservations[1].time);
+cards[0].reservedTimes = [reservations[0].time, reservations[2].time];
+cards[1].reservedTimes = [reservations[1].time];
 
 const seedUsersDB = async () => {
   await User.remove({});

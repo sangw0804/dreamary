@@ -10,7 +10,11 @@ const logger = require('../log');
 // GET /users/:user_id/reservations/all
 router.get('/all', async (req, res) => {
   try {
-    const foundReservations = await Reservation.find({});
+    const foundReservations = await Reservation.find({})
+      .populate('_user')
+      .populate('_designer')
+      .populate('_card')
+      .exec();
     res.status(200).send(foundReservations);
   } catch (e) {
     res.status(400).send(e);
@@ -25,6 +29,8 @@ router.get('/', async (req, res) => {
       $or: [{ _user: user_id }, { _designer: user_id }]
     })
       .populate('_designer')
+      .populate('_user')
+      .populate('_card')
       .exec();
 
     res.status(200).send(foundReservations);
@@ -50,7 +56,6 @@ router.post('/', async (req, res) => {
 
     res.status(200).send(createdReservation);
   } catch (e) {
-    console.log(e);
     res.status(400).send(e);
   }
 });
@@ -65,6 +70,7 @@ router.patch('/:id', async (req, res) => {
 
     res.status(200).send(reservation);
   } catch (e) {
+    console.log(e);
     res.status(400).send(e);
   }
 });

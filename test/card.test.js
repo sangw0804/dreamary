@@ -75,15 +75,15 @@ describe('Card', () => {
     it('should create new card with correct recruit id', done => {
       const data = {
         _recruit: recruits[0]._id,
-        date: 20180928,
+        date: new Date().setHours(6, 0, 0, 0),
         ableTimes: [
           {
-            since: new Date().getTime(),
-            until: new Date().getTime() + 30000000
+            since: 600,
+            until: 780
           },
           {
-            since: new Date().getTime() + 40000000,
-            until: new Date().getTime() + 70000000
+            since: 1200,
+            until: 1380
           }
         ],
         price: {
@@ -210,6 +210,8 @@ describe('Card', () => {
             }
             const foundCards = await Card.find({});
             expect(foundCards.length).toBe(1);
+
+            await setTimeout(() => 1, 500); // asyncronous 문제로 잠깐 기다림
             const foundRecruit = await Recruit.findById(recruits[0]._id);
             expect(foundRecruit._cards.length).toBe(0);
             done();

@@ -156,7 +156,7 @@ describe('Reservation', () => {
         .get(`/users/${users[0]._id}/reservations`)
         .expect(200)
         .expect(res => {
-          expect(res.body[0]._user).toBe(users[0]._id.toHexString());
+          expect(res.body[0]._user._id).toBe(users[0]._id.toHexString());
         })
         .end(done);
     });

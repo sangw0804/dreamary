@@ -49,7 +49,8 @@ const cardSchema = new mongoose.Schema({
     perm: Boolean,
     dye: Boolean
   },
-  shopLocation: String
+  region: String,
+  shop: String
 });
 
 const sortHelper = (a, b) => a.since - b.since;
@@ -66,9 +67,7 @@ function updateReservable(next) {
   const { reservedTimes, ableTimes } = card;
   let largestAbleTime = 0;
   ableTimes.forEach(time => {
-    const reserveds = reservedTimes.filter(
-      rt => rt.until <= time.until && rt.since >= time.since
-    );
+    const reserveds = reservedTimes.filter(rt => rt.until <= time.until && rt.since >= time.since);
     if (!reserveds.length) {
       largestAbleTime = Math.max(largestAbleTime, time.until - time.since);
       return;
@@ -82,7 +81,7 @@ function updateReservable(next) {
     largestAbleTime = Math.max(largestAbleTime, tempLargest);
   });
 
-  const { cut, perm, dye } = card.reservable;
+  const { cut, perm, dye } = card.requireTime;
   card.reservable = largestAbleTime >= Math.min(cut, perm, dye);
   next();
 }
@@ -95,30 +94,16 @@ async function validateRecruit(next) {
   next();
 }
 
-async function updateRelationalDBs(doc, next) {
-  try {
-    const recruit = await Recruit.findById(doc._recruit);
-    recruit._cards = updateIdArray(recruit._cards, doc._id);
-    await recruit.save();
-    next();
-  } catch (e) {
-    next(e);
-  }
+async function updateRelationalDBs(doc) {
+  const recruit = await Recruit.findById(doc._recruit);
+  recruit._cards = updateIdArray(recruit._cards, doc._id);
+  await recruit.save();
 }
 
-async function removeRelationalDBs(doc, next) {
-  try {
-    const recruit = await Recruit.findById(doc._recruit);
-    // console.log(recruit);
-    recruit._cards = recruit._cards.filter(
-      _card => _card._id.toHexString() !== doc._id.toHexString()
-    );
-    await recruit.save();
-
-    next();
-  } catch (e) {
-    next(e);
-  }
+async function removeRelationalDBs(doc) {
+  const recruit = await Recruit.findById(doc._recruit);
+  recruit._cards = recruit._cards.filter(_card => _card._id.toHexString() !== doc._id.toHexString());
+  await recruit.save();
 }
 
 cardSchema.pre('save', validateRecruit);
