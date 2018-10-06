@@ -4,26 +4,22 @@ const router = express.Router({ mergeParams: true });
 
 const { Review } = require('../model/review');
 const { Recruit } = require('../model/recruit');
+const logger = require('../log');
 
-// POST /recruits/:id/reviews
+// POST /recruits/:recruit_id/reviews
 router.post('/', async (req, res) => {
   try {
-    const recruit = await Recruit.findById(req.params.id);
-    if (!recruit) {
-      throw new Error('recruit not found!');
-    }
-    const { _user, content, score } = req.body;
+    const { _user, content, score, _reservation } = req.body;
     const body = {
       _user,
       content,
       score,
+      _reservation,
       createdAt: new Date().getTime(),
-      _recruit: req.params.id
+      _recruit: req.params.recruit_id
     };
 
     const createdReview = await Review.create(body);
-    recruit._reviews.push(createdReview._id);
-    await recruit.save();
 
     res.status(200).send(createdReview);
   } catch (e) {

@@ -208,10 +208,10 @@ describe('Card', () => {
             if (err) {
               throw new Error(err);
             }
+            await setTimeout(() => 1, 500); // asyncronous 문제로 잠깐 기다림
+
             const foundCards = await Card.find({});
             expect(foundCards.length).toBe(1);
-
-            await setTimeout(() => 1, 500); // asyncronous 문제로 잠깐 기다림
             const foundRecruit = await Recruit.findById(recruits[0]._id);
             expect(foundRecruit._cards.length).toBe(0);
             done();

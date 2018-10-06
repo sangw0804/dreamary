@@ -90,7 +90,7 @@ describe('Reservation', () => {
 
           Reservation.find({})
             .then(foundReservations => {
-              expect(foundReservations.length).toBe(1);
+              expect(foundReservations.length).toBe(2);
               done();
             })
             .catch(e => {
@@ -111,7 +111,7 @@ describe('Reservation', () => {
               throw new Error(err);
             }
             const foundReservations = await Reservation.find({});
-            expect(foundReservations.length).toBe(0);
+            expect(foundReservations.length).toBe(1);
             done();
           } catch (e) {
             done(e);
@@ -130,7 +130,7 @@ describe('Reservation', () => {
 
           Reservation.find({})
             .then(foundReservations => {
-              expect(foundReservations.length).toBe(1);
+              expect(foundReservations.length).toBe(2);
               done();
             })
             .catch(e => {

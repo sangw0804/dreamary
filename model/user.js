@@ -13,6 +13,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  male: Boolean,
+  email: String,
+  birthDate: Date,
   locations: [
     {
       region: {

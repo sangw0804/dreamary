@@ -38,7 +38,7 @@ admin.initializeApp({
 app.use('/users/:id/tickets', ticketRoutes);
 app.use('/users/:user_id/reservations', reservationRoutes);
 app.use('/users', userRoutes);
-app.use('/recruits/:id/reviews', reviewRoutes);
+app.use('/recruits/:recruit_id/reviews', reviewRoutes);
 app.use('/recruits', recruitRoutes);
 app.use('/kakao_login', kakaoRoutes);
 app.use('/', cardRoutes);

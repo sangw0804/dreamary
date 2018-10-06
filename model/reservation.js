@@ -39,6 +39,10 @@ const reservationSchema = new mongoose.Schema({
   isCanceled: {
     type: Boolean,
     default: false
+  },
+  _review: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Review'
   }
 });
 

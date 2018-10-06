@@ -70,25 +70,6 @@ const recruits = [
   }
 ];
 
-const reviews = [
-  {
-    _id: new ObjectID(),
-    _recruit: recruits[0]._id,
-    _user: users[0]._id,
-    score: 4.0,
-    content: '상당히 잘 자르시네요',
-    createdAt: new Date().getTime()
-  },
-  {
-    _id: new ObjectID(),
-    _recruit: recruits[0]._id,
-    _user: users[2]._id,
-    score: 2.5,
-    content: '그냥 그래요...',
-    createdAt: new Date().getTime() + 10000000
-  }
-];
-
 const cards = [
   {
     _id: new ObjectID(),
@@ -216,7 +197,8 @@ const reservations = [
     },
     services: {
       cut: 3000
-    }
+    },
+    _review: null
   },
   {
     _id: new ObjectID(),
@@ -230,7 +212,8 @@ const reservations = [
     },
     services: {
       dye: 30000
-    }
+    },
+    _review: null
   },
   {
     _id: new ObjectID(),
@@ -244,7 +227,27 @@ const reservations = [
     },
     services: {
       cut: 3000
-    }
+    },
+    _review: null
+  }
+];
+
+const reviews = [
+  {
+    _id: new ObjectID(),
+    _recruit: recruits[0]._id,
+    _user: users[0]._id,
+    score: 4.0,
+    content: '상당히 잘 자르시네요',
+    createdAt: new Date().getTime()
+  },
+  {
+    _id: new ObjectID(),
+    _recruit: recruits[0]._id,
+    _user: users[2]._id,
+    score: 2.5,
+    content: '그냥 그래요...',
+    createdAt: new Date().getTime() + 10000000
   }
 ];
 
@@ -256,6 +259,9 @@ recruits[0]._reviews = [reviews[0]._id, reviews[1]._id];
 recruits[0]._cards = [cards[0]._id, cards[1]._id];
 cards[0].reservedTimes = [reservations[0].time, reservations[2].time];
 cards[1].reservedTimes = [reservations[1].time];
+
+reservations[0]._review = reviews[0]._id;
+reservations[1]._review = reviews[1]._id;
 
 const seedUsersDB = async () => {
   await User.remove({});

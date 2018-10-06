@@ -50,7 +50,8 @@ const cardSchema = new mongoose.Schema({
     dye: Boolean
   },
   region: String,
-  shop: String
+  shop: String,
+  requireGender: String
 });
 
 const sortHelper = (a, b) => a.since - b.since;
@@ -86,12 +87,11 @@ function updateReservable(next) {
   next();
 }
 
-async function validateRecruit(next) {
+async function validateRecruit() {
   const recruit = await Recruit.findById(this._recruit);
   if (!recruit) {
-    return next('Recruit not found!');
+    throw new Error('recruit not found!');
   }
-  next();
 }
 
 async function updateRelationalDBs(doc) {

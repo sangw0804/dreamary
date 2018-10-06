@@ -21,9 +21,6 @@ const recruitSchema = new mongoose.Schema({
       type: String
     }
   ],
-  introduction: {
-    type: String
-  },
   requirement: {
     type: String
   },

@@ -18,7 +18,23 @@ const reservations = [
     time: {
       since: 1200,
       until: 1290
-    }
+    },
+    _review: null
+  },
+  {
+    _id: new ObjectID(),
+    _user: users[2]._id,
+    _card: cards[0]._id,
+    _designer: users[1]._id,
+    date: cards[0].date,
+    services: {
+      cut: 3000
+    },
+    time: {
+      since: 1200,
+      until: 1290
+    },
+    _review: null
   }
 ];
 
