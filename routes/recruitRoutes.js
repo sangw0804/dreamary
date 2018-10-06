@@ -51,11 +51,7 @@ router.post('/', async (req, res) => {
 router.patch('/:id', async (req, res) => {
   try {
     const { title, _cards } = req.body;
-    const updatedRecruit = await Recruit.findByIdAndUpdate(
-      req.params.id,
-      { $set: { title, _cards } },
-      { new: true }
-    );
+    const updatedRecruit = await Recruit.findByIdAndUpdate(req.params.id, { $set: { title, _cards } }, { new: true });
     if (!updatedRecruit) {
       throw new Error('user not found!');
     }
