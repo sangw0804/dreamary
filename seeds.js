@@ -237,6 +237,23 @@ const reservations = [
     services: {
       cut: 3000
     },
+    _review: null,
+    isDone: true
+  },
+  {
+    _id: new ObjectID(),
+    _user: users[0]._id,
+    _designer: users[1]._id,
+    _card: cards[0]._id,
+    date: cards[0].date,
+    time: {
+      since: 1200,
+      until: 1290
+    },
+    services: {
+      cut: 3000,
+      perm: 20000
+    },
     _review: null
   }
 ];

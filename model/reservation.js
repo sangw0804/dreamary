@@ -40,6 +40,10 @@ const reservationSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  isDone: {
+    type: Boolean,
+    default: false
+  },
   _review: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Review'
