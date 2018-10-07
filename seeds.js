@@ -106,7 +106,10 @@ const cards = [
       cut: false,
       perm: false,
       dye: true
-    }
+    },
+    region: '성북구',
+    shop: '준오헤어',
+    requireGender: 'male'
   },
   {
     _id: new ObjectID(),
@@ -143,7 +146,10 @@ const cards = [
       cut: false,
       perm: true,
       dye: false
-    }
+    },
+    region: '강서구',
+    shop: '미스터헤어',
+    requireGender: 'both'
   },
   {
     _id: new ObjectID(),
@@ -180,7 +186,10 @@ const cards = [
       cut: false,
       perm: false,
       dye: true
-    }
+    },
+    region: '강남구',
+    shop: '살롱헤어',
+    requireGender: 'male'
   }
 ];
 
@@ -257,6 +266,7 @@ users[2]._reservations = [reservations[1]._id];
 
 recruits[0]._reviews = [reviews[0]._id, reviews[1]._id];
 recruits[0]._cards = [cards[0]._id, cards[1]._id];
+
 cards[0].reservedTimes = [reservations[0].time, reservations[2].time];
 cards[1].reservedTimes = [reservations[1].time];
 
