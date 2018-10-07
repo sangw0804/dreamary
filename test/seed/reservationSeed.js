@@ -24,9 +24,9 @@ const reservations = [
   {
     _id: new ObjectID(),
     _user: users[2]._id,
-    _card: cards[0]._id,
+    _card: cards[1]._id,
     _designer: users[1]._id,
-    date: cards[0].date,
+    date: cards[1].date,
     services: {
       cut: 3000
     },

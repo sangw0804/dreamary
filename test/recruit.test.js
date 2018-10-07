@@ -68,19 +68,16 @@ describe('Recruit', () => {
         .post('/recruits')
         .send(data)
         .expect(200)
-        .end((err, res) => {
-          if (err) {
-            return done(err);
-          }
+        .end(async (err, res) => {
+          try {
+            if (err) throw new Error(err);
 
-          Recruit.find()
-            .then(foundRecruits => {
-              expect(foundRecruits.length).toBe(3);
-              done();
-            })
-            .catch(e => {
-              done(e);
-            });
+            const foundRecruits = await Recruit.find();
+            expect(foundRecruits.length).toBe(3);
+            done();
+          } catch (e) {
+            done(e);
+          }
         });
     });
 
@@ -92,19 +89,16 @@ describe('Recruit', () => {
         .post('/recruits')
         .send(invalidData)
         .expect(400)
-        .end((err, res) => {
-          if (err) {
-            return done(err);
-          }
+        .end(async (err, res) => {
+          try {
+            if (err) throw new Error(err);
 
-          Recruit.find()
-            .then(foundRecruits => {
-              expect(foundRecruits.length).toBe(2);
-              done();
-            })
-            .catch(e => {
-              done(e);
-            });
+            const foundRecruits = await Recruit.find();
+            expect(foundRecruits.length).toBe(2);
+            done();
+          } catch (e) {
+            done(e);
+          }
         });
     });
   });

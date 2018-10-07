@@ -61,8 +61,8 @@ describe('Reservation', () => {
             expect(foundUser).toBeTruthy();
             expect(foundUser._reservations.length).toBe(2);
             const foundCard = await Card.findById(res.body._card);
-            expect(foundCard.reservedTimes[0].since).toBe(res.body.time.since);
-            expect(foundCard.reservable).toBe(false);
+            expect(foundCard.reservedTimes[0].since).toBe(res.body.time.since); // reservedTimes 정렬 확인
+            expect(foundCard.reservable).toBe(false); // reservable true => false 로 바뀌었는지 확인
             done();
           } catch (e) {
             done(e);
