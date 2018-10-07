@@ -30,9 +30,18 @@ const cardSchema = new mongoose.Schema({
     default: true
   },
   price: {
-    cut: Number,
-    perm: Number,
-    dye: Number
+    cut: {
+      type: Number,
+      default: 3000
+    },
+    perm: {
+      type: Number,
+      default: 30000
+    },
+    dye: {
+      type: Number,
+      default: 30000
+    }
   },
   requireTime: {
     cut: Number,
