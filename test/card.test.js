@@ -100,7 +100,10 @@ describe('Card', () => {
           cut: false,
           perm: false,
           dye: true
-        }
+        },
+        region: '구로구',
+        requireGender: 'both',
+        shop: '준오헤어'
       };
       request(app)
         .post(`/recruits/${recruits[0]._id}/cards`)
@@ -208,7 +211,7 @@ describe('Card', () => {
             if (err) {
               throw new Error(err);
             }
-            await setTimeout(() => 1, 1000); // asyncronous 문제로 잠깐 기다림
+            await new Promise((resolve, reject) => setTimeout(resolve, 500)); // asyncronous 문제로 잠깐 기다림
 
             const foundCards = await Card.find({});
             expect(foundCards.length).toBe(1);

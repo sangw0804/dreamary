@@ -36,7 +36,7 @@ describe('Review', () => {
             done(err);
           }
           try {
-            await setTimeout(() => 1, 500); // asyncronous db 처리 때문
+            await new Promise((resolve, reject) => setTimeout(resolve, 500)); // asyncronous db 처리 때문
 
             const review = await Review.findById(res.body._id);
             expect(review.score).toBe(1.0);

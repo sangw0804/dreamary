@@ -1,6 +1,8 @@
-const generateCondition = (date, kinds) => {
+const generateCondition = (date, kinds, gender, region) => {
   const condition = {
     // date: new Date(date).getTime(),
+    requireGender: gender,
+    region
   };
 
   Object.keys(kinds).forEach(kind => {
