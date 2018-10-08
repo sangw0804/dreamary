@@ -1,0 +1,14 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/home/ubuntu/dreamary/log/.56272660d26bb2f5f634dc4475524f1745b7643d-audit.json",
+    "files": [
+        {
+            "date": 1538985049050,
+            "name": "/home/ubuntu/dreamary/log/2018-10-08.log",
+            "hash": "5a3d8ffb2376212f1c206df6cf820ae1"
+        }
+    ]
+}
