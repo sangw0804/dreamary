@@ -1,9 +1,9 @@
 const generateCondition = (date, kinds, gender, region) => {
   const condition = {
     // date: new Date(date).getTime(),
-    requireGender: gender,
-    region
   };
+  if (gender) condition.requireGender = gender;
+  if (region) condition.region = region;
 
   Object.keys(kinds).forEach(kind => {
     switch (kinds[kind]) {

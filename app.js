@@ -16,6 +16,7 @@ const reservationRoutes = require('./routes/reservationRoutes');
 const kakaoRoutes = require('./routes/kakaoRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const cardRoutes = require('./routes/cardRoutes');
+const { logging } = require('./middlewares/log');
 
 // connect to db
 mongoose.connect(
@@ -35,6 +36,7 @@ admin.initializeApp({
 });
 
 // routes
+if (process.env.NODE_ENV !== 'test') app.use(logging);
 app.use('/users/:id/tickets', ticketRoutes);
 app.use('/users/:user_id/reservations', reservationRoutes);
 app.use('/users', userRoutes);
