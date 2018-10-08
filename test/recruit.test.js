@@ -2,6 +2,7 @@ const expect = require('expect');
 const request = require('supertest');
 const { ObjectID } = require('mongodb');
 const { app } = require('../app');
+const { User } = require('../model/user');
 const { Recruit } = require('../model/recruit');
 const { recruits, populateRecruits } = require('./seed/recruitSeed');
 const { users, populateUsers } = require('./seed/userSeed');
@@ -74,6 +75,8 @@ describe('Recruit', () => {
 
             const foundRecruits = await Recruit.find();
             expect(foundRecruits.length).toBe(3);
+            const user = await User.findById(res.body._designer);
+            expect(user._recruit.toHexString()).toBe(res.body._id);
             done();
           } catch (e) {
             done(e);

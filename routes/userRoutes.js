@@ -16,14 +16,12 @@ router.get('/', async (req, res) => {
 // POST /users
 router.post('/', async (req, res) => {
   try {
-    const { isD, phone, _uid, name } = req.body;
+    const { _uid } = req.body;
     const body = {
       _uid,
-      isD,
-      phone,
-      name,
       _tickets: [],
-      _reservations: []
+      _reservations: [],
+      _recruit: null
     };
     const createdUser = await User.create(body);
 

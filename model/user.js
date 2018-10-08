@@ -1,34 +1,6 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  isD: {
-    type: Boolean,
-    default: false
-  },
-  name: {
-    type: String,
-    required: true
-  },
-  phone: {
-    type: String,
-    required: true
-  },
-  male: Boolean,
-  email: String,
-  birthDate: Date,
-  locations: [
-    {
-      region: {
-        type: String
-      },
-      shop: {
-        type: String
-      },
-      address: {
-        type: String
-      }
-    }
-  ],
   _uid: {
     type: String,
     required: true
@@ -44,7 +16,11 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Reservation'
     }
-  ]
+  ],
+  _recruit: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Recruit'
+  }
 });
 
 const User = mongoose.model('User', userSchema);

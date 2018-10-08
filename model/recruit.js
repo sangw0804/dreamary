@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const { User } = require('./user');
+
+// const { updateIdArray } = require('./helpers/updateArray');
 
 const recruitSchema = new mongoose.Schema({
   _designer: {
@@ -31,6 +34,15 @@ const recruitSchema = new mongoose.Schema({
     }
   ]
 });
+
+async function updateRelatedDBs(doc) {
+  const recruit = doc;
+  const user = await User.findById(recruit._designer);
+  user._recruit = recruit._id;
+  await user.save();
+}
+
+recruitSchema.post('save', updateRelatedDBs);
 
 const Recruit = mongoose.model('Recruit', recruitSchema);
 

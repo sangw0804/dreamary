@@ -25,10 +25,7 @@ describe('User', () => {
   describe('POST /users', () => {
     it('should create new user with valid id', done => {
       const data = {
-        _uid: '4',
-        isD: false,
-        name: '이정민',
-        phone: '01098765432'
+        _uid: '4'
       };
       request(app)
         .post('/users')

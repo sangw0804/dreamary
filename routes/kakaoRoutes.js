@@ -14,7 +14,6 @@ router.post('/', async ({ body: { userToken } }, res) => {
   try {
     const response = await request(options);
     const userData = JSON.parse(response);
-    userData.uuid = `Kakao_${userData.uuid}`;
     const customToken = await admin.auth().createCustomToken(userData.uuid);
     res.status(200).send({ token: customToken, userData });
   } catch (e) {
