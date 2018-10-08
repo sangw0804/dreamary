@@ -24,6 +24,7 @@ router.post('/', async (req, res) => {
       _recruit: null
     };
     const createdUser = await User.create(body);
+    console.log(createdUser);
 
     res.status(200).send(createdUser);
   } catch (e) {
