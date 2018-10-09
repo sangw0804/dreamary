@@ -47,6 +47,8 @@ async function updateRelatedDBs(doc) {
   const reservation = await Reservation.findById(review._reservation);
   reservation._review = review._id;
   recruit._reviews.push(review._id);
+
+  recruit.score = ((recruit.score * (recruit._reviews.length - 1) + review.score) / recruit._reviews.length).toFixed(1);
   await recruit.save();
   await reservation.save();
 }

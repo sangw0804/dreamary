@@ -37,7 +37,11 @@ const recruitSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Review'
     }
-  ]
+  ],
+  score: {
+    type: Number,
+    default: 0.0
+  }
 });
 
 async function updateRelatedDBs(doc) {

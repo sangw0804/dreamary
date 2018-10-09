@@ -42,6 +42,7 @@ describe('Review', () => {
             expect(review.score).toBe(1.0);
             const recruit = await Recruit.findById(res.body._recruit);
             expect(recruit._reviews[0]._id.toHexString()).toBe(res.body._id);
+            expect(recruit.score).toBe(1.0);
             const reservation = await Reservation.findById(res.body._reservation);
             expect(reservation._review.toHexString()).toBe(res.body._id);
             done();
