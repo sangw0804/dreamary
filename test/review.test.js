@@ -5,7 +5,7 @@ const { app } = require('../app');
 const { recruits, populateRecruits } = require('./seed/recruitSeed');
 const { users, populateUsers } = require('./seed/userSeed');
 const { reservations, populateReservation } = require('./seed/reservationSeed');
-const { populateReview } = require('./seed/reviewSeed');
+const { populateReview, reviews } = require('./seed/reviewSeed');
 const { Review } = require('../model/review');
 const { Recruit } = require('../model/recruit');
 const { Reservation } = require('../model/reservation');
@@ -18,7 +18,7 @@ beforeEach(populateReservation);
 beforeEach(populateReview);
 
 describe('Review', () => {
-  describe('POST /recruits/:id/reviews', () => {
+  describe('POST /recruits/:recruit_id/reviews', () => {
     it('should create new review with valid data', done => {
       const data = {
         _user: users[0]._id,
@@ -92,6 +92,28 @@ describe('Review', () => {
           try {
             const reviews = await Review.find({});
             expect(reviews.length).toBe(1);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+    });
+  });
+
+  describe('DELETE /recruits/:recruit_id/reviews/:id', () => {
+    it('should remove review with valid id', done => {
+      request(app)
+        .delete(`/recruits/${recruits[0]._id}/reviews/${reviews[0]._id}`)
+        .expect(200)
+        .end(async (err, res) => {
+          try {
+            if (err) throw new Error(err);
+
+            const foundReviews = await Review.find();
+            expect(foundReviews.length).toBe(0);
+            const recruit = await Recruit.findById(recruits[0]._id);
+            expect(recruit._reviews.length).toBe(0);
+            expect(recruit.score).toBe(0);
             done();
           } catch (e) {
             done(e);

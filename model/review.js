@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 
 const { Recruit } = require('./recruit');
 const { Reservation } = require('./reservation');
+const { updateIdArray } = require('./helpers/updateArray');
+const { addScore, removeScore } = require('./helpers/updateScore');
 
 const reviewSchema = new mongoose.Schema({
   _recruit: {
@@ -46,16 +48,28 @@ async function updateRelatedDBs(doc) {
   const recruit = await Recruit.findById(review._recruit);
   const reservation = await Reservation.findById(review._reservation);
   reservation._review = review._id;
-  recruit._reviews.push(review._id);
+  recruit._reviews = updateIdArray(recruit._reviews, review._id);
 
-  recruit.score = ((recruit.score * (recruit._reviews.length - 1) + review.score) / recruit._reviews.length).toFixed(1);
+  recruit.score = addScore(recruit.score, review.score, recruit._reviews.length);
   await recruit.save();
   await reservation.save();
+}
+
+async function removeRelatedDBs(doc) {
+  const review = doc;
+  const recruit = await Recruit.findById(review._recruit);
+  await Reservation.findByIdAndRemove(review._reservation, { $set: { _review: null } });
+
+  recruit.score = removeScore(recruit.score, review.score, recruit._reviews.length);
+  recruit._reviews = recruit._reviews.filter(rv => rv.toHexString() !== review._id.toHexString());
+
+  await recruit.save();
 }
 
 reviewSchema.pre('save', validateRelatedDBs);
 
 reviewSchema.post('save', updateRelatedDBs);
+reviewSchema.post('remove', removeRelatedDBs);
 
 const Review = mongoose.model('Review', reviewSchema);
 

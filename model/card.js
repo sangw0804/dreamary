@@ -67,7 +67,7 @@ function sortTimes(next) {
   next();
 }
 
-async function updateReservable(next) {
+async function updateReservable() {
   const card = this;
   const { reservedTimes, ableTimes } = card;
   let largestAbleTime = 0;
@@ -90,7 +90,6 @@ async function updateReservable(next) {
     requireTime: { cut, perm, dye }
   } = await Recruit.findById(card._recruit);
   card.reservable = largestAbleTime >= Math.min(cut, perm, dye);
-  next();
 }
 
 async function validateRecruit() {

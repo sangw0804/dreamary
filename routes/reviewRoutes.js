@@ -28,4 +28,17 @@ router.post('/', async (req, res) => {
   }
 });
 
+// DELETE /recruits/:recruit_id/reviews/:id
+router.delete('/:id', async (req, res) => {
+  try {
+    const review = await Review.findById(req.params.id);
+    await review.remove();
+    res.status(200).send({});
+  } catch (e) {
+    console.log(e);
+    logger && logger.error('DELETE /recruits/:recruit_id/reviews/:id | %o', e);
+    res.status(400).send(e);
+  }
+});
+
 module.exports = router;
