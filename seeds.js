@@ -43,6 +43,11 @@ const recruits = [
     _designer: users[1]._id,
     title: '뎅겅잘라드립니다',
     _cards: [],
+    requireTime: {
+      cut: 90,
+      perm: 180,
+      dye: 120
+    },
     portfolios: [
       'https://picsum.photos/300/200/?image=5',
       'https://picsum.photos/300/200/?image=8',
@@ -76,11 +81,6 @@ const cards = [
       cut: 3000,
       perm: 20000,
       dye: 30000
-    },
-    requireTime: {
-      cut: 90,
-      perm: 180,
-      dye: 120
     },
     must: {
       cut: false,
@@ -117,11 +117,6 @@ const cards = [
       perm: 20000,
       dye: 30000
     },
-    requireTime: {
-      cut: 60,
-      perm: 240,
-      dye: 90
-    },
     must: {
       cut: false,
       perm: false,
@@ -156,11 +151,6 @@ const cards = [
       cut: 3000,
       perm: 20000,
       dye: 30000
-    },
-    requireTime: {
-      cut: 90,
-      perm: 180,
-      dye: 120
     },
     must: {
       cut: false,
