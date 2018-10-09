@@ -11,7 +11,18 @@ router.get('/', async (req, res) => {
     res.status(200).send(foundUsers);
   } catch (e) {
     logger && logger.error('GET /users | %o', e);
-    res.send(400).send(e);
+    res.status(400).send(e);
+  }
+});
+
+// GET /users/:id
+router.get('/:id', async (req, res) => {
+  try {
+    const foundUser = await User.findById(req.params.id);
+    res.status(200).send(foundUser);
+  } catch (e) {
+    logger && logger.error('GET /users/:id | %o', e);
+    res.status(400).send(e);
   }
 });
 

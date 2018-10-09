@@ -3,7 +3,7 @@ const request = require('supertest');
 // const {ObjectID} = require("mongodb");
 const { app } = require('../app');
 const { User } = require('../model/user');
-const { populateUsers } = require('./seed/userSeed');
+const { populateUsers, users } = require('./seed/userSeed');
 
 // seed User db
 beforeEach(populateUsers);
@@ -17,6 +17,18 @@ describe('User', () => {
         .expect(200)
         .expect(res => {
           expect(res.body.length).toBe(3);
+        })
+        .end(done);
+    });
+  });
+
+  describe('GET /users/:id', () => {
+    it('should get user with valid id', done => {
+      request(app)
+        .get(`/users/${users[0]._id}`)
+        .expect(200)
+        .expect(res => {
+          expect(res.body._id).toBe(users[0]._id.toHexString());
         })
         .end(done);
     });
