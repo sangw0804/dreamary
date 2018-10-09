@@ -43,11 +43,6 @@ const cardSchema = new mongoose.Schema({
       default: 30000
     }
   },
-  requireTime: {
-    cut: Number,
-    perm: Number,
-    dye: Number
-  },
   must: {
     cut: Boolean,
     perm: Boolean,
@@ -72,7 +67,7 @@ function sortTimes(next) {
   next();
 }
 
-function updateReservable(next) {
+async function updateReservable(next) {
   const card = this;
   const { reservedTimes, ableTimes } = card;
   let largestAbleTime = 0;
@@ -91,7 +86,9 @@ function updateReservable(next) {
     largestAbleTime = Math.max(largestAbleTime, tempLargest);
   });
 
-  const { cut, perm, dye } = card.requireTime;
+  const {
+    requireTime: { cut, perm, dye }
+  } = await Recruit.findById(card._recruit);
   card.reservable = largestAbleTime >= Math.min(cut, perm, dye);
   next();
 }

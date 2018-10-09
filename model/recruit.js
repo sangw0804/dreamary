@@ -27,6 +27,11 @@ const recruitSchema = new mongoose.Schema({
   requirement: {
     type: String
   },
+  requireTime: {
+    cut: Number,
+    perm: Number,
+    dye: Number
+  },
   _reviews: [
     {
       type: mongoose.Schema.Types.ObjectId,

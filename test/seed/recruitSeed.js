@@ -10,14 +10,24 @@ const recruits = [
     title: '머리자르실분',
     _designer: users[1]._id,
     _reviews: [],
-    _cards: []
+    _cards: [],
+    requireTime: {
+      cut: 90,
+      perm: 180,
+      dye: 120
+    }
   },
   {
     _id: new ObjectID(),
     title: '컷컷컷',
     _designer: users[2]._id,
     _reviews: [],
-    _cards: []
+    _cards: [],
+    requireTime: {
+      cut: 60,
+      perm: 240,
+      dye: 90
+    }
   }
 ];
 
