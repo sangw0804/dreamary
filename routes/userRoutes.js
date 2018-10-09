@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const { User } = require('../model/user');
-const logger = require('../log');
+const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
 
 // GET /users
 router.get('/', async (req, res) => {
@@ -10,6 +10,7 @@ router.get('/', async (req, res) => {
     const foundUsers = await User.find();
     res.status(200).send(foundUsers);
   } catch (e) {
+    logger && logger.error('GET /users | %o', e);
     res.send(400).send(e);
   }
 });
@@ -29,7 +30,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).send(createdUser);
   } catch (e) {
-//	logger.error('POST /users : %o', e);
+    logger && logger.error('POST /users | %o', e);
     res.status(400).send(e);
   }
 });

@@ -5,7 +5,7 @@ const { Reservation } = require('../model/reservation');
 const { User } = require('../model/user');
 const { Card } = require('../model/card');
 const { Recruit } = require('../model/recruit');
-const logger = require('../log');
+const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
 
 // GET /users/:user_id/reservations/all
 router.get('/all', async (req, res) => {
@@ -17,6 +17,7 @@ router.get('/all', async (req, res) => {
       .exec();
     res.status(200).send(foundReservations);
   } catch (e) {
+    logger && logger.error('GET /users/:user_id/reservations/all | %o', e);
     res.status(400).send(e);
   }
 });
@@ -35,6 +36,7 @@ router.get('/', async (req, res) => {
 
     res.status(200).send(foundReservations);
   } catch (e) {
+    logger && logger.error('GET /users/:user_id/reservations | %o', e);
     res.status(400).send(e);
   }
 });
@@ -56,6 +58,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).send(createdReservation);
   } catch (e) {
+    logger && logger.error('POST /users/:user_id/reservations | %o', e);
     res.status(400).send(e);
   }
 });
@@ -71,6 +74,7 @@ router.patch('/:id', async (req, res) => {
 
     res.status(200).send(reservation);
   } catch (e) {
+    logger && logger.error('PATCH /users/:user_id/reservations/:id | %o', e);
     res.status(400).send(e);
   }
 });
@@ -86,6 +90,7 @@ router.delete('/:id', async (req, res) => {
 
     res.status(200).send();
   } catch (e) {
+    logger && logger.error('DELETE /users/:user_id/reservations/:id | %o', e);
     res.status(400).send(e);
   }
 });

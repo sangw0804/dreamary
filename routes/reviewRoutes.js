@@ -4,7 +4,7 @@ const router = express.Router({ mergeParams: true });
 
 const { Review } = require('../model/review');
 const { Recruit } = require('../model/recruit');
-const logger = require('../log');
+const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
 
 // POST /recruits/:recruit_id/reviews
 router.post('/', async (req, res) => {
@@ -23,6 +23,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).send(createdReview);
   } catch (e) {
+    logger && logger.error('POST /recruits/:recruit_id/reviews | %o', e);
     res.status(400).send(e);
   }
 });
