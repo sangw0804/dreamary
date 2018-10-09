@@ -58,8 +58,6 @@ router.post('/recruits/:recruit_id/cards', async (req, res) => {
       requireGender,
       reservedTimes: []
     });
-
-    console.log(createdCard);
     res.status(200).send(createdCard);
   } catch (e) {
     res.status(400).send(e);

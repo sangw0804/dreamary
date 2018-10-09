@@ -111,40 +111,26 @@ describe('Recruit', () => {
       request(app)
         .delete(`/recruits/${recruits[0]._id.toHexString()}`)
         .expect(200)
-        .end((err, res) => {
-          if (err) {
-            return done(err);
-          }
+        .end(async (err, res) => {
+          try {
+            if (err) throw new Error(err);
 
-          Recruit.find()
-            .then(foundRecruits => {
-              expect(foundRecruits.length).toBe(1);
-              done();
-            })
-            .catch(e => {
-              done(e);
-            });
+            const foundRecruits = await Recruit.find();
+            expect(foundRecruits.length).toBe(1);
+            const user = await User.findById(users[1]._id);
+            expect(user._recruit).toBeFalsy();
+            done();
+          } catch (e) {
+            done(e);
+          }
         });
     });
 
     it('should not remove recruit with absent user id', done => {
       request(app)
         .delete(`/recruits/${new ObjectID().toHexString()}`)
-        .expect(200)
-        .end((err, res) => {
-          if (err) {
-            return done(err);
-          }
-
-          Recruit.find()
-            .then(foundRecruits => {
-              expect(foundRecruits.length).toBe(2);
-              done();
-            })
-            .catch(e => {
-              done(e);
-            });
-        });
+        .expect(400)
+        .end(done);
     });
 
     it('should get 400 with invalid user id', done => {

@@ -42,7 +42,15 @@ async function updateRelatedDBs(doc) {
   await user.save();
 }
 
+async function removeRelatedDBs(doc) {
+  const recruit = doc;
+  const user = await User.findById(recruit._designer);
+  user._recruit = null;
+  await user.save();
+}
+
 recruitSchema.post('save', updateRelatedDBs);
+recruitSchema.post('remove', removeRelatedDBs);
 
 const Recruit = mongoose.model('Recruit', recruitSchema);
 
