@@ -64,7 +64,8 @@ router.patch('/:id', async (req, res) => {
 // DELETE /recruits/:id
 router.delete('/:id', async (req, res) => {
   try {
-    await Recruit.findByIdAndRemove(req.params.id);
+    const recruit = await Recruit.findById(req.params.id);
+    await recruit.remove();
     res.status(200).send({});
   } catch (e) {
     res.status(400).send(e);

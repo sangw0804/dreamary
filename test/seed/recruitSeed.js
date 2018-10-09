@@ -1,5 +1,6 @@
 const { ObjectID } = require('mongodb');
 const { Recruit } = require('../../model/recruit');
+const { User } = require('../../model/user');
 const { users } = require('./userSeed');
 
 // Recruit
@@ -24,6 +25,8 @@ const populateRecruits = async done => {
   try {
     await Recruit.deleteMany({});
     await Recruit.insertMany(recruits);
+    await User.findByIdAndUpdate(users[1]._id, { $set: { _recruit: recruits[0]._id } });
+    await User.findByIdAndUpdate(users[2]._id, { $set: { _recruit: recruits[1]._id } });
     done();
   } catch (e) {
     done(e);
