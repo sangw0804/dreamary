@@ -9,6 +9,7 @@ const recruits = [
     _id: new ObjectID(),
     title: '머리자르실분',
     _designer: users[1]._id,
+    designerName: '안운장',
     _reviews: [],
     _cards: [],
     requireTime: {
@@ -20,6 +21,7 @@ const recruits = [
   {
     _id: new ObjectID(),
     title: '컷컷컷',
+    designerName: '신한결',
     _designer: users[2]._id,
     _reviews: [],
     _cards: [],

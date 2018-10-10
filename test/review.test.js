@@ -90,8 +90,8 @@ describe('Review', () => {
             done(err);
           }
           try {
-            const reviews = await Review.find({});
-            expect(reviews.length).toBe(1);
+            const foundReviews = await Review.find({});
+            expect(foundReviews.length).toBe(1);
             done();
           } catch (e) {
             done(e);

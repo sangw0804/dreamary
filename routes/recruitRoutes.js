@@ -42,10 +42,11 @@ router.get('/:id', async (req, res) => {
 // TODO: 한명의 디자이너가 한개의 recruit만을 가지게 하려면 어떻게 할까?
 router.post('/', async (req, res) => {
   try {
-    const { title, _designer, _cards, portfolios, requireTime, requirement, _reviews } = req.body;
+    const { title, _designer, designerName, _cards, portfolios, requireTime, requirement, _reviews } = req.body;
     const createdUser = await Recruit.create({
       title,
       _designer,
+      designerName,
       _cards,
       portfolios,
       requirement,

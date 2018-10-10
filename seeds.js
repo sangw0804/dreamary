@@ -41,6 +41,7 @@ const recruits = [
   {
     _id: new ObjectID(),
     _designer: users[1]._id,
+    designerName: '안운장',
     title: '뎅겅잘라드립니다',
     _cards: [],
     requireTime: {
