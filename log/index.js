@@ -10,6 +10,14 @@ const transport = new transports.DailyRotateFile({
   level: 'info'
 });
 
+const transportError = new transports.DailyRotateFile({
+  filename: `${appRoot}/log/%DATE%_error.log`,
+  datePattern: 'YYYY-MM-DD',
+  maxSize: '20m',
+  maxFiles: '14d',
+  level: 'error'
+});
+
 const logger = createLogger({
   level: 'debug',
   format: format.combine(
@@ -18,11 +26,8 @@ const logger = createLogger({
     format.printf(info => `[${info.timestamp}] ${info.level}: ${info.message}`)
   ),
   transports: [
-    new transports.File({
-      filename: `${appRoot}/log/error.log`,
-      level: 'error'
-    }),
     transport,
+    transportError,
     new transports.Console({
       format: format.combine(
         format.timestamp(),
