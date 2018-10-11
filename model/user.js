@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
   _recruit: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Recruit'
+  },
+  point: {
+    type: Number,
+    default: 0
   }
 });
 

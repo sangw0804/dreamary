@@ -17,6 +17,7 @@ describe('User', () => {
         .expect(200)
         .expect(res => {
           expect(res.body.length).toBe(3);
+          expect(res.body[0].point).toBe(0);
         })
         .end(done);
     });

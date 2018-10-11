@@ -19,21 +19,24 @@ const users = [
     _uid: '123',
     _tickets: [],
     _reservations: [],
-    _recruit: null
+    _recruit: null,
+    point: 0
   },
   {
     _id: new ObjectID(),
     _uid: '456',
     _tickets: [],
     _reservations: [],
-    _recruit: null
+    _recruit: null,
+    point: 0
   },
   {
     _id: new ObjectID(),
     _uid: '789',
     _tickets: [],
     _reservations: [],
-    _recruit: null
+    _recruit: null,
+    point: 0
   }
 ];
 
