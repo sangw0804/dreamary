@@ -3,60 +3,65 @@ const mongoose = require('mongoose');
 const { Recruit } = require('./recruit');
 const { updateIdArray } = require('./helpers/updateArray');
 
-const cardSchema = new mongoose.Schema({
-  _recruit: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Recruit',
-    required: true
-  },
-  date: {
-    required: true,
-    type: Number
-  },
-  ableTimes: [
-    {
-      since: Number,
-      until: Number
-    }
-  ],
-  reservedTimes: [
-    {
-      since: Number,
-      until: Number
-    }
-  ],
-  reservable: {
-    type: Boolean,
-    default: true
-  },
-  price: {
-    cut: {
-      type: Number,
-      default: 3000
+const cardSchema = new mongoose.Schema(
+  {
+    _recruit: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Recruit',
+      required: true
     },
-    perm: {
-      type: Number,
-      default: 30000
+    date: {
+      required: true,
+      type: Number
     },
-    dye: {
-      type: Number,
-      default: 30000
-    }
+    ableTimes: [
+      {
+        since: Number,
+        until: Number
+      }
+    ],
+    reservedTimes: [
+      {
+        since: Number,
+        until: Number
+      }
+    ],
+    reservable: {
+      type: Boolean,
+      default: true
+    },
+    price: {
+      cut: {
+        type: Number,
+        default: 3000
+      },
+      perm: {
+        type: Number,
+        default: 30000
+      },
+      dye: {
+        type: Number,
+        default: 30000
+      }
+    },
+    must: {
+      cut: Boolean,
+      perm: Boolean,
+      dye: Boolean
+    },
+    no: {
+      cut: Boolean,
+      perm: Boolean,
+      dye: Boolean
+    },
+    region: String,
+    shop: String,
+    requireGender: String
   },
-  must: {
-    cut: Boolean,
-    perm: Boolean,
-    dye: Boolean
-  },
-  no: {
-    cut: Boolean,
-    perm: Boolean,
-    dye: Boolean
-  },
-  region: String,
-  shop: String,
-  requireGender: String
-});
+  {
+    versionKey: false
+  }
+);
 
 const sortHelper = (a, b) => a.since - b.since;
 
