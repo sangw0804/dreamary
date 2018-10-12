@@ -138,7 +138,7 @@ const cards = [
   {
     _id: new ObjectID(),
     _recruit: recruits[0]._id,
-    date: new Date(2018, 9, 10).setHours(6, 0, 0, 0),
+    date: new Date(2018, 9, 16).setHours(6, 0, 0, 0),
     ableTimes: [
       {
         since: 480,
@@ -231,6 +231,21 @@ const reservations = [
     },
     services: {
       cut: 3000,
+      perm: 20000
+    },
+    _review: null
+  },
+  {
+    _id: new ObjectID(),
+    _user: users[0]._id,
+    _designer: users[1]._id,
+    _card: cards[2]._id,
+    date: cards[2].date,
+    time: {
+      since: 600,
+      until: 720
+    },
+    services: {
       perm: 20000
     },
     _review: null
