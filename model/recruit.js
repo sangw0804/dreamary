@@ -3,50 +3,55 @@ const { User } = require('./user');
 
 // const { updateIdArray } = require('./helpers/updateArray');
 
-const recruitSchema = new mongoose.Schema({
-  _designer: {
-    required: true,
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  designerName: {
-    required: true,
-    type: String
-  },
-  title: {
-    required: true,
-    type: String
-  },
-  _cards: [
-    {
+const recruitSchema = new mongoose.Schema(
+  {
+    _designer: {
+      required: true,
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Card'
-    }
-  ],
-  portfolios: [
-    {
+      ref: 'User'
+    },
+    designerName: {
+      required: true,
       type: String
+    },
+    title: {
+      required: true,
+      type: String
+    },
+    _cards: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Card'
+      }
+    ],
+    portfolios: [
+      {
+        type: String
+      }
+    ],
+    requirement: {
+      type: String
+    },
+    requireTime: {
+      cut: Number,
+      perm: Number,
+      dye: Number
+    },
+    _reviews: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Review'
+      }
+    ],
+    score: {
+      type: Number,
+      default: 0.0
     }
-  ],
-  requirement: {
-    type: String
   },
-  requireTime: {
-    cut: Number,
-    perm: Number,
-    dye: Number
-  },
-  _reviews: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Review'
-    }
-  ],
-  score: {
-    type: Number,
-    default: 0.0
+  {
+    versionKey: false
   }
-});
+);
 
 async function updateRelatedDBs(doc) {
   const recruit = doc;

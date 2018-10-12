@@ -9,6 +9,7 @@ router.get('/', async (req, res) => {
   try {
     const foundRecruits = await Recruit.find({})
       .populate('_designer')
+      .populate('_cards')
       .exec();
     res.status(200).send(foundRecruits);
   } catch (e) {

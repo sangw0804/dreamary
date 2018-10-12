@@ -5,34 +5,39 @@ const { Reservation } = require('./reservation');
 const { updateIdArray } = require('./helpers/updateArray');
 const { addScore, removeScore } = require('./helpers/updateScore');
 
-const reviewSchema = new mongoose.Schema({
-  _recruit: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Recruit',
-    required: true
+const reviewSchema = new mongoose.Schema(
+  {
+    _recruit: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Recruit',
+      required: true
+    },
+    _user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    _reservation: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Reservation'
+    },
+    score: {
+      type: Number,
+      required: true
+    },
+    content: {
+      type: String,
+      required: true
+    },
+    createdAt: {
+      type: Number,
+      required: true
+    }
   },
-  _user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  _reservation: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Reservation'
-  },
-  score: {
-    type: Number,
-    required: true
-  },
-  content: {
-    type: String,
-    required: true
-  },
-  createdAt: {
-    type: Number,
-    required: true
+  {
+    versionKey: false
   }
-});
+);
 
 async function validateRelatedDBs() {
   const review = this;

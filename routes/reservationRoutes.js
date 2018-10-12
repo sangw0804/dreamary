@@ -12,7 +12,7 @@ router.get('/all', async (req, res) => {
   try {
     const foundReservations = await Reservation.find({})
       .populate('_user')
-      .populate('_designer')
+      .populate({ path: '_designer', populate: { path: '_recruit' } })
       .populate('_card')
       .exec();
     res.status(200).send(foundReservations);
@@ -26,10 +26,8 @@ router.get('/all', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const { user_id } = req.params;
-    const foundReservations = await Reservation.find({
-      $or: [{ _user: user_id }, { _designer: user_id }]
-    })
-      .populate('_designer')
+    const foundReservations = await Reservation.find({ $or: [{ _user: user_id }, { _designer: user_id }] })
+      .populate({ path: '_designer', populate: { path: '_recruit' } })
       .populate('_user')
       .populate('_card')
       .exec();

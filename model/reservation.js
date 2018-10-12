@@ -4,51 +4,56 @@ const { User } = require('./user');
 const { Card } = require('./card');
 const { updateIdArray, updateTimeArray } = require('./helpers/updateArray');
 
-const reservationSchema = new mongoose.Schema({
-  _user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  _designer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  _card: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Card'
-  },
-  date: {
-    type: Number,
-    required: true
-  },
-  time: {
-    since: {
+const reservationSchema = new mongoose.Schema(
+  {
+    _user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    _designer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    _card: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Card'
+    },
+    date: {
       type: Number,
       required: true
     },
-    until: {
-      type: Number,
-      required: true
+    time: {
+      since: {
+        type: Number,
+        required: true
+      },
+      until: {
+        type: Number,
+        required: true
+      }
+    },
+    services: {
+      cut: Number,
+      perm: Number,
+      dye: Number
+    },
+    isCanceled: {
+      type: Boolean,
+      default: false
+    },
+    isDone: {
+      type: Boolean,
+      default: false
+    },
+    _review: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Review'
     }
   },
-  services: {
-    cut: Number,
-    perm: Number,
-    dye: Number
-  },
-  isCanceled: {
-    type: Boolean,
-    default: false
-  },
-  isDone: {
-    type: Boolean,
-    default: false
-  },
-  _review: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Review'
+  {
+    versionKey: false
   }
-});
+);
 
 async function updateRelationalDBs(doc) {
   const reservation = doc;
