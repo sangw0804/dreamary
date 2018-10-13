@@ -276,7 +276,7 @@ users[1]._reservations = [reservations[0]._id, reservations[1]._id, reservations
 users[2]._reservations = [reservations[1]._id];
 
 recruits[0]._reviews = [reviews[0]._id, reviews[1]._id];
-recruits[0]._cards = [cards[0]._id, cards[1]._id];
+recruits[0]._cards = [cards[0]._id, cards[1]._id, cards[2]._id];
 
 cards[0].reservedTimes = [reservations[0].time, reservations[2].time];
 cards[1].reservedTimes = [reservations[1].time];
