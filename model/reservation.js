@@ -47,7 +47,8 @@ const reservationSchema = new mongoose.Schema(
     },
     _review: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Review'
+      ref: 'Review',
+      default: null
     }
   },
   {

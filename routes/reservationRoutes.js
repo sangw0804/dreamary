@@ -29,6 +29,7 @@ router.get('/', async (req, res) => {
     const foundReservations = await Reservation.find({ $or: [{ _user: user_id }, { _designer: user_id }] })
       .populate({ path: '_designer', populate: { path: '_recruit' } })
       .populate('_user')
+      .populate('_review')
       .populate('_card')
       .exec();
 
