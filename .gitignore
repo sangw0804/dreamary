@@ -5,3 +5,4 @@ coverage
 .eslintrc
 log/*.log
 log/*.json
+npm-debug.log
