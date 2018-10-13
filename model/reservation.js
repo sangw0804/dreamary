@@ -41,6 +41,7 @@ const reservationSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+    cancelReason: String,
     isDone: {
       type: Boolean,
       default: false

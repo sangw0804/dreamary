@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    name: String,
     _tickets: [
       {
         type: mongoose.Schema.Types.ObjectId,

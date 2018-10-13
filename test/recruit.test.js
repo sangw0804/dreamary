@@ -58,7 +58,6 @@ describe('Recruit', () => {
       const data = {
         _designer: users[2]._id,
         title: '두번째 디자이너의 모집글',
-        designerName: '신한결',
         ableDates: [
           {
             since: 20180910123412,

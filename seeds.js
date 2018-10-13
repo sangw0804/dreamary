@@ -17,6 +17,7 @@ const users = [
   {
     _id: new ObjectID(),
     _uid: '123',
+    name: '오상우',
     _tickets: [],
     _reservations: [],
     _recruit: null,
@@ -25,6 +26,7 @@ const users = [
   {
     _id: new ObjectID(),
     _uid: '456',
+    name: '안운장',
     _tickets: [],
     _reservations: [],
     _recruit: null,
@@ -33,6 +35,7 @@ const users = [
   {
     _id: new ObjectID(),
     _uid: '789',
+    name: '신한결',
     _tickets: [],
     _reservations: [],
     _recruit: null,
@@ -44,7 +47,6 @@ const recruits = [
   {
     _id: new ObjectID(),
     _designer: users[1]._id,
-    designerName: '안운장',
     title: '뎅겅잘라드립니다',
     _cards: [],
     requireTime: {

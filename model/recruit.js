@@ -10,10 +10,6 @@ const recruitSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
     },
-    designerName: {
-      required: true,
-      type: String
-    },
     title: {
       required: true,
       type: String
