@@ -59,7 +59,8 @@ const cardSchema = new mongoose.Schema(
     requireGender: String
   },
   {
-    versionKey: false
+    versionKey: false,
+    timestamps: true
   }
 );
 

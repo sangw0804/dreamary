@@ -29,12 +29,13 @@ router.get('/:id', async (req, res) => {
 // POST /users
 router.post('/', async (req, res) => {
   try {
-    const { _uid } = req.body;
+    const { _uid, name } = req.body;
     const body = {
       _uid,
       _tickets: [],
       _reservations: [],
-      _recruit: null
+      _recruit: null,
+      name
     };
     const createdUser = await User.create(body);
 

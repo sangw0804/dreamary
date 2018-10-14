@@ -25,7 +25,8 @@ const ticketSchema = new mongoose.Schema(
     }
   },
   {
-    versionKey: false
+    versionKey: false,
+    timestamps: true
   }
 );
 
