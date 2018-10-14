@@ -22,11 +22,14 @@ const ticketSchema = new mongoose.Schema(
     expiredAt: {
       type: Number,
       default: null
+    },
+    createdAt: {
+      type: Number,
+      default: new Date().getTime()
     }
   },
   {
-    versionKey: false,
-    timestamps: true
+    versionKey: false
   }
 );
 

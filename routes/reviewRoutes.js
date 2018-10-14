@@ -15,7 +15,6 @@ router.post('/', async (req, res) => {
       content,
       score,
       _reservation,
-      createdAt: new Date().getTime(),
       _recruit: req.params.recruit_id
     };
 

@@ -65,10 +65,12 @@ router.post('/', async (req, res) => {
 // PATCH /users/:user_id/reservations/:id 예약 취소 OR 시술 완료
 router.patch('/:id', async (req, res) => {
   try {
-    const { isCanceled, isDone } = req.body;
+    const { isCanceled, isDone, cancelByUser, cancelReason } = req.body;
     const reservation = await Reservation.findById(req.params.id);
     reservation.isCanceled = !!isCanceled;
     reservation.isDone = !!isDone;
+    reservation.cancelByUser = !!cancelByUser;
+    reservation.cancelReason = cancelReason;
     await reservation.save();
 
     res.status(200).send(reservation);

@@ -50,11 +50,15 @@ const reservationSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Review',
       default: null
+    },
+    cancelByUser: Boolean,
+    createdAt: {
+      type: Number,
+      default: new Date().getTime()
     }
   },
   {
-    versionKey: false,
-    timestamps: true
+    versionKey: false
   }
 );
 

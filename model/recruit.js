@@ -42,11 +42,14 @@ const recruitSchema = new mongoose.Schema(
     score: {
       type: Number,
       default: 0.0
+    },
+    createdAt: {
+      type: Number,
+      default: new Date().getTime()
     }
   },
   {
-    versionKey: false,
-    timestamps: true
+    versionKey: false
   }
 );
 

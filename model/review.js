@@ -31,12 +31,11 @@ const reviewSchema = new mongoose.Schema(
     },
     createdAt: {
       type: Number,
-      required: true
+      default: new Date().getTime()
     }
   },
   {
-    versionKey: false,
-    timestamps: true
+    versionKey: false
   }
 );
 

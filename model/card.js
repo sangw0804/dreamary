@@ -56,11 +56,14 @@ const cardSchema = new mongoose.Schema(
     },
     region: String,
     shop: String,
-    requireGender: String
+    requireGender: String,
+    createdAt: {
+      type: Number,
+      default: new Date().getTime()
+    }
   },
   {
-    versionKey: false,
-    timestamps: true
+    versionKey: false
   }
 );
 
