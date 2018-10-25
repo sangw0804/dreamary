@@ -17,6 +17,7 @@ const kakaoRoutes = require('./routes/kakaoRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const cardRoutes = require('./routes/cardRoutes');
 const firebaseRoutes = require('./routes/firebaseRoutes');
+const inquiryRoutes = require('./routes/inquiryRoutes');
 
 const { logging } = require('./middlewares/log');
 
@@ -47,6 +48,7 @@ app.use('/recruits/:recruit_id/reviews', reviewRoutes);
 app.use('/recruits', recruitRoutes);
 app.use('/kakao_login', kakaoRoutes);
 app.use('/firebase', firebaseRoutes);
+app.use('/inquiries', inquiryRoutes);
 app.use('/', cardRoutes);
 
 module.exports = { app };

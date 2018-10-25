@@ -4,7 +4,7 @@ const { Recruit } = require('../../model/recruit');
 const { Reservation } = require('../../model/reservation');
 const { recruits } = require('./recruitSeed');
 const { reservations } = require('./reservationSeed');
-const { users } = require('../seed/userSeed');
+const { users } = require('./userSeed');
 
 const reviews = [
   {
