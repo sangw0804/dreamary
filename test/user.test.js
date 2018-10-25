@@ -84,5 +84,12 @@ describe('User', () => {
           }
         });
     });
+
+    it('should return 400 with invalid id', done => {
+      request(app)
+        .patch(`/users/123/addpoint`)
+        .expect(400)
+        .end(done);
+    });
   });
 });
