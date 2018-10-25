@@ -46,4 +46,18 @@ router.post('/', async (req, res) => {
   }
 });
 
+// PATCH /users/:id/addpoint
+router.patch('/:id/addpoint', async (req, res) => {
+  try {
+    const foundUser = await User.findById(req.params.id);
+    foundUser.point += 1000;
+    await foundUser.save();
+
+    res.status(200).send(foundUser);
+  } catch (e) {
+    logger && logger.error('PATCH /users/:id | %o', e);
+    res.status(400).send(e);
+  }
+});
+
 module.exports = router;

@@ -64,4 +64,25 @@ describe('User', () => {
         });
     });
   });
+
+  describe('PATCH /users/:id/addpoint', () => {
+    it('should add 1000 point to user', done => {
+      request(app)
+        .patch(`/users/${users[0]._id}/addpoint`)
+        .expect(200)
+        .expect(res => {
+          expect(res.body.point).toBe(1000);
+        })
+        .end(async (err, res) => {
+          try {
+            if (err) throw new Error(err);
+            const user = await User.findById(res.body._id);
+            expect(user.point).toBe(1000);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+    });
+  });
 });
