@@ -86,10 +86,17 @@ describe('Card', () => {
             until: 1380
           }
         ],
-        price: {
-          cut: 3000,
-          perm: 20000,
-          dye: 30000
+        permPrice: {
+          normal: 10000,
+          chin: 20000,
+          shoulder: 30000,
+          chest: 40000
+        },
+        dyePrice: {
+          normal: 10000,
+          chin: 20000,
+          shoulder: 30000,
+          chest: 40000
         },
         must: {
           cut: false,
@@ -166,10 +173,17 @@ describe('Card', () => {
           }
         ],
         reservedTimes: [],
-        price: {
-          cut: 3000,
-          perm: 20000,
-          dye: 30000
+        permPrice: {
+          normal: 10000,
+          chin: 20000,
+          shoulder: 30000,
+          chest: 40000
+        },
+        dyePrice: {
+          normal: 10000,
+          chin: 20000,
+          shoulder: 30000,
+          chest: 40000
         },
         must: {
           cut: false,

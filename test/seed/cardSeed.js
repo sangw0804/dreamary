@@ -20,10 +20,17 @@ const cards = [
     ],
     reservedTimes: [],
     reservable: true,
-    price: {
-      cut: 3000,
-      perm: 20000,
-      dye: 30000
+    permPrice: {
+      normal: 10000,
+      chin: 20000,
+      shoulder: 30000,
+      chest: 40000
+    },
+    dyePrice: {
+      normal: 10000,
+      chin: 20000,
+      shoulder: 30000,
+      chest: 40000
     },
 
     must: {
@@ -53,10 +60,17 @@ const cards = [
     ],
     reservedTimes: [],
     reservable: true,
-    price: {
-      cut: 3000,
-      perm: 20000,
-      dye: 30000
+    permPrice: {
+      normal: 10000,
+      chin: 20000,
+      shoulder: 30000,
+      chest: 40000
+    },
+    dyePrice: {
+      normal: 10000,
+      chin: 20000,
+      shoulder: 30000,
+      chest: 40000
     },
     must: {
       cut: false,

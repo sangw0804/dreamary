@@ -30,19 +30,17 @@ const cardSchema = new mongoose.Schema(
       type: Boolean,
       default: true
     },
-    price: {
-      cut: {
-        type: Number,
-        default: 3000
-      },
-      perm: {
-        type: Number,
-        default: 30000
-      },
-      dye: {
-        type: Number,
-        default: 30000
-      }
+    permPrice: {
+      normal: Number,
+      chin: Number,
+      shoulder: Number,
+      chest: Number
+    },
+    dyePrice: {
+      normal: Number,
+      chin: Number,
+      shoulder: Number,
+      chest: Number
     },
     must: {
       cut: Boolean,
