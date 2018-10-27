@@ -12,7 +12,7 @@ const { Recruit } = require('./model/recruit');
 const { Review } = require('./model/review');
 const { Card } = require('./model/card');
 const { Reservation } = require('./model/reservation');
-
+/*
 const users = [
   {
     _id: new ObjectID(),
@@ -285,30 +285,30 @@ cards[1].reservedTimes = [reservations[1].time];
 
 reservations[0]._review = reviews[0]._id;
 reservations[1]._review = reviews[1]._id;
-
+*/
 const seedUsersDB = async () => {
   await User.remove({});
-  await User.insertMany(users);
+  //await User.insertMany(users);
 };
 
 const seedRecruitsDB = async () => {
   await Recruit.remove({});
-  await Recruit.insertMany(recruits);
+  //await Recruit.insertMany(recruits);
 };
 
 const seedReviewsDB = async () => {
   await Review.remove({});
-  await Review.insertMany(reviews);
+  //await Review.insertMany(reviews);
 };
 
 const seedReservationsDB = async () => {
   await Reservation.remove({});
-  await Reservation.insertMany(reservations);
+  //await Reservation.insertMany(reservations);
 };
 
 const seedCardsDB = async () => {
   await Card.remove({});
-  await Card.insertMany(cards);
+  //await Card.insertMany(cards);
 };
 
 const seedDB = async () => {
