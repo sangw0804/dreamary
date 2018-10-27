@@ -20,7 +20,7 @@ router.post('/upload', (req, res) => {
         const s3 = new AWS.S3();
         const params = {
           Bucket: 'dreamary',
-          Key: files[fileType].name + randomNum,
+          Key: randomNum + files[fileType].name,
           ACL: 'public-read',
           Body: fs.createReadStream(files[fileType].path)
         };
