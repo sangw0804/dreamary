@@ -40,7 +40,7 @@ describe('Reservation', () => {
           until: 740
         },
         services: {
-          perm: 30000
+          perm: true
         }
       };
       request(app)

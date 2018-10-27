@@ -13,7 +13,7 @@ const reservations = [
     _designer: users[1]._id,
     date: cards[0].date,
     services: {
-      cut: 3000
+      cut: true
     },
     time: {
       since: 1200,
@@ -28,7 +28,7 @@ const reservations = [
     _designer: users[1]._id,
     date: cards[1].date,
     services: {
-      cut: 3000
+      cut: true
     },
     time: {
       since: 1200,

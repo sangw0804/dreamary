@@ -33,9 +33,9 @@ const reservationSchema = new mongoose.Schema(
       }
     },
     services: {
-      cut: Number,
-      perm: Number,
-      dye: Number
+      cut: Boolean,
+      perm: Boolean,
+      dye: Boolean
     },
     isCanceled: {
       type: Boolean,

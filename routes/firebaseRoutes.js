@@ -36,6 +36,7 @@ router.post('/upload', (req, res) => {
 
     res.status(200).send(req.files);
   } catch (e) {
+    logger && logger.error('/upload | %o', e);
     console.log(e);
   }
 });
