@@ -14,12 +14,13 @@ router.post('/upload', (req, res) => {
   try {
     const form = new formidable.IncomingForm();
     const { uid } = req.query;
+    const randomNum = Math.floor(Math.random() * 1000000);
     form.parse(req, (err, fields, files) => {
       Object.keys(files).forEach(fileType => {
         const s3 = new AWS.S3();
         const params = {
           Bucket: 'dreamary',
-          Key: files[fileType].name,
+          Key: files[fileType].name + randomNum,
           ACL: 'public-read',
           Body: fs.createReadStream(files[fileType].path)
         };
