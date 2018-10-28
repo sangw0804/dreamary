@@ -109,7 +109,9 @@ async function validateRecruit() {
 
 cardSchema.methods.updateRecruitDB = async function() {
   const recruit = await Recruit.findById(this._recruit);
+  logger.info('%o', recruit);
   recruit._cards = updateIdArray(recruit._cards, this._id);
+  logger.info('%o', recruit);
   await recruit.save();
 };
 
