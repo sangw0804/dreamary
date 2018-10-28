@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const { Recruit } = require('./recruit');
 const { updateIdArray } = require('./helpers/updateArray');
+const logger = require('../log');
 
 const cardSchema = new mongoose.Schema(
   {
@@ -106,17 +107,29 @@ async function validateRecruit() {
   }
 }
 
-async function updateRelationalDBs(doc) {
-  const recruit = await Recruit.findById(doc._recruit);
-  recruit._cards = updateIdArray(recruit._cards, doc._id);
+cardSchema.methods.updateRecruitDB = async function() {
+  const recruit = await Recruit.findById(this._recruit);
+  recruit._cards = updateIdArray(recruit._cards, this._id);
   await recruit.save();
-}
+};
 
-async function removeRelationalDBs(doc) {
-  const recruit = await Recruit.findById(doc._recruit);
-  recruit._cards = recruit._cards.filter(_card => _card._id.toHexString() !== doc._id.toHexString());
+// async function updateRelationalDBs(doc) {
+//   const recruit = await Recruit.findById(doc._recruit);
+//   recruit._cards = updateIdArray(recruit._cards, doc._id);
+//   await recruit.save();
+// }
+
+cardSchema.methods.removeRecruitDB = async function() {
+  const recruit = await Recruit.findById(this._recruit);
+  recruit._cards = recruit._cards.filter(_card => _card._id.toHexString() !== this._id.toHexString());
   await recruit.save();
-}
+};
+
+// async function removeRelationalDBs(doc) {
+//   const recruit = await Recruit.findById(doc._recruit);
+//   recruit._cards = recruit._cards.filter(_card => _card._id.toHexString() !== doc._id.toHexString());
+//   await recruit.save();
+// }
 
 cardSchema.pre('save', validateRecruit);
 cardSchema.pre('save', sortTimes);
@@ -124,8 +137,8 @@ cardSchema.pre('save', updateReservable);
 cardSchema.pre('remove', sortTimes);
 cardSchema.pre('remove', updateReservable);
 
-cardSchema.post('save', updateRelationalDBs);
-cardSchema.post('remove', removeRelationalDBs);
+// cardSchema.post('save', updateRelationalDBs);
+// cardSchema.post('remove', removeRelationalDBs);
 
 const Card = mongoose.model('Card', cardSchema);
 

@@ -44,7 +44,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { title, _designer, _cards, portfolios, requireTime, requirement, _reviews } = req.body;
-    const createdUser = await Recruit.create({
+    const createdRecruit = await Recruit.create({
       title,
       _designer,
       _cards,
@@ -53,8 +53,11 @@ router.post('/', async (req, res) => {
       _reviews,
       requireTime
     });
-    res.status(200).send(createdUser);
+    await createdRecruit.updateRelatedDB();
+
+    res.status(200).send(createdRecruit);
   } catch (e) {
+    console.log(e);
     logger && logger.error('POST /recruits | %o', e);
     res.status(400).send(e);
   }
@@ -84,6 +87,7 @@ router.delete('/:id', async (req, res) => {
   try {
     const recruit = await Recruit.findById(req.params.id);
     await recruit.remove();
+    await recruit.removeRelatedDB();
     res.status(200).send({});
   } catch (e) {
     logger && logger.error('DELETE /recruits/:id | %o', e);

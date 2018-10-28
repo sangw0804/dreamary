@@ -62,8 +62,8 @@ const reservationSchema = new mongoose.Schema(
   }
 );
 
-async function updateRelationalDBs(doc) {
-  const reservation = doc;
+reservationSchema.methods.updateRelatedDB = async function() {
+  const reservation = this;
   const user = await User.findById(reservation._user);
   const designer = await User.findById(reservation._designer);
   const card = await Card.findById(reservation._card);
@@ -85,10 +85,35 @@ async function updateRelationalDBs(doc) {
   await user.save();
   await designer.save();
   await card.save();
-}
+};
 
-async function removeRelationalDBs(doc) {
-  const reservation = doc;
+// async function updateRelationalDBs(doc) {
+//   const reservation = doc;
+//   const user = await User.findById(reservation._user);
+//   const designer = await User.findById(reservation._designer);
+//   const card = await Card.findById(reservation._card);
+
+//   if (!user || !designer || !card) {
+//     throw new Error('user || card || recruit not found!!');
+//   }
+
+//   const temp = user._reservations.map(r => r.toHexString());
+//   if (temp.includes(reservation._id.toHexString())) {
+//     card.reservedTimes = card.reservedTimes.filter(reservedTime => reservedTime.since !== reservation.time.since);
+//     await card.save();
+//     return;
+//   }
+//   user._reservations = updateIdArray(user._reservations, reservation._id);
+//   designer._reservations = updateIdArray(designer._reservations, reservation._id);
+//   card.reservedTimes = updateTimeArray(card.reservedTimes, reservation.time);
+
+//   await user.save();
+//   await designer.save();
+//   await card.save();
+// }
+
+reservationSchema.methods.removeRelatedDB = async function() {
+  const reservation = this;
   const user = await User.findById(reservation._user);
   user._reservations = user._reservations.filter(reserve => reserve.toHexString() !== reservation._id);
   const designer = await User.findById(reservation._designer);
@@ -99,10 +124,24 @@ async function removeRelationalDBs(doc) {
   await user.save();
   await designer.save();
   await card.save();
-}
+};
 
-reservationSchema.post('save', updateRelationalDBs);
-reservationSchema.post('remove', removeRelationalDBs);
+// async function removeRelationalDBs(doc) {
+//   const reservation = doc;
+//   const user = await User.findById(reservation._user);
+//   user._reservations = user._reservations.filter(reserve => reserve.toHexString() !== reservation._id);
+//   const designer = await User.findById(reservation._designer);
+//   designer._reservations = designer._reservations.filter(reserve => reserve.toHexString() !== reservation._id);
+//   const card = await Card.findById(reservation._card);
+//   card.reservedTimes = card.reservedTimes.filter(time => time.since !== reservation.time.since);
+
+//   await user.save();
+//   await designer.save();
+//   await card.save();
+// }
+
+// reservationSchema.post('save', updateRelationalDBs);
+// reservationSchema.post('remove', removeRelationalDBs);
 
 const Reservation = mongoose.model('Reservation', reservationSchema);
 

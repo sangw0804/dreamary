@@ -61,6 +61,7 @@ router.post('/recruits/:recruit_id/cards', async (req, res) => {
       requireGender,
       reservedTimes: []
     });
+    await createdCard.updateRecruitDB();
     res.status(200).send(createdCard);
   } catch (e) {
     logger && logger.error('POST /recruits/:recruit_id/cards || %o', e);
@@ -81,7 +82,8 @@ router.post('/recruits/:recruit_id/cards', async (req, res) => {
 router.delete('/recruits/:recruit_id/cards/:id', async (req, res) => {
   try {
     const card = await Card.findById(req.params.id);
-    card.remove();
+    await card.remove();
+    await card.removeRecruitDB();
 
     res.status(200).send({});
   } catch (e) {

@@ -55,6 +55,8 @@ router.post('/', async (req, res) => {
       time
     });
 
+    await createdReservation.updateRelatedDB();
+
     res.status(200).send(createdReservation);
   } catch (e) {
     logger && logger.error('POST /users/:user_id/reservations | %o', e);
@@ -72,6 +74,7 @@ router.patch('/:id', async (req, res) => {
     reservation.cancelByUser = !!cancelByUser;
     reservation.cancelReason = cancelReason;
     await reservation.save();
+    await reservation.updateRelatedDB();
 
     res.status(200).send(reservation);
   } catch (e) {
@@ -88,6 +91,7 @@ router.delete('/:id', async (req, res) => {
       throw new Error('reservation not found!!');
     }
     await reservation.remove();
+    await reservation.removeRelatedDB();
 
     res.status(200).send();
   } catch (e) {
