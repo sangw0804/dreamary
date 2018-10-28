@@ -57,7 +57,6 @@ router.post('/', async (req, res) => {
 
     res.status(200).send(createdRecruit);
   } catch (e) {
-    console.log(e);
     logger && logger.error('POST /recruits | %o', e);
     res.status(400).send(e);
   }

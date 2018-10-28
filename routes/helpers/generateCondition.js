@@ -1,8 +1,9 @@
 const generateCondition = (date, kinds, gender, region) => {
   const condition = {
+    // requireGender: { $in: [gender, 'both'] }
     // date: new Date(date).getTime(),
   };
-  if (gender) condition.requireGender = gender;
+  if (gender) condition.requireGender = { $in: [gender, 'both'] };
   if (region) condition.region = region;
 
   Object.keys(kinds).forEach(kind => {
