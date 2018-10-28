@@ -44,14 +44,32 @@ const cardSchema = new mongoose.Schema(
       chest: Number
     },
     must: {
-      cut: Boolean,
-      perm: Boolean,
-      dye: Boolean
+      cut: {
+        type: Boolean,
+        default: false
+      },
+      perm: {
+        type: Boolean,
+        default: false
+      },
+      dye: {
+        type: Boolean,
+        default: false
+      }
     },
     no: {
-      cut: Boolean,
-      perm: Boolean,
-      dye: Boolean
+      cut: {
+        type: Boolean,
+        default: false
+      },
+      perm: {
+        type: Boolean,
+        default: false
+      },
+      dye: {
+        type: Boolean,
+        default: false
+      }
     },
     region: String,
     shop: String,
