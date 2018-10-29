@@ -12,8 +12,8 @@ const ticketSchema = new mongoose.Schema(
       type: Number
     },
     activatedAt: {
-      required: true,
-      type: Number
+      type: Number,
+      default: null
     },
     expiredAt: {
       type: Number,
@@ -28,6 +28,8 @@ const ticketSchema = new mongoose.Schema(
     versionKey: false
   }
 );
+
+// ticketSchema.methods.
 
 const Ticket = mongoose.model('Ticket', ticketSchema);
 

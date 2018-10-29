@@ -45,7 +45,6 @@ describe('Ticket', () => {
   describe('POST /users/:id/tickets', () => {
     it('should create new ticket with valid data', done => {
       const data = {
-        isD: true,
         price: 10000
       };
       let ticketId;
