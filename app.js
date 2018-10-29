@@ -3,8 +3,8 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-// const admin = require('firebase-admin');
-// const firebase = require('firebase');
+const admin = require('firebase-admin');
+const firebase = require('firebase');
 const cors = require('cors');
 
 // const logger = require('./log');
@@ -33,12 +33,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-// firebase.initializeApp(config.FIREBASE_CONFIG);
+firebase.initializeApp(config.FIREBASE_CONFIG);
 
-// admin.initializeApp({
-//   credential: admin.credential.cert(config.FIREBASE_ADMIN_CONFIG),
-//   databaseURL: config.FIREBASE_CONFIG.databaseURL
-// });
+admin.initializeApp({
+  credential: admin.credential.cert(config.FIREBASE_ADMIN_CONFIG),
+  databaseURL: config.FIREBASE_CONFIG.databaseURL
+});
 
 // routes
 if (process.env.NODE_ENV !== 'test') app.use(logging);

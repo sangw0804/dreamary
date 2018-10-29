@@ -3,9 +3,9 @@ const express = require('express');
 const formidable = require('formidable');
 const AWS = require('aws-sdk');
 const fs = require('fs');
+const firebase = require('firebase');
 
 const router = express.Router();
-const firebase = require('../config/firebase');
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
 
 AWS.config.region = 'ap-northeast-2';

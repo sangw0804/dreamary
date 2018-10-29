@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const request = require('request-promise');
-const { admin } = require('../config/firebase');
+const admin = require('firebase-admin');
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
 
 router.post('/', async ({ body: { userToken } }, res) => {
