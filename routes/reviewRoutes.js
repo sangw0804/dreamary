@@ -46,7 +46,7 @@ router.post('/', async (req, res) => {
 router.patch('/:id/images', async (req, res) => {
   try {
     const form = new formidable.IncomingForm();
-    const { id } = req.query;
+    const { id } = req.params;
     const { fields, files } = await formidablePromise(req);
     const fileLocations = [];
 
@@ -78,7 +78,6 @@ router.delete('/:id', async (req, res) => {
     await review.remove();
     res.status(200).send({});
   } catch (e) {
-    console.log(e);
     logger && logger.error('DELETE /recruits/:recruit_id/reviews/:id | %o', e);
     res.status(400).send(e);
   }
