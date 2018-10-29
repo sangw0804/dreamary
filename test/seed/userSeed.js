@@ -7,19 +7,22 @@ const users = [
     _id: new ObjectID(),
     _uid: '123',
     tickets: [],
-    reservations: []
+    reservations: [],
+    point: 0
   },
   {
     _id: new ObjectID(),
     _uid: '456',
     tickets: [],
-    reservations: []
+    reservations: [],
+    point: 0
   },
   {
     _id: new ObjectID(),
     _uid: '789',
     tickets: [],
-    reservations: []
+    reservations: [],
+    point: 0
   }
 ];
 

@@ -20,6 +20,7 @@ const recruitSchema = new mongoose.Schema(
         ref: 'Card'
       }
     ],
+    shops: [String],
     portfolios: [
       {
         type: String

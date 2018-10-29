@@ -43,13 +43,14 @@ router.get('/:id', async (req, res) => {
 // TODO: 한명의 디자이너가 한개의 recruit만을 가지게 하려면 어떻게 할까?
 router.post('/', async (req, res) => {
   try {
-    const { title, _designer, _cards, portfolios, requireTime, requirement, _reviews } = req.body;
+    const { title, _designer, _cards, portfolios, requireTime, requirement, _reviews, shops } = req.body;
     const createdRecruit = await Recruit.create({
       title,
       _designer,
       _cards,
       portfolios,
       requirement,
+      shops,
       _reviews,
       requireTime
     });
@@ -65,10 +66,10 @@ router.post('/', async (req, res) => {
 // PATCH /recruits/:id
 router.patch('/:id', async (req, res) => {
   try {
-    const { title, _designer, _cards, portfolios, requireTime, requirement, _reviews } = req.body;
+    const { title, _designer, _cards, portfolios, requireTime, requirement, _reviews, shops } = req.body;
     const updatedRecruit = await Recruit.findByIdAndUpdate(
       req.params.id,
-      { $set: { title, _designer, _cards, portfolios, requireTime, requirement, _reviews } },
+      { $set: { title, _designer, _cards, portfolios, requireTime, requirement, _reviews, shops } },
       { new: true }
     );
     if (!updatedRecruit) {
