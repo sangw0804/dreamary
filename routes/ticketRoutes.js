@@ -28,12 +28,10 @@ router.post('/', async (req, res) => {
       throw new Error('user not found!!');
     }
 
-    const { isD, price } = req.body;
+    const { price } = req.body;
     const createdTicket = await Ticket.create({
-      isD,
       price,
-      _user: req.params.id,
-      purchasedAt: new Date().getTime()
+      _user: req.params.id
     });
 
     user._tickets.push(createdTicket._id);
@@ -54,8 +52,8 @@ router.patch('/:ticket_id', async (req, res) => {
     if (!foundUser) {
       throw new Error('user not found!!');
     }
-    const body = { expiredAt: new Date().getTime() };
-    const updatedTicket = await Ticket.findOneAndUpdate({ _id: req.params.ticket_id }, { $set: body }, { new: true });
+    // const body = { expiredAt: new Date().getTime() };
+    // const updatedTicket = await Ticket.findOneAndUpdate({ _id: req.params.ticket_id }, { $set: body }, { new: true });
 
     res.status(200).send(updatedTicket);
   } catch (e) {

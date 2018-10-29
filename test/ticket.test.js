@@ -64,18 +64,14 @@ describe('Ticket', () => {
           Ticket.findById(res.body._id)
             .then(foundTicket => {
               ticketId = foundTicket._id;
-              expect(foundTicket._user.toHexString()).toBe(
-                users[2]._id.toHexString()
-              );
-              expect(foundTicket.purchasedAt).toBeTruthy();
+              expect(foundTicket._user.toHexString()).toBe(users[2]._id.toHexString());
+              expect(foundTicket.createdAt).toBeTruthy();
               expect(foundTicket.expiredAt).toBeNull();
 
               return User.findById(foundTicket._user);
             })
             .then(foundUser => {
-              expect(foundUser._tickets.pop().toHexString()).toBe(
-                ticketId.toHexString()
-              );
+              expect(foundUser._tickets.pop().toHexString()).toBe(ticketId.toHexString());
               done();
             })
             .catch(e => {

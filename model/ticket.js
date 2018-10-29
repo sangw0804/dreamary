@@ -7,15 +7,11 @@ const ticketSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
     },
-    isD: {
-      required: true,
-      type: Boolean
-    },
     price: {
       required: true,
       type: Number
     },
-    purchasedAt: {
+    activatedAt: {
       required: true,
       type: Number
     },
