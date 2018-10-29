@@ -52,10 +52,13 @@ router.patch('/:ticket_id', async (req, res) => {
     if (!foundUser) {
       throw new Error('user not found!!');
     }
-    // const body = { expiredAt: new Date().getTime() };
-    // const updatedTicket = await Ticket.findOneAndUpdate({ _id: req.params.ticket_id }, { $set: body }, { new: true });
 
-    res.status(200).send(updatedTicket);
+    const foundTicket = await Ticket.findById(req.params.ticket_id);
+    foundTicket.activatedAt = new Date().getTime();
+    foundTicket.expiredAt = foundTicket.activatedAt + 2592000000; // add 30 days
+    const savedTicket = await foundTicket.save();
+
+    res.status(200).send(savedTicket);
   } catch (e) {
     logger && logger.error('GET /users/:id/tickets | %o', e);
     res.status(400).send(e);

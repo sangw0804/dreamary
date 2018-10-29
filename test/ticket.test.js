@@ -131,10 +131,8 @@ describe('Ticket', () => {
 
   describe('PATCH /users/:id/tickets/:ticket_id', () => {
     it('should update ticket with valid user id', done => {
-      const data = {};
       request(app)
         .patch(`/users/${tickets[0]._user}/tickets/${tickets[0]._id}`)
-        .send(data)
         .expect(200)
         .expect(res => {
           expect(typeof res.body.expiredAt).toBe('number');
