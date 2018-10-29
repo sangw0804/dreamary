@@ -2,56 +2,87 @@ const mongoose = require('mongoose');
 
 const { Recruit } = require('./recruit');
 const { updateIdArray } = require('./helpers/updateArray');
+const logger = require('../log');
 
-const cardSchema = new mongoose.Schema({
-  _recruit: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Recruit',
-    required: true
-  },
-  date: {
-    required: true,
-    type: Number
-  },
-  ableTimes: [
-    {
-      since: Number,
-      until: Number
+const cardSchema = new mongoose.Schema(
+  {
+    _recruit: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Recruit',
+      required: true
+    },
+    date: {
+      required: true,
+      type: Number
+    },
+    ableTimes: [
+      {
+        since: Number,
+        until: Number
+      }
+    ],
+    reservedTimes: [
+      {
+        since: Number,
+        until: Number
+      }
+    ],
+    reservable: {
+      type: Boolean,
+      default: true
+    },
+    permPrice: {
+      normal: Number,
+      chin: Number,
+      shoulder: Number,
+      chest: Number
+    },
+    dyePrice: {
+      normal: Number,
+      chin: Number,
+      shoulder: Number,
+      chest: Number
+    },
+    must: {
+      cut: {
+        type: Boolean,
+        default: false
+      },
+      perm: {
+        type: Boolean,
+        default: false
+      },
+      dye: {
+        type: Boolean,
+        default: false
+      }
+    },
+    no: {
+      cut: {
+        type: Boolean,
+        default: false
+      },
+      perm: {
+        type: Boolean,
+        default: false
+      },
+      dye: {
+        type: Boolean,
+        default: false
+      }
+    },
+    region: String,
+    shop: String,
+    requireGender: String,
+    createdAt: {
+      type: Number,
+      default: new Date().getTime()
     }
-  ],
-  reservedTimes: [
-    {
-      since: Number,
-      until: Number
-    }
-  ],
-  reservable: {
-    type: Boolean,
-    default: true
   },
-  price: {
-    cut: Number,
-    perm: Number,
-    dye: Number
-  },
-  requireTime: {
-    cut: Number,
-    perm: Number,
-    dye: Number
-  },
-  must: {
-    cut: Boolean,
-    perm: Boolean,
-    dye: Boolean
-  },
-  no: {
-    cut: Boolean,
-    perm: Boolean,
-    dye: Boolean
-  },
-  region: String,
-  shop: String
-});
+  {
+    versionKey: false
+  }
+);
 
 const sortHelper = (a, b) => a.since - b.since;
 
@@ -62,7 +93,7 @@ function sortTimes(next) {
   next();
 }
 
-function updateReservable(next) {
+async function updateReservable() {
   const card = this;
   const { reservedTimes, ableTimes } = card;
   let largestAbleTime = 0;
@@ -81,30 +112,44 @@ function updateReservable(next) {
     largestAbleTime = Math.max(largestAbleTime, tempLargest);
   });
 
-  const { cut, perm, dye } = card.requireTime;
+  const {
+    requireTime: { cut, perm, dye }
+  } = await Recruit.findById(card._recruit);
   card.reservable = largestAbleTime >= Math.min(cut, perm, dye);
-  next();
 }
 
-async function validateRecruit(next) {
+async function validateRecruit() {
   const recruit = await Recruit.findById(this._recruit);
   if (!recruit) {
-    return next('Recruit not found!');
+    throw new Error('recruit not found!');
   }
-  next();
 }
 
-async function updateRelationalDBs(doc) {
-  const recruit = await Recruit.findById(doc._recruit);
-  recruit._cards = updateIdArray(recruit._cards, doc._id);
+cardSchema.methods.updateRecruitDB = async function() {
+  const recruit = await Recruit.findById(this._recruit);
+  logger.info('%o', recruit);
+  recruit._cards = updateIdArray(recruit._cards, this._id);
+  logger.info('%o', recruit);
   await recruit.save();
-}
+};
 
-async function removeRelationalDBs(doc) {
-  const recruit = await Recruit.findById(doc._recruit);
-  recruit._cards = recruit._cards.filter(_card => _card._id.toHexString() !== doc._id.toHexString());
+// async function updateRelationalDBs(doc) {
+//   const recruit = await Recruit.findById(doc._recruit);
+//   recruit._cards = updateIdArray(recruit._cards, doc._id);
+//   await recruit.save();
+// }
+
+cardSchema.methods.removeRecruitDB = async function() {
+  const recruit = await Recruit.findById(this._recruit);
+  recruit._cards = recruit._cards.filter(_card => _card._id.toHexString() !== this._id.toHexString());
   await recruit.save();
-}
+};
+
+// async function removeRelationalDBs(doc) {
+//   const recruit = await Recruit.findById(doc._recruit);
+//   recruit._cards = recruit._cards.filter(_card => _card._id.toHexString() !== doc._id.toHexString());
+//   await recruit.save();
+// }
 
 cardSchema.pre('save', validateRecruit);
 cardSchema.pre('save', sortTimes);
@@ -112,8 +157,8 @@ cardSchema.pre('save', updateReservable);
 cardSchema.pre('remove', sortTimes);
 cardSchema.pre('remove', updateReservable);
 
-cardSchema.post('save', updateRelationalDBs);
-cardSchema.post('remove', removeRelationalDBs);
+// cardSchema.post('save', updateRelationalDBs);
+// cardSchema.post('remove', removeRelationalDBs);
 
 const Card = mongoose.model('Card', cardSchema);
 

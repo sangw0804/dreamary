@@ -40,7 +40,7 @@ describe('Reservation', () => {
           until: 740
         },
         services: {
-          perm: 30000
+          perm: true
         }
       };
       request(app)
@@ -61,8 +61,8 @@ describe('Reservation', () => {
             expect(foundUser).toBeTruthy();
             expect(foundUser._reservations.length).toBe(2);
             const foundCard = await Card.findById(res.body._card);
-            expect(foundCard.reservedTimes[0].since).toBe(res.body.time.since);
-            expect(foundCard.reservable).toBe(false);
+            expect(foundCard.reservedTimes[0].since).toBe(res.body.time.since); // reservedTimes 정렬 확인
+            expect(foundCard.reservable).toBe(false); // reservable true => false 로 바뀌었는지 확인
             done();
           } catch (e) {
             done(e);
@@ -90,7 +90,7 @@ describe('Reservation', () => {
 
           Reservation.find({})
             .then(foundReservations => {
-              expect(foundReservations.length).toBe(1);
+              expect(foundReservations.length).toBe(2);
               done();
             })
             .catch(e => {
@@ -111,7 +111,7 @@ describe('Reservation', () => {
               throw new Error(err);
             }
             const foundReservations = await Reservation.find({});
-            expect(foundReservations.length).toBe(0);
+            expect(foundReservations.length).toBe(1);
             done();
           } catch (e) {
             done(e);
@@ -130,7 +130,7 @@ describe('Reservation', () => {
 
           Reservation.find({})
             .then(foundReservations => {
-              expect(foundReservations.length).toBe(1);
+              expect(foundReservations.length).toBe(2);
               done();
             })
             .catch(e => {
@@ -173,9 +173,33 @@ describe('Reservation', () => {
     it('should cancel reservation and remove from card reservedTime', done => {
       request(app)
         .patch(`/users/${users[0]._id}/reservations/${reservations[0]._id}`)
+        .send({ isCanceled: 'true' })
         .expect(200)
         .expect(res => {
           expect(res.body.isCanceled).toBe(true);
+        })
+        .end(async (err, res) => {
+          try {
+            if (err) {
+              throw new Error(err);
+            }
+
+            const card = await Card.findById(res.body._card);
+            expect(card.reservedTimes.length).toBe(0);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+    });
+
+    it('should cancel reservation and remove from card reservedTime', done => {
+      request(app)
+        .patch(`/users/${users[0]._id}/reservations/${reservations[0]._id}`)
+        .send({ isDone: 'true' })
+        .expect(200)
+        .expect(res => {
+          expect(res.body.isDone).toBe(true);
         })
         .end(async (err, res) => {
           try {

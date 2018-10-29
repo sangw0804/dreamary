@@ -1,8 +1,10 @@
 const { ObjectID } = require('mongodb');
 const { Review } = require('../../model/review');
-// const {Recruit} = require("../../model/recruit");
+const { Recruit } = require('../../model/recruit');
+const { Reservation } = require('../../model/reservation');
 const { recruits } = require('./recruitSeed');
-const { users } = require('../seed/userSeed');
+const { reservations } = require('./reservationSeed');
+const { users } = require('./userSeed');
 
 const reviews = [
   {
@@ -19,6 +21,8 @@ const populateReview = async done => {
   try {
     await Review.remove({});
     await Review.insertMany(reviews);
+    await Recruit.findByIdAndUpdate(reviews[0]._recruit, { $set: { _reviews: [reviews[0]._id] } });
+    await Reservation.findByIdAndUpdate(reservations[0]._id, { $set: { _review: reviews[0]._id } });
     done();
   } catch (e) {
     done(e);

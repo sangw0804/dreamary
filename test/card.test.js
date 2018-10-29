@@ -86,10 +86,17 @@ describe('Card', () => {
             until: 1380
           }
         ],
-        price: {
-          cut: 3000,
-          perm: 20000,
-          dye: 30000
+        permPrice: {
+          normal: 10000,
+          chin: 20000,
+          shoulder: 30000,
+          chest: 40000
+        },
+        dyePrice: {
+          normal: 10000,
+          chin: 20000,
+          shoulder: 30000,
+          chest: 40000
         },
         must: {
           cut: false,
@@ -100,7 +107,10 @@ describe('Card', () => {
           cut: false,
           perm: false,
           dye: true
-        }
+        },
+        region: '구로구',
+        requireGender: 'both',
+        shop: '준오헤어'
       };
       request(app)
         .post(`/recruits/${recruits[0]._id}/cards`)
@@ -163,10 +173,17 @@ describe('Card', () => {
           }
         ],
         reservedTimes: [],
-        price: {
-          cut: 3000,
-          perm: 20000,
-          dye: 30000
+        permPrice: {
+          normal: 10000,
+          chin: 20000,
+          shoulder: 30000,
+          chest: 40000
+        },
+        dyePrice: {
+          normal: 10000,
+          chin: 20000,
+          shoulder: 30000,
+          chest: 40000
         },
         must: {
           cut: false,
@@ -208,10 +225,10 @@ describe('Card', () => {
             if (err) {
               throw new Error(err);
             }
+            // await new Promise((resolve, reject) => setTimeout(resolve, 500)); // asyncronous 문제로 잠깐 기다림
+
             const foundCards = await Card.find({});
             expect(foundCards.length).toBe(1);
-
-            await setTimeout(() => 1, 500); // asyncronous 문제로 잠깐 기다림
             const foundRecruit = await Recruit.findById(recruits[0]._id);
             expect(foundRecruit._cards.length).toBe(0);
             done();

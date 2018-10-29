@@ -3,7 +3,7 @@ const request = require('supertest');
 // const {ObjectID} = require("mongodb");
 const { app } = require('../app');
 const { User } = require('../model/user');
-const { populateUsers } = require('./seed/userSeed');
+const { populateUsers, users } = require('./seed/userSeed');
 
 // seed User db
 beforeEach(populateUsers);
@@ -17,6 +17,19 @@ describe('User', () => {
         .expect(200)
         .expect(res => {
           expect(res.body.length).toBe(3);
+          expect(res.body[0].point).toBe(0);
+        })
+        .end(done);
+    });
+  });
+
+  describe('GET /users/:id', () => {
+    it('should get user with valid id', done => {
+      request(app)
+        .get(`/users/${users[0]._id}`)
+        .expect(200)
+        .expect(res => {
+          expect(res.body._id).toBe(users[0]._id.toHexString());
         })
         .end(done);
     });
@@ -25,10 +38,7 @@ describe('User', () => {
   describe('POST /users', () => {
     it('should create new user with valid id', done => {
       const data = {
-        _uid: '4',
-        isD: false,
-        name: '이정민',
-        phone: '01098765432'
+        _uid: '4'
       };
       request(app)
         .post('/users')
@@ -52,6 +62,34 @@ describe('User', () => {
               done(e);
             });
         });
+    });
+  });
+
+  describe('PATCH /users/:id/addpoint', () => {
+    it('should add 1000 point to user', done => {
+      request(app)
+        .patch(`/users/${users[0]._id}/addpoint`)
+        .expect(200)
+        .expect(res => {
+          expect(res.body.point).toBe(1000);
+        })
+        .end(async (err, res) => {
+          try {
+            if (err) throw new Error(err);
+            const user = await User.findById(res.body._id);
+            expect(user.point).toBe(1000);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+    });
+
+    it('should return 400 with invalid id', done => {
+      request(app)
+        .patch(`/users/123/addpoint`)
+        .expect(400)
+        .end(done);
     });
   });
 });

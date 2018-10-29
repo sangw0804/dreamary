@@ -5,18 +5,19 @@ const { Reservation } = require('../model/reservation');
 const { User } = require('../model/user');
 const { Card } = require('../model/card');
 const { Recruit } = require('../model/recruit');
-const logger = require('../log');
+const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
 
 // GET /users/:user_id/reservations/all
 router.get('/all', async (req, res) => {
   try {
     const foundReservations = await Reservation.find({})
       .populate('_user')
-      .populate('_designer')
+      .populate({ path: '_designer', populate: { path: '_recruit' } })
       .populate('_card')
       .exec();
     res.status(200).send(foundReservations);
   } catch (e) {
+    logger && logger.error('GET /users/:user_id/reservations/all | %o', e);
     res.status(400).send(e);
   }
 });
@@ -25,16 +26,16 @@ router.get('/all', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const { user_id } = req.params;
-    const foundReservations = await Reservation.find({
-      $or: [{ _user: user_id }, { _designer: user_id }]
-    })
-      .populate('_designer')
+    const foundReservations = await Reservation.find({ $or: [{ _user: user_id }, { _designer: user_id }] })
+      .populate({ path: '_designer', populate: { path: '_recruit' } })
       .populate('_user')
+      .populate('_review')
       .populate('_card')
       .exec();
 
     res.status(200).send(foundReservations);
   } catch (e) {
+    logger && logger.error('GET /users/:user_id/reservations | %o', e);
     res.status(400).send(e);
   }
 });
@@ -54,23 +55,30 @@ router.post('/', async (req, res) => {
       time
     });
 
+    await createdReservation.updateRelatedDB();
+
     res.status(200).send(createdReservation);
   } catch (e) {
+    logger && logger.error('POST /users/:user_id/reservations | %o', e);
     res.status(400).send(e);
   }
 });
 
-// PATCH /users/:user_id/reservations/:id 무조건 예약 취소
+// PATCH /users/:user_id/reservations/:id 예약 취소 OR 시술 완료
 router.patch('/:id', async (req, res) => {
   try {
-    // const { isCanceled } = req.body;
+    const { isCanceled, isDone, cancelByUser, cancelReason } = req.body;
     const reservation = await Reservation.findById(req.params.id);
-    reservation.isCanceled = true;
+    reservation.isCanceled = !!isCanceled;
+    reservation.isDone = !!isDone;
+    reservation.cancelByUser = !!cancelByUser;
+    reservation.cancelReason = cancelReason;
     await reservation.save();
+    await reservation.updateRelatedDB();
 
     res.status(200).send(reservation);
   } catch (e) {
-    console.log(e);
+    logger && logger.error('PATCH /users/:user_id/reservations/:id | %o', e);
     res.status(400).send(e);
   }
 });
@@ -83,9 +91,11 @@ router.delete('/:id', async (req, res) => {
       throw new Error('reservation not found!!');
     }
     await reservation.remove();
+    await reservation.removeRelatedDB();
 
     res.status(200).send();
   } catch (e) {
+    logger && logger.error('DELETE /users/:user_id/reservations/:id | %o', e);
     res.status(400).send(e);
   }
 });

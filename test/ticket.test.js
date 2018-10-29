@@ -19,7 +19,7 @@ describe('Ticket', () => {
         .expect(200)
         .expect(res => {
           expect(res.body.length).toBe(2);
-          expect(res.body[0].price).toBe(3000);
+          expect(res.body[0].price).toBe(10000);
         })
         .end(done);
     });
@@ -45,7 +45,6 @@ describe('Ticket', () => {
   describe('POST /users/:id/tickets', () => {
     it('should create new ticket with valid data', done => {
       const data = {
-        isD: true,
         price: 10000
       };
       let ticketId;
@@ -64,18 +63,14 @@ describe('Ticket', () => {
           Ticket.findById(res.body._id)
             .then(foundTicket => {
               ticketId = foundTicket._id;
-              expect(foundTicket._user.toHexString()).toBe(
-                users[2]._id.toHexString()
-              );
-              expect(foundTicket.purchasedAt).toBeTruthy();
+              expect(foundTicket._user.toHexString()).toBe(users[2]._id.toHexString());
+              expect(foundTicket.createdAt).toBeTruthy();
               expect(foundTicket.expiredAt).toBeNull();
 
               return User.findById(foundTicket._user);
             })
             .then(foundUser => {
-              expect(foundUser._tickets.pop().toHexString()).toBe(
-                ticketId.toHexString()
-              );
+              expect(foundUser._tickets.pop().toHexString()).toBe(ticketId.toHexString());
               done();
             })
             .catch(e => {
@@ -136,27 +131,23 @@ describe('Ticket', () => {
 
   describe('PATCH /users/:id/tickets/:ticket_id', () => {
     it('should update ticket with valid user id', done => {
-      const data = {};
       request(app)
         .patch(`/users/${tickets[0]._user}/tickets/${tickets[0]._id}`)
-        .send(data)
         .expect(200)
         .expect(res => {
           expect(typeof res.body.expiredAt).toBe('number');
         })
-        .end((err, res) => {
-          if (err) {
-            return done(err);
+        .end(async (err, res) => {
+          try {
+            if (err) throw new Error(err);
+            const foundTicket = await Ticket.findById(tickets[0]._id);
+            expect(typeof foundTicket.expiredAt).toBe('number');
+            const foundUser = await User.findById(tickets[0]._user);
+            expect(foundUser.expiredAt).toBe(foundTicket.expiredAt);
+            done();
+          } catch (e) {
+            done(e);
           }
-
-          Ticket.findById(tickets[0]._id)
-            .then(foundTicket => {
-              expect(typeof foundTicket.expiredAt).toBe('number');
-              done();
-            })
-            .catch(e => {
-              done(e);
-            });
         });
     });
 

@@ -1,5 +1,8 @@
 node_modules
 config/*.json
+config/firebase.js
 coverage
 .eslintrc
 log/*.log
+log/*.json
+npm-debug.log
