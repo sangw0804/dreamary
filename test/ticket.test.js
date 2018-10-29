@@ -137,19 +137,17 @@ describe('Ticket', () => {
         .expect(res => {
           expect(typeof res.body.expiredAt).toBe('number');
         })
-        .end((err, res) => {
-          if (err) {
-            return done(err);
+        .end(async (err, res) => {
+          try {
+            if (err) throw new Error(err);
+            const foundTicket = await Ticket.findById(tickets[0]._id);
+            expect(typeof foundTicket.expiredAt).toBe('number');
+            const foundUser = await User.findById(tickets[0]._user);
+            expect(foundUser.expiredAt).toBe(foundTicket.expiredAt);
+            done();
+          } catch (e) {
+            done(e);
           }
-
-          Ticket.findById(tickets[0]._id)
-            .then(foundTicket => {
-              expect(typeof foundTicket.expiredAt).toBe('number');
-              done();
-            })
-            .catch(e => {
-              done(e);
-            });
         });
     });
 
