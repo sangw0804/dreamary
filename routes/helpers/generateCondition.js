@@ -4,6 +4,7 @@ const generateCondition = (date, kinds, gender, sido, sigungu) => {
     // date: new Date(date).getTime(),
   };
   if (gender) condition.requireGender = { $in: [gender, 'both'] };
+
   if (sido) condition.sido = sido;
   if (sigungu) condition.sigungu = sigungu;
   if (date) condition.date = date;

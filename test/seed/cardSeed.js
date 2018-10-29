@@ -42,7 +42,9 @@ const cards = [
       cut: false,
       perm: false,
       dye: true
-    }
+    },
+    sido: '서울',
+    sigungu: '강서구'
   },
   {
     _id: new ObjectID(),
@@ -81,7 +83,9 @@ const cards = [
       cut: false,
       perm: true,
       dye: false
-    }
+    },
+    sido: '서울',
+    sigungu: '강남구'
   }
 ];
 
