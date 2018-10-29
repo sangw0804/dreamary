@@ -5,6 +5,7 @@ const generateCondition = (date, kinds, gender, region) => {
   };
   if (gender) condition.requireGender = { $in: [gender, 'both'] };
   if (region) condition.region = region;
+  if (date) condition.date = date;
 
   Object.keys(kinds).forEach(kind => {
     switch (kinds[kind]) {
