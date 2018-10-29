@@ -71,7 +71,8 @@ const cardSchema = new mongoose.Schema(
         default: false
       }
     },
-    region: String,
+    sido: String,
+    sigungu: String,
     shop: String,
     requireGender: String,
     createdAt: {
