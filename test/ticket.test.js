@@ -19,7 +19,7 @@ describe('Ticket', () => {
         .expect(200)
         .expect(res => {
           expect(res.body.length).toBe(2);
-          expect(res.body[0].price).toBe(3000);
+          expect(res.body[0].price).toBe(10000);
         })
         .end(done);
     });

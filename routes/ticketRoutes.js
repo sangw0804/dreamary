@@ -48,15 +48,17 @@ router.post('/', async (req, res) => {
 // PATCH /users/:id/tickets/:ticket_id
 router.patch('/:ticket_id', async (req, res) => {
   try {
-    const foundUser = await User.findOne({ _id: req.params.id });
+    const { id, ticket_id } = req.params;
+    const foundUser = await User.findOne({ _id: id });
     if (!foundUser) {
       throw new Error('user not found!!');
     }
 
-    const foundTicket = await Ticket.findById(req.params.ticket_id);
-    foundTicket.activatedAt = new Date().getTime();
-    foundTicket.expiredAt = foundTicket.activatedAt + 2592000000; // add 30 days
+    const foundTicket = await Ticket.findById(ticket_id);
+    foundTicket.activate();
     const savedTicket = await foundTicket.save();
+    foundUser.expiredAt = foundTicket.expiredAt;
+    await foundUser.save();
 
     res.status(200).send(savedTicket);
   } catch (e) {

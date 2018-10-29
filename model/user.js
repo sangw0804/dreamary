@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
+    expiredAt: {
+      type: Number,
+      default: null
+    },
     createdAt: {
       type: Number,
       default: new Date().getTime()

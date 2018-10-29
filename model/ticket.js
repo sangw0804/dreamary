@@ -29,7 +29,13 @@ const ticketSchema = new mongoose.Schema(
   }
 );
 
-// ticketSchema.methods.
+ticketSchema.methods.activate = function() {
+  const ticket = this;
+  ticket.activatedAt = Math.floor(new Date().getTime() / 86400000) * 86400000;
+  const kind = 1;
+  if (ticket.price == 28000) kind = 3;
+  ticket.expiredAt = ticket.activatedAt + 2678400000 * kind; // add 31 days or 93 days
+};
 
 const Ticket = mongoose.model('Ticket', ticketSchema);
 
