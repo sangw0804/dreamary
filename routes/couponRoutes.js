@@ -20,9 +20,9 @@ router.get('/', async (req, res) => {
 // POST /coupons
 router.post('/', async (req, res) => {
   try {
-    const { point, number } = req.body;
+    const { point, number, forDesigner } = req.body;
     if (!point || !number) throw new Error('invalid params!!!');
-    const coupons = await Coupon.makeCoupons(point, number);
+    const coupons = await Coupon.makeCoupons(point, number, forDesigner);
 
     res.status(200).send(coupons);
   } catch (e) {
@@ -34,14 +34,19 @@ router.post('/', async (req, res) => {
 // PATCH /coupons/:id
 router.patch('/:id', async (req, res) => {
   try {
-    const { _user } = req.body;
+    const { _user, isD } = req.body;
     const { id } = req.params;
     const coupon = await Coupon.findById(id);
     const user = await User.findById(_user);
     if (!coupon || !user) throw new Error('coupon || user not found!');
+    if (isD !== user.isD) throw new Error('coupon type and user type not match!!!');
 
     coupon._user = _user;
-    user.point += coupon.point;
+    if (user.forDesigner) {
+      user.expiredAt += coupon.point;
+    } else {
+      user.point += coupon.point;
+    }
 
     const savedCoupon = await coupon.save();
     await user.save();
