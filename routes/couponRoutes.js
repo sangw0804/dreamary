@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router({ mergeParams: true });
 const { Coupon } = require('../model/coupon');
+const { Ticket } = require('../model/ticket');
 const { User } = require('../model/user');
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
 
@@ -43,7 +44,10 @@ router.patch('/:id', async (req, res) => {
 
     coupon._user = _user;
     if (user.forDesigner) {
-      user.expiredAt += coupon.point;
+      Ticket.create({
+        price: coupon.point,
+        _user
+      });
     } else {
       user.point += coupon.point;
     }
