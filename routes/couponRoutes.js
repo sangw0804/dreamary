@@ -44,10 +44,11 @@ router.patch('/:id', async (req, res) => {
 
     coupon._user = _user;
     if (user.forDesigner) {
-      Ticket.create({
+      const ticket = await Ticket.create({
         price: coupon.point,
         _user
       });
+      user._tickets.push(ticket._id);
     } else {
       user.point += coupon.point;
     }
