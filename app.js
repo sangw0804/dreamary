@@ -35,7 +35,7 @@ app.use(cors());
 
 firebase.initializeApp(config.FIREBASE_CONFIG);
 
-admin.initializeApp({
+ admin.initializeApp({
   credential: admin.credential.cert(config.FIREBASE_ADMIN_CONFIG),
   databaseURL: config.FIREBASE_CONFIG.databaseURL
 });
