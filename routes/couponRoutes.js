@@ -36,7 +36,7 @@ router.patch('/:id', async (req, res) => {
   try {
     const { _user, isD } = req.body;
     const { id } = req.params;
-    const coupon = await Coupon.findById(id);
+    const coupon = await Coupon.findById(+id);
     const user = await User.findById(_user);
     if (!coupon || !user) throw new Error('coupon || user not found!');
     if (isD !== coupon.forDesigner) throw new Error('coupon type and user type not match!!!');

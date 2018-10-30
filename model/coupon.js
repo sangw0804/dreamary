@@ -8,7 +8,7 @@ const couponSchema = new mongoose.Schema(
       type: Number,
       required: true
     },
-    forDisgner: {
+    forDesigner: {
       type: Boolean,
       required: true
     },
