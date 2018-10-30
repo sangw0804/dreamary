@@ -26,7 +26,8 @@ describe('Coupon', () => {
     it('should make coupons with valid data', done => {
       const validData = {
         point: 1000,
-        number: 10
+        number: 10,
+        forDesigner: true
       };
       request(app)
         .post('/coupons')
@@ -71,7 +72,8 @@ describe('Coupon', () => {
   describe('PATCH /coupons/:id', () => {
     it('should update coupon with valid data', done => {
       const validData = {
-        _user: users[1]._id
+        _user: users[1]._id,
+        isD: false
       };
       request(app)
         .patch(`/coupons/${coupons[0]._id}`)
@@ -85,6 +87,30 @@ describe('Coupon', () => {
             expect(coupon._user.toHexString()).toBe(users[1]._id.toHexString());
             const user = await User.findById(users[1]._id);
             expect(user.point).toBe(coupons[0].point);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+    });
+
+    it('should update coupon and ticket with valid data', done => {
+      const validData = {
+        _user: users[2]._id,
+        isD: true
+      };
+      request(app)
+        .patch(`/coupons/${coupons[1]._id}`)
+        .send(validData)
+        .expect(200)
+        .end(async (err, res) => {
+          try {
+            if (err) throw new Error(err);
+
+            const coupon = await Coupon.findById(coupons[1]._id);
+            expect(coupon._user.toHexString()).toBe(users[2]._id.toHexString());
+            const user = await User.findById(users[2]._id);
+            expect(user._tickets.length).toBe(1);
             done();
           } catch (e) {
             done(e);
