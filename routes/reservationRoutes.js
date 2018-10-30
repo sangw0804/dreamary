@@ -22,24 +22,6 @@ router.get('/all', async (req, res) => {
   }
 });
 
-// GET /users/:user_id/reservations
-router.get('/', async (req, res) => {
-  try {
-    const { user_id } = req.params;
-    const foundReservations = await Reservation.find({ $or: [{ _user: user_id }, { _designer: user_id }] })
-      .populate({ path: '_designer', populate: { path: '_recruit' } })
-      .populate('_user')
-      .populate('_review')
-      .populate('_card')
-      .exec();
-
-    res.status(200).send(foundReservations);
-  } catch (e) {
-    logger && logger.error('GET /users/:user_id/reservations | %o', e);
-    res.status(400).send(e);
-  }
-});
-
 // GET /users/:user_id/reservations/:id
 router.get('/:id', async (req, res) => {
   try {
@@ -52,6 +34,24 @@ router.get('/:id', async (req, res) => {
       .exec();
 
     res.status(200).send(foundReservation);
+  } catch (e) {
+    logger && logger.error('GET /users/:user_id/reservations | %o', e);
+    res.status(400).send(e);
+  }
+});
+
+// GET /users/:user_id/reservations
+router.get('/', async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const foundReservations = await Reservation.find({ $or: [{ _user: user_id }, { _designer: user_id }] })
+      .populate({ path: '_designer', populate: { path: '_recruit' } })
+      .populate('_user')
+      .populate('_review')
+      .populate('_card')
+      .exec();
+
+    res.status(200).send(foundReservations);
   } catch (e) {
     logger && logger.error('GET /users/:user_id/reservations | %o', e);
     res.status(400).send(e);
