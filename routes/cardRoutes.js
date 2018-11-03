@@ -45,7 +45,7 @@ router.get('/recruits/:recruit_id/cards', async (req, res) => {
 // POST /recruits/:recruit_id/cards
 router.post('/recruits/:recruit_id/cards', async (req, res) => {
   try {
-    const { date, ableTimes, sido, sigungu, shop, requireGender, permPrice, dyePrice, must, no } = req.body;
+    const { date, ableTimes, sido, sigungu, shop, requireGender, permPrice, dyePrice, must, no, picture } = req.body;
     const { recruit_id } = req.params;
 
     const createdCard = await Card.create({
@@ -54,6 +54,7 @@ router.post('/recruits/:recruit_id/cards', async (req, res) => {
       ableTimes,
       permPrice,
       dyePrice,
+      picture,
       must,
       no,
       sido,

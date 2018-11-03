@@ -75,6 +75,7 @@ const cardSchema = new mongoose.Schema(
     sigungu: String,
     shop: String,
     requireGender: String,
+    picture: String,
     createdAt: {
       type: Number,
       default: new Date().getTime()
