@@ -8,13 +8,15 @@ const coupons = [
     _id: Math.floor(Math.random() * 10 ** 12),
     point: 3000,
     _user: null,
-    createdAt: new Date().getTime()
+    createdAt: new Date().getTime(),
+    forDesigner: false
   },
   {
     _id: Math.floor(Math.random() * 10 ** 12),
     point: 2000,
     _user: users[0]._id,
-    createdAt: new Date().getTime() - 1000000
+    createdAt: new Date().getTime() - 1000000,
+    forDesigner: true
   }
 ];
 

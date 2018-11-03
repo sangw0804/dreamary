@@ -28,6 +28,18 @@ describe('Reservation', () => {
     });
   });
 
+  describe('GET /users/:user_id/reservations/:id', () => {
+    it('should get one reservation', done => {
+      request(app)
+        .get(`/users/${users[0]._id}/reservations/${reservations[0]._id}`)
+        .expect(200)
+        .expect(res => {
+          expect(res.body._id).toBe(reservations[0]._id.toHexString());
+        })
+        .end(done);
+    });
+  });
+
   describe('POST /users/:user_id/reservations', () => {
     it('should create new reservation with valid data', done => {
       const data = {

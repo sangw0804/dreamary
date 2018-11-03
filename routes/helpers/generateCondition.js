@@ -1,10 +1,13 @@
-const generateCondition = (date, kinds, gender, region) => {
+const generateCondition = (date, kinds, gender, sido, sigungu) => {
   const condition = {
     // requireGender: { $in: [gender, 'both'] }
     // date: new Date(date).getTime(),
   };
   if (gender) condition.requireGender = { $in: [gender, 'both'] };
-  if (region) condition.region = region;
+
+  if (sido) condition.sido = sido;
+  if (sigungu) condition.sigungu = sigungu;
+  if (date) condition.date = date;
 
   Object.keys(kinds).forEach(kind => {
     switch (kinds[kind]) {

@@ -8,6 +8,10 @@ const couponSchema = new mongoose.Schema(
       type: Number,
       required: true
     },
+    forDesigner: {
+      type: Boolean,
+      required: true
+    },
     point: {
       type: Number,
       required: true
@@ -27,11 +31,11 @@ const couponSchema = new mongoose.Schema(
   }
 );
 
-couponSchema.statics.makeCoupons = async function(point, number) {
-  const Coupon = this;
-  const coupons = [];
+couponSchema.statics.makeCoupons = async function(point, number, forDesigner) {
+  let Coupon = this;
+  let coupons = [];
   for (let i = 0; i < number; i++) {
-    coupons.push(await Coupon.create({ point, _id: Math.floor(Math.random() * 10 ** 12) }));
+    coupons.push(await Coupon.create({ point, _id: Math.floor(Math.random() * 10 ** 12), forDesigner }));
   }
   return coupons;
 };

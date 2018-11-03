@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router({ mergeParams: true });
 const { Coupon } = require('../model/coupon');
+const { Ticket } = require('../model/ticket');
 const { User } = require('../model/user');
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
 
@@ -20,12 +21,13 @@ router.get('/', async (req, res) => {
 // POST /coupons
 router.post('/', async (req, res) => {
   try {
-    const { point, number } = req.body;
+    const { point, number, forDesigner } = req.body;
     if (!point || !number) throw new Error('invalid params!!!');
-    const coupons = await Coupon.makeCoupons(point, number);
+    const coupons = await Coupon.makeCoupons(point, number, forDesigner);
 
     res.status(200).send(coupons);
   } catch (e) {
+    console.log(e);
     logger && logger.error('POST /coupons %o', e);
     res.status(400).send(e);
   }
@@ -34,14 +36,24 @@ router.post('/', async (req, res) => {
 // PATCH /coupons/:id
 router.patch('/:id', async (req, res) => {
   try {
-    const { _user } = req.body;
+    const { _user, isD } = req.body;
     const { id } = req.params;
-    const coupon = await Coupon.findById(id);
+    const coupon = await Coupon.findById(+id);
     const user = await User.findById(_user);
     if (!coupon || !user) throw new Error('coupon || user not found!');
+    console.log(isD, coupon.forDesigner);
+    if (isD !== coupon.forDesigner) throw new Error('coupon type and user type not match!!!');
 
     coupon._user = _user;
-    user.point += coupon.point;
+    if (coupon.forDesigner) {
+      const ticket = await Ticket.create({
+        price: coupon.point,
+        _user
+      });
+      user._tickets.push(ticket._id);
+    } else {
+      user.point += coupon.point;
+    }
 
     const savedCoupon = await coupon.save();
     await user.save();

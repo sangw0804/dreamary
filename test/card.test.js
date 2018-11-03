@@ -45,7 +45,7 @@ describe('Card', () => {
   describe('GET /recruits/:id/cards', () => {
     it('should get every cards of this recruit', done => {
       request(app)
-        .get(`/recruits/${recruits[0]._id}/cards`)
+        .get(`/recruits/${recruits[0]._id}/cards?`)
         .expect(200)
         .expect(res => {
           expect(res.body.length).toBe(1);
