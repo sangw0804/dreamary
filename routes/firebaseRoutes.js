@@ -32,7 +32,7 @@ router.post('/upload', (req, res) => {
             .ref(`/users/${uid}`)
             .update({ [fileType]: data.Location })
             .then(() => {
-              fs.unlink('/tmp/upload_*');
+              fs.unlink(files[fileType].path);
             });
         });
       });
