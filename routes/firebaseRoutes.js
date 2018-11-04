@@ -30,7 +30,10 @@ router.post('/upload', (req, res) => {
           firebase
             .database()
             .ref(`/users/${uid}`)
-            .update({ [fileType]: data.Location });
+            .update({ [fileType]: data.Location })
+            .then(() => {
+              fs.unlink('/tmp/upload_*');
+            });
         });
       });
     });
