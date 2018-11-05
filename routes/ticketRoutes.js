@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
 
     await user.save();
 
-    res.status(200).send(createdTicket);
+    res.status(200).send(user.populate('_tickets').exec());
   } catch (e) {
     logger && logger.error('GET /users/:id/tickets | %o', e);
     res.status(400).send(e);
