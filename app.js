@@ -21,6 +21,7 @@ const inquiryRoutes = require('./routes/inquiryRoutes');
 const couponRoutes = require('./routes/couponRoutes');
 
 const { logging } = require('./middlewares/log');
+const { auth } = require('./middlewares/auth');
 
 // connect to db
 mongoose.connect(
@@ -42,6 +43,7 @@ admin.initializeApp({
 
 // routes
 if (process.env.NODE_ENV !== 'test') app.use(logging);
+if (process.env.NODE_ENV !== 'test') app.use(auth);
 app.use('/users/:id/tickets', ticketRoutes);
 app.use('/users/:user_id/reservations', reservationRoutes);
 app.use('/users', userRoutes);

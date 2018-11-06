@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).send(createdTicket);
   } catch (e) {
-    logger && logger.error('GET /users/:id/tickets | %o', e);
+    logger && logger.error('POST /users/:id/tickets | %o', e);
     res.status(400).send(e);
   }
 });
@@ -62,7 +62,7 @@ router.patch('/:ticket_id', async (req, res) => {
 
     res.status(200).send(savedTicket);
   } catch (e) {
-    logger && logger.error('GET /users/:id/tickets | %o', e);
+    logger && logger.error('PATCH /users/:id/tickets | %o', e);
     res.status(400).send(e);
   }
 });
