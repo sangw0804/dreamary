@@ -63,6 +63,22 @@ router.post('/', async (req, res) => {
   }
 });
 
+// PATCH /recruits/:id/updateportpolios
+router.patch('/:id/updateportpolios', async (req, res) => {
+  try {
+    const { remove } = req.body;
+    const foundRecruit = await Recruit.findById(req.params.id);
+    if (!foundRecruit) throw new Error('Recruit not found!!');
+    foundRecruit.portfolios = foundRecruit.portfolios.filter(url => url !== remove);
+    await foundRecruit.save();
+
+    res.status(200).send(foundRecruit);
+  } catch (e) {
+    logger && logger.error('PATCH /recruits/:id | %o', e);
+    res.status(400).send(e);
+  }
+});
+
 // PATCH /recruits/:id
 router.patch('/:id', async (req, res) => {
   try {
