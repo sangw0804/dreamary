@@ -26,10 +26,11 @@ router.post('/upload', (req, res) => {
           ACL: 'public-read',
           Body: fs.createReadStream(files[fileType].path)
         };
-        s3.upload(params, async (err, data) => {
+        s3.upload(params, (err, data) => {
           if (err) throw new Error('something wrong!');
+          console.log(fileType);
 
-          if (fileType in ['cert_mh', 'cert_jg', 'profile']) {
+          if (['cert_mh', 'cert_jg', 'profile'].includes(fileType)) {
             firebase
               .database()
               .ref(`/users/${uid}`)
@@ -41,10 +42,12 @@ router.post('/upload', (req, res) => {
             firebase
               .database()
               .ref(`/users/${uid}`)
-              .on('value', snapshot => {
+              .once('value')
+              .then(snapshot => {
                 let { portfolios } = snapshot.val();
                 if (!portfolios) portfolios = [];
                 portfolios.push(data.Location);
+                console.log(portfolios);
                 firebase
                   .database()
                   .ref(`/users/${uid}`)
