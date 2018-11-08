@@ -4,6 +4,7 @@ const formidable = require('formidable');
 const AWS = require('aws-sdk');
 const fs = require('fs');
 const firebase = require('firebase');
+const { Recruit } = require('../model/recruit');
 
 const router = express.Router();
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
@@ -15,6 +16,7 @@ router.post('/upload', (req, res) => {
     const form = new formidable.IncomingForm();
     const { uid } = req.query;
     const randomNum = Math.floor(Math.random() * 1000000);
+
     form.parse(req, (err, fields, files) => {
       Object.keys(files).forEach(fileType => {
         const s3 = new AWS.S3();
@@ -24,16 +26,34 @@ router.post('/upload', (req, res) => {
           ACL: 'public-read',
           Body: fs.createReadStream(files[fileType].path)
         };
-        s3.upload(params, (err, data) => {
+        s3.upload(params, async (err, data) => {
           if (err) throw new Error('something wrong!');
 
-          firebase
-            .database()
-            .ref(`/users/${uid}`)
-            .update({ [fileType]: data.Location })
-            .then(() => {
-              fs.unlink(files[fileType].path);
-            });
+          if (fileType in ['cert_mh', 'cert_jg', 'profile']) {
+            firebase
+              .database()
+              .ref(`/users/${uid}`)
+              .update({ [fileType]: data.Location })
+              .then(() => {
+                fs.unlink(files[fileType].path);
+              });
+          } else {
+            firebase
+              .database()
+              .ref(`/users/${uid}`)
+              .on('value', snapshot => {
+                let { portfolios } = snapshot.val();
+                if (!portfolios) portfolios = [];
+                portfolios.push(data.Location);
+                firebase
+                  .database()
+                  .ref(`/users/${uid}`)
+                  .update({ portfolios })
+                  .then(() => {
+                    fs.unlink(files[fileType].path);
+                  });
+              });
+          }
         });
       });
     });
