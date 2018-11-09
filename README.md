@@ -36,7 +36,9 @@
 - users
 
   > GET /users <br>
+  > GET /users/:id
   > POST /users
+  > PATCH /user/:id/addpoint
 
 - recruits
 
@@ -51,7 +53,8 @@
   > GET /cards <br>
   > GET /recruits/:recruit_id/cards <br>
 
-위의 두 요청은 query parameter 로 cut , perm , dye 를 받을수 있고 1 은 꼭 받아야 함, 2 는 받기 싫음, param 이 없으면 상관없음이다.
+위의 두 요청은 query parameter 로 cut , perm , dye 를 받을수 있고 1 은 꼭 받아야 함, 2 는 받기 싫음, param 이 없으면 상관없음이다.<br>
+그 외에도 date, gender, sido, sigungu 를 받을 수 있다.
 
 > POST /recruits/:recruit_id/cards <br>
 > DELETE /recruits/:recruit_id/cards/:id
@@ -60,10 +63,29 @@
 
   > GET /users/:user_id/reservations/all <br>
   > GET /users/:user_id/reservations <br>
+  > GET /users/:user_id/reservations/:id <br>
   > POST /users/:user_id/reservations <br>
+  > PATCH /users/:user_id/reservations/:id <br>
   > DELETE /users/:user_id/reservations/:id
 
-- tickets (사용 X)
+- tickets
+
   > GET /users/:id/tickets <br>
-  > POST /users/:id/tickets --body {isD: 구매유저 디자이너 여부 불린값} <br>
+  > POST /users/:id/tickets <br>
   > PATCH /users/:id/tickets/:ticket_id
+
+- reviews
+
+  > POST /recruits/:recruit_id/reviews
+  > PATCH /recruits/:recruit_id/reviews/:id/images
+  > DELETE /recruits/:recruit_id/reviews/:id
+
+- coupon
+
+  > GET /coupons <br>
+  > POST /coupons <br>
+  > PATCH /coupons/:id <br>
+
+- inquiries
+  > GET /inquiries <br>
+  > POST /inquiries
