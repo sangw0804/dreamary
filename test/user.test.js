@@ -69,6 +69,7 @@ describe('User', () => {
     it('should add 1000 point to user', done => {
       request(app)
         .patch(`/users/${users[0]._id}/addpoint`)
+        .send({ point: 1000 })
         .expect(200)
         .expect(res => {
           expect(res.body.point).toBe(1000);

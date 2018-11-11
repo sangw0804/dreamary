@@ -49,8 +49,10 @@ router.post('/', async (req, res) => {
 // PATCH /users/:id/addpoint
 router.patch('/:id/addpoint', async (req, res) => {
   try {
+    const { point } = req.body;
     const foundUser = await User.findById(req.params.id);
-    foundUser.point += 1000;
+    if (!foundUser) throw new Error('user not found!');
+    foundUser.point += point;
     await foundUser.save();
 
     res.status(200).send(foundUser);
