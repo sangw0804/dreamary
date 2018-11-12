@@ -47,19 +47,18 @@ router.post('/upload', async (req, res) => {
 
     let Locations = await Promise.all(promises);
     Locations = Locations.filter(loc => !!loc);
-    logger.info(Locations);
-    // const snapshot = await firebase
-    //   .database()
-    //   .ref(`/users/${uid}`)
-    //   .once('value');
+    const snapshot = await firebase
+      .database()
+      .ref(`/users/${uid}`)
+      .once('value');
 
-    // let { portfolios } = snapshot.val();
-    // if (!portfolios) portfolios = [];
-    // portfolios.concat(Locations);
-    // await firebase
-    //   .database()
-    //   .ref(`/users/${uid}`)
-    //   .update({ portfolios });
+    let { portfolios } = snapshot.val();
+    if (!portfolios) portfolios = [];
+    portfolios.concat(Locations);
+    await firebase
+      .database()
+      .ref(`/users/${uid}`)
+      .update({ portfolios });
 
     //   s3.upload(params, (err, data) => {
     //     if (err) throw new Error('something wrong!');
