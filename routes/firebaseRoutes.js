@@ -46,7 +46,7 @@ router.post('/upload', async (req, res) => {
 
     if (promises.length) {
       const Locations = await Promise.all(promises);
-      const snapshot = firebase
+      const snapshot = await firebase
         .database()
         .ref(`/users/${uid}`)
         .once('value');
