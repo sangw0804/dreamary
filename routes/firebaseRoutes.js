@@ -51,10 +51,12 @@ router.post('/upload', async (req, res) => {
       .database()
       .ref(`/users/${uid}`)
       .once('value');
+    logger.info('%o', snapshot);
 
     let { portfolios } = snapshot.val();
+    logger.info('%o', portfolios);
     if (!portfolios) portfolios = [];
-    portfolios.concat(Locations);
+    portfolios = portfolios.concat(Locations);
     await firebase
       .database()
       .ref(`/users/${uid}`)
