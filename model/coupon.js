@@ -32,8 +32,8 @@ const couponSchema = new mongoose.Schema(
 );
 
 couponSchema.statics.makeCoupons = async function(point, number, forDesigner) {
-  let Coupon = this;
-  let coupons = [];
+  const Coupon = this;
+  const coupons = [];
   for (let i = 0; i < number; i++) {
     coupons.push(await Coupon.create({ point, _id: Math.floor(Math.random() * 10 ** 12), forDesigner }));
   }

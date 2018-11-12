@@ -97,7 +97,7 @@ function sortTimes(next) {
 
 async function updateReservable() {
   const card = this;
-  const { reservedTimes, ableTimes } = card;
+  const { reservedTimes, ableTimes, must } = card;
   let largestAbleTime = 0;
   ableTimes.forEach(time => {
     const reserveds = reservedTimes.filter(rt => rt.until <= time.until && rt.since >= time.since);
@@ -114,10 +114,13 @@ async function updateReservable() {
     largestAbleTime = Math.max(largestAbleTime, tempLargest);
   });
 
-  const {
-    requireTime: { cut, perm, dye }
-  } = await Recruit.findById(card._recruit);
-  card.reservable = largestAbleTime >= Math.min(cut, perm, dye);
+  const { requireTime } = await Recruit.findById(card._recruit);
+  let times = [];
+  for (let key in must) {
+    if (must[key]) times.push(requireTime[key]);
+  }
+  if (!times.length) times = Object.values(requireTime);
+  card.reservable = largestAbleTime >= Math.min(...times);
 }
 
 async function validateRecruit() {
@@ -135,32 +138,17 @@ cardSchema.methods.updateRecruitDB = async function() {
   await recruit.save();
 };
 
-// async function updateRelationalDBs(doc) {
-//   const recruit = await Recruit.findById(doc._recruit);
-//   recruit._cards = updateIdArray(recruit._cards, doc._id);
-//   await recruit.save();
-// }
-
 cardSchema.methods.removeRecruitDB = async function() {
   const recruit = await Recruit.findById(this._recruit);
   recruit._cards = recruit._cards.filter(_card => _card._id.toHexString() !== this._id.toHexString());
   await recruit.save();
 };
 
-// async function removeRelationalDBs(doc) {
-//   const recruit = await Recruit.findById(doc._recruit);
-//   recruit._cards = recruit._cards.filter(_card => _card._id.toHexString() !== doc._id.toHexString());
-//   await recruit.save();
-// }
-
 cardSchema.pre('save', validateRecruit);
 cardSchema.pre('save', sortTimes);
 cardSchema.pre('save', updateReservable);
 cardSchema.pre('remove', sortTimes);
 cardSchema.pre('remove', updateReservable);
-
-// cardSchema.post('save', updateRelationalDBs);
-// cardSchema.post('remove', removeRelationalDBs);
 
 const Card = mongoose.model('Card', cardSchema);
 
