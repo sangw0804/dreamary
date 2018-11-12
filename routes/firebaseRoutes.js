@@ -45,18 +45,20 @@ router.post('/upload', async (req, res) => {
 
     let Locations = await Promise.all(promises);
     Locations = Locations.filter(loc => !!loc);
-    const snapshot = await firebase
-      .database()
-      .ref(`/users/${uid}`)
-      .once('value');
+    if (Locations.length) {
+      const snapshot = await firebase
+        .database()
+        .ref(`/users/${uid}`)
+        .once('value');
 
-    let { portfolios } = snapshot.val();
-    if (!portfolios) portfolios = [];
-    portfolios = portfolios.concat(Locations);
-    await firebase
-      .database()
-      .ref(`/users/${uid}`)
-      .update({ portfolios });
+      let { portfolios } = snapshot.val();
+      if (!portfolios) portfolios = [];
+      portfolios = portfolios.concat(Locations);
+      await firebase
+        .database()
+        .ref(`/users/${uid}`)
+        .update({ portfolios });
+    }
 
     res.status(200).send(req.files);
   } catch (e) {
