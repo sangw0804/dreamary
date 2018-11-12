@@ -61,29 +61,12 @@ recruitSchema.methods.updateRelatedDB = async function() {
   await user.save();
 };
 
-// async function updateRelatedDBs(doc) {
-//   const recruit = doc;
-//   const user = await User.findById(recruit._designer);
-//   user._recruit = recruit._id;
-//   await user.save();
-// }
-
 recruitSchema.methods.removeRelatedDB = async function() {
   const recruit = this;
   const user = await User.findById(recruit._designer);
   user._recruit = null;
   await user.save();
 };
-
-// async function removeRelatedDBs(doc) {
-//   const recruit = doc;
-//   const user = await User.findById(recruit._designer);
-//   user._recruit = null;
-//   await user.save();
-// }
-
-// recruitSchema.post('save', updateRelatedDBs);
-// recruitSchema.post('remove', removeRelatedDBs);
 
 const Recruit = mongoose.model('Recruit', recruitSchema);
 

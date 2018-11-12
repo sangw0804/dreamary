@@ -27,7 +27,6 @@ router.post('/', async (req, res) => {
 
     res.status(200).send(coupons);
   } catch (e) {
-    console.log(e);
     logger && logger.error('POST /coupons %o', e);
     res.status(400).send(e);
   }
@@ -41,7 +40,6 @@ router.patch('/:id', async (req, res) => {
     const coupon = await Coupon.findById(+id);
     const user = await User.findById(_user);
     if (!coupon || !user) throw new Error('coupon || user not found!');
-    console.log(isD, coupon.forDesigner);
     if (isD !== coupon.forDesigner) throw new Error('coupon type and user type not match!!!');
 
     coupon._user = _user;
