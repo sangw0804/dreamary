@@ -30,15 +30,13 @@ router.post('/upload', async (req, res) => {
       };
 
       const data = await s3.upload(params).promise();
+      fs.unlink(files[fileType].path);
       if (['cert_mh', 'cert_jg', 'profile'].includes(fileType)) {
         await firebase
           .database()
           .ref(`/users/${uid}`)
           .update({ [fileType]: data.Location });
-
-        fs.unlink(files[fileType].path);
       } else {
-        fs.unlink(files[fileType].path);
         return data.Location;
       }
     });
