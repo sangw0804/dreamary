@@ -16,6 +16,10 @@ const cards = [
       {
         since: 1200,
         until: 1320
+      },
+      {
+        since: 1380,
+        until: 1470
       }
     ],
     reservedTimes: [],
