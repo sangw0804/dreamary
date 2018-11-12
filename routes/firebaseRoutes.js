@@ -45,7 +45,8 @@ router.post('/upload', async (req, res) => {
       }
     });
 
-    const Locations = await Promise.all(promises);
+    let Locations = await Promise.all(promises);
+    Locations = Locations.filter(loc => !!loc);
     logger.info(Locations);
     // const snapshot = await firebase
     //   .database()
