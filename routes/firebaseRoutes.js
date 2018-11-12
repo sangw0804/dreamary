@@ -20,7 +20,8 @@ router.post('/upload', async (req, res) => {
 
     const { err, fields, files } = await formPromise(req);
     if (err) throw new Error(err);
-    for (let fileType of Object.keys(files)) {
+    const promises = [];
+    Object.keys(files).forEach(async fileType => {
       const s3 = new AWS.S3();
       const params = {
         Bucket: 'dreamary',
@@ -38,21 +39,25 @@ router.post('/upload', async (req, res) => {
 
         fs.unlink(files[fileType].path);
       } else {
-        const snapshot = await firebase
-          .database()
-          .ref(`/users/${uid}`)
-          .once('value');
-
-        let { portfolios } = snapshot.val();
-        if (!portfolios) portfolios = [];
-        portfolios.push(data.Location);
-
-        await firebase
-          .database()
-          .ref(`/users/${uid}`)
-          .update({ portfolios });
+        promises.push(new Promise((resolve, reject) => resolve(data.Location)));
         fs.unlink(files[fileType].path);
       }
+    });
+
+    if (promises.length) {
+      const Locations = await Promise.all(promises);
+      const snapshot = firebase
+        .database()
+        .ref(`/users/${uid}`)
+        .once('value');
+
+      let { portfolios } = snapshot.val();
+      if (!portfolios) portfolios = [];
+      portfolios.concat(Locations);
+      await firebase
+        .database()
+        .ref(`/users/${uid}`)
+        .update({ portfolios });
     }
 
     //   s3.upload(params, (err, data) => {
