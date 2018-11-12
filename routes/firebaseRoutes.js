@@ -19,42 +19,41 @@ router.post('/upload', async (req, res) => {
     const randomNum = Math.floor(Math.random() * 1000000);
 
     const { err, fields, files } = await formPromise(req);
-    logger.info('%o', { err, fields, files });
-    // if (err) throw new Error(err);
-    // Object.keys(files, async fileType => {
-    //   const s3 = new AWS.S3();
-    //   const params = {
-    //     Bucket: 'dreamary',
-    //     Key: randomNum + files[fileType].name,
-    //     ACL: 'public-read',
-    //     Body: fs.createReadStream(files[fileType].path)
-    //   };
+    if (err) throw new Error(err);
+    for (let fileType of Object.keys(files)) {
+      const s3 = new AWS.S3();
+      const params = {
+        Bucket: 'dreamary',
+        Key: randomNum + files[fileType].name,
+        ACL: 'public-read',
+        Body: fs.createReadStream(files[fileType].path)
+      };
 
-    //   const data = await s3.upload(params).promise();
-    //   if (['cert_mh', 'cert_jg', 'profile'].includes(fileType)) {
-    //     await firebase
-    //       .database()
-    //       .ref(`/users/${uid}`)
-    //       .update({ [fileType]: data.Location });
+      const data = await s3.upload(params).promise();
+      if (['cert_mh', 'cert_jg', 'profile'].includes(fileType)) {
+        await firebase
+          .database()
+          .ref(`/users/${uid}`)
+          .update({ [fileType]: data.Location });
 
-    //     fs.unlink(files[fileType].path);
-    //   } else {
-    //     const snapshot = await firebase
-    //       .database()
-    //       .ref(`/users/${uid}`)
-    //       .once('value');
+        fs.unlink(files[fileType].path);
+      } else {
+        const snapshot = await firebase
+          .database()
+          .ref(`/users/${uid}`)
+          .once('value');
 
-    //     let { portfolios } = snapshot.val();
-    //     if (!portfolios) portfolios = [];
-    //     portfolios.push(data.Location);
-    //     console.log(portfolios);
-    //     await firebase
-    //       .database()
-    //       .ref(`/users/${uid}`)
-    //       .update({ portfolios });
-    //     fs.unlink(files[fileType].path);
-    //   }
-    // });
+        let { portfolios } = snapshot.val();
+        if (!portfolios) portfolios = [];
+        portfolios.push(data.Location);
+
+        await firebase
+          .database()
+          .ref(`/users/${uid}`)
+          .update({ portfolios });
+        fs.unlink(files[fileType].path);
+      }
+    }
 
     //   s3.upload(params, (err, data) => {
     //     if (err) throw new Error('something wrong!');
