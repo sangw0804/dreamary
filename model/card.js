@@ -116,10 +116,13 @@ async function updateReservable() {
 
   const { requireTime } = await Recruit.findById(card._recruit);
   let times = [];
-  for (let key in must) {
-    if (must[key]) times.push(requireTime[key]);
-  }
+
+  Object.keys(must).forEach(key => {
+    if (key !== '$init' && must[key]) times.push(requireTime[key]);
+  });
+
   if (!times.length) times = Object.values(requireTime);
+
   card.reservable = largestAbleTime >= Math.min(...times);
 }
 

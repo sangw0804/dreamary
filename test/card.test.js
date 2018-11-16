@@ -126,6 +126,7 @@ describe('Card', () => {
             }
             const foundCards = await Card.find({ _recruit: recruits[0]._id });
             expect(foundCards.length).toBe(2);
+            expect(foundCards[1].reservable).toBe(true);
             const foundRecruit = await Recruit.findById(recruits[0]._id);
             expect(foundRecruit._cards.length).toBe(2);
             done();
