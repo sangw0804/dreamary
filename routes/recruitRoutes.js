@@ -52,7 +52,8 @@ router.post('/', async (req, res) => {
       requirement,
       shops,
       _reviews,
-      requireTime
+      requireTime,
+      createdAt: new Date().getTime()
     });
     await createdRecruit.updateRelatedDB();
 

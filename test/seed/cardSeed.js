@@ -48,7 +48,8 @@ const cards = [
       dye: true
     },
     sido: '서울',
-    sigungu: '강서구'
+    sigungu: '강서구',
+    createdAt: new Date().getTime()
   },
   {
     _id: new ObjectID(),
@@ -89,7 +90,8 @@ const cards = [
       dye: false
     },
     sido: '서울',
-    sigungu: '강남구'
+    sigungu: '강남구',
+    createdAt: new Date().getTime()
   }
 ];
 

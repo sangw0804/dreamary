@@ -30,13 +30,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { _uid, name } = req.body;
-    const body = {
-      _uid,
-      _tickets: [],
-      _reservations: [],
-      _recruit: null,
-      name
-    };
+    const body = { _uid, _tickets: [], _reservations: [], _recruit: null, name, createdAt: new Date().getTime() };
     const createdUser = await User.create(body);
 
     res.status(200).send(createdUser);

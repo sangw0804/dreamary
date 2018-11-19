@@ -8,21 +8,24 @@ const users = [
     _uid: '123',
     tickets: [],
     reservations: [],
-    point: 0
+    point: 0,
+    createdAt: new Date().getTime()
   },
   {
     _id: new ObjectID(),
     _uid: '456',
     tickets: [],
     reservations: [],
-    point: 0
+    point: 0,
+    createdAt: new Date().getTime()
   },
   {
     _id: new ObjectID(),
     _uid: '789',
     tickets: [],
     reservations: [],
-    point: 0
+    point: 0,
+    createdAt: new Date().getTime()
   }
 ];
 

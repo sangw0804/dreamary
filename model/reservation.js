@@ -54,7 +54,7 @@ const reservationSchema = new mongoose.Schema(
     cancelByUser: Boolean,
     createdAt: {
       type: Number,
-      default: new Date().getTime()
+      required: true
     }
   },
   {

@@ -61,7 +61,8 @@ router.post('/recruits/:recruit_id/cards', async (req, res) => {
       sigungu,
       shop,
       requireGender,
-      reservedTimes: []
+      reservedTimes: [],
+      createdAt: new Date().getTime()
     });
     await createdCard.updateRecruitDB();
     res.status(200).send(createdCard);
