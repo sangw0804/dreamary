@@ -78,7 +78,7 @@ const cardSchema = new mongoose.Schema(
     picture: String,
     createdAt: {
       type: Number,
-      default: new Date().getTime()
+      required: true
     }
   },
   {

@@ -20,13 +20,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { _user, title, name, email, content } = req.body;
-    const inquiry = await Inquiry.create({
-      _user,
-      title,
-      name,
-      email,
-      content
-    });
+    const inquiry = await Inquiry.create({ _user, title, name, email, content, createdAt: new Date().getTime() });
 
     res.status(200).send(inquiry);
   } catch (e) {

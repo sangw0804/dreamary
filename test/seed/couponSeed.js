@@ -14,7 +14,7 @@ const coupons = [
   {
     _id: Math.floor(Math.random() * 10 ** 12),
     point: 2000,
-    _user: users[0]._id,
+    _user: null,
     createdAt: new Date().getTime() - 1000000,
     forDesigner: true
   }

@@ -30,7 +30,8 @@ router.post('/', async (req, res) => {
       content,
       score,
       _reservation,
-      _recruit: req.params.recruit_id
+      _recruit: req.params.recruit_id,
+      createdAt: new Date().getTime()
     };
 
     const createdReview = await Review.create(body);

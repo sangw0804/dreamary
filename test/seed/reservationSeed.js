@@ -19,7 +19,8 @@ const reservations = [
       since: 1200,
       until: 1290
     },
-    _review: null
+    _review: null,
+    createdAt: new Date().getTime()
   },
   {
     _id: new ObjectID(),
@@ -34,7 +35,8 @@ const reservations = [
       since: 1200,
       until: 1290
     },
-    _review: null
+    _review: null,
+    createdAt: new Date().getTime()
   }
 ];
 

@@ -29,10 +29,7 @@ router.post('/', async (req, res) => {
     }
 
     const { price } = req.body;
-    const createdTicket = await Ticket.create({
-      price,
-      _user: req.params.id
-    });
+    const createdTicket = await Ticket.create({ price, _user: req.params.id, createdAt: new Date().getTime() });
 
     user._tickets.push(createdTicket._id);
 

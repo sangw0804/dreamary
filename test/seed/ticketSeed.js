@@ -9,21 +9,21 @@ const tickets = [
     _user: users[0]._id,
     isD: false,
     price: 10000,
-    purchasedAt: new Date().getTime()
+    createdAt: new Date().getTime()
   },
   {
     _id: new ObjectID(),
     _user: users[1]._id,
     isD: true,
     price: 10000,
-    purchasedAt: new Date().getTime()
+    createdAt: new Date().getTime()
   },
   {
     _id: new ObjectID(),
     _user: users[0]._id,
     isD: false,
     price: 28000,
-    purchasedAt: new Date().getTime()
+    createdAt: new Date().getTime()
   }
 ];
 

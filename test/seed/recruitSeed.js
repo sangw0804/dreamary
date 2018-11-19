@@ -15,7 +15,8 @@ const recruits = [
       cut: 90,
       perm: 180,
       dye: 120
-    }
+    },
+    createdAt: new Date().getTime()
   },
   {
     _id: new ObjectID(),
@@ -27,7 +28,8 @@ const recruits = [
       cut: 60,
       perm: 240,
       dye: 90
-    }
+    },
+    createdAt: new Date().getTime()
   }
 ];
 

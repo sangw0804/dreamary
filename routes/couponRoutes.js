@@ -45,10 +45,7 @@ router.patch('/:id', async (req, res) => {
 
     coupon._user = _user;
     if (coupon.forDesigner) {
-      const ticket = await Ticket.create({
-        price: coupon.point,
-        _user
-      });
+      const ticket = await Ticket.create({ price: coupon.point, _user, createdAt: new Date().getTime() });
       user._tickets.push(ticket._id);
     } else {
       user.point += coupon.point;
@@ -59,6 +56,7 @@ router.patch('/:id', async (req, res) => {
 
     res.status(200).send({ point: user.point });
   } catch (e) {
+    console.log(e);
     logger && logger.error('PATCH /coupons/:id %o', e);
     res.status(400).send(e);
   }

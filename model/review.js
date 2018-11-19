@@ -32,7 +32,7 @@ const reviewSchema = new mongoose.Schema(
     images: [String],
     createdAt: {
       type: Number,
-      default: new Date().getTime()
+      required: true
     }
   },
   {

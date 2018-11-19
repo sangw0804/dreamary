@@ -70,7 +70,8 @@ router.post('/', async (req, res) => {
       _card,
       date,
       services,
-      time
+      time,
+      createdAt: new Date().getTime()
     });
 
     await createdReservation.updateRelatedDB();
