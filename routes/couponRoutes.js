@@ -40,6 +40,7 @@ router.patch('/:id', async (req, res) => {
     const coupon = await Coupon.findById(+id);
     const user = await User.findById(_user);
     if (!coupon || !user) throw new Error('coupon || user not found!');
+    if (coupon._user) throw new Error('already used coupon!!');
     if (isD !== coupon.forDesigner) throw new Error('coupon type and user type not match!!!');
 
     coupon._user = _user;
@@ -53,10 +54,10 @@ router.patch('/:id', async (req, res) => {
       user.point += coupon.point;
     }
 
-    const savedCoupon = await coupon.save();
+    await coupon.save();
     await user.save();
 
-    res.status(200).send(savedCoupon);
+    res.status(200).send({ point: user.point });
   } catch (e) {
     logger && logger.error('PATCH /coupons/:id %o', e);
     res.status(400).send(e);
