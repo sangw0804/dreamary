@@ -51,6 +51,22 @@ router.patch('/:id/addpoint', async (req, res) => {
 
     res.status(200).send(foundUser);
   } catch (e) {
+    logger && logger.error('PATCH /users/:id/addpoint | %o', e);
+    res.status(400).send(e);
+  }
+});
+
+//PATCH /users/:id
+router.patch('/:id', async (req, res) => {
+  try {
+    const { name } = req.body;
+    const foundUser = await User.findById(req.params.id);
+    if (!foundUser) throw new Error('user not found!');
+    foundUser.name = name;
+    await foundUser.save();
+
+    res.status(200).send(foundUser);
+  } catch (e) {
     logger && logger.error('PATCH /users/:id | %o', e);
     res.status(400).send(e);
   }
