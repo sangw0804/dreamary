@@ -13,7 +13,7 @@ const { Reservation } = require('./model/reservation');
 
 const makeReview = async (name, recruit_id, score, content, createdAt) => {
   try {
-    const user = await User.create({ name, createdAt: new Date().getTime() });
+    const user = await User.create({ name, createdAt: new Date().getTime(), _uid: '12345678' });
 
     Review.create({
       _user: user._id,
