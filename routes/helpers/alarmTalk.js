@@ -13,7 +13,8 @@ const alarmTemplates = {
   designerReservationInformNow: ['DES0001', buttonNames[1], urls[1], urls[1]],
   designerReservationInformAgain: ['DES0002', buttonNames[1], urls[1], urls[1]],
   userCancelInfromDesigner: ['DES0003', buttonNames[1], urls[1], urls[1]],
-  designerCancel: ['DES0004', buttonNames[1], urls[1], urls[1]]
+  designerCancel: ['DES0004', buttonNames[1], urls[1], urls[1]],
+  designerServiceDone: ['DES0005', buttonNames[1], urls[1], urls[1]]
 };
 
 const alarmAxios = axios.create({
