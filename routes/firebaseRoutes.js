@@ -25,13 +25,13 @@ router.post('/upload', async (req, res) => {
       const s3 = new AWS.S3();
       await sharp(files[fileType].path)
         .rotate()
-        .toFile(`/${files[fileType].name}_cropped`);
+        .toFile(`/home/ubuntu/${files[fileType].name}`);
 
       const params = {
         Bucket: 'dreamary',
         Key: randomNum + files[fileType].name,
         ACL: 'public-read',
-        Body: fs.createReadStream(`/${files[fileType].name}_cropped`)
+        Body: fs.createReadStream(`/home/ubuntu/${files[fileType].name}`)
       };
 
       const data = await s3.upload(params).promise();
