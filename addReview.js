@@ -6,6 +6,7 @@ mongoose.connect(
   { useNewUrlParser: true }
 );
 
+const { addScore } = require('./model/helpers/updateScore');
 const { User } = require('./model/user');
 const { Recruit } = require('./model/recruit');
 const { Review } = require('./model/review');
@@ -13,17 +14,28 @@ const { Reservation } = require('./model/reservation');
 
 const makeReview = async (name, recruit_id, score, content, createdAt) => {
   try {
+    const recruit = await Recruit.findById(recruit_id);
+    if (!recruit) throw new Error('wrong recruit id!');
     const user = await User.create({ name, createdAt: new Date().getTime(), _uid: '12345678' });
 
-    Review.create({
-      _user: user._id,
-      _recruit: recruit_id,
-      _reservation: new ObjectID().toHexString(),
-      score,
-      content,
-      image: null,
-      createdAt: new Date(createdAt).getTime()
-    });
+    const review_id = new ObjectID().toHexString();
+    await Review.insertMany([
+      {
+        _id: review_id,
+        _user: user._id,
+        _recruit: recruit_id,
+        _reservation: new ObjectID().toHexString(),
+        score,
+        content,
+        image: null,
+        createdAt: new Date(createdAt).getTime()
+      }
+    ]);
+
+    recruit._reviews = recruit._reviews.push(review_id);
+    recruit.score = addScore(recruit.score, score, recruit._reviews.length);
+
+    await recruit.save();
   } catch (e) {
     console.log(e);
   }
