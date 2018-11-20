@@ -36,6 +36,7 @@ router.post('/upload', async (req, res) => {
 
       const data = await s3.upload(params).promise();
       fs.unlink(files[fileType].path);
+      fs.unlink(`/home/ubuntu/${files[fileType].name}`);
       if (['cert_mh', 'cert_jg', 'profile'].includes(fileType)) {
         await firebase
           .database()
