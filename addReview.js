@@ -36,6 +36,7 @@ const makeReview = async (name, recruit_id, score, content, createdAt) => {
     recruit.score = addScore(recruit.score, score, recruit._reviews.length);
 
     await recruit.save();
+    console.log('리뷰생성완료!');
   } catch (e) {
     console.log(e);
   }
