@@ -73,6 +73,7 @@ const cardSchema = new mongoose.Schema(
     },
     sido: String,
     sigungu: String,
+    fullAddress: String,
     shop: String,
     requireGender: String,
     picture: String,

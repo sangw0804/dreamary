@@ -1,7 +1,7 @@
 const generateCondition = (date, kinds, gender, sido, sigungu) => {
   const condition = {
     // requireGender: { $in: [gender, 'both'] }
-    // date: new Date(date).getTime(),
+    date: { $gte: new Date().getTime() },
     reservable: true
   };
   if (gender) condition.requireGender = { $in: [gender, 'both'] };

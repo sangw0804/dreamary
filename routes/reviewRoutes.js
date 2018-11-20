@@ -21,6 +21,19 @@ function formidablePromise(req, opts) {
   });
 }
 
+// GET /recruits/:recruit_id/reviews/:id
+router.get('/:id', async (req, res) => {
+  try {
+    const review = await Review.findById(req.params.id);
+    if (!review) throw new Error('review not found!!');
+
+    res.status(200).send(review);
+  } catch (e) {
+    logger && logger.error('GET /recruits/:recruit_id/reviews/:id | %o', e);
+    res.status(400).send(e);
+  }
+});
+
 // POST /recruits/:recruit_id/reviews
 router.post('/', async (req, res) => {
   try {

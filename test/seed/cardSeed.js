@@ -7,7 +7,7 @@ const cards = [
   {
     _id: new ObjectID(),
     _recruit: recruits[0]._id,
-    date: new Date().setHours(6, 0, 0, 0),
+    date: new Date().setHours(6, 0, 0, 0) + 100000000,
     ableTimes: [
       {
         since: 480,
@@ -54,7 +54,7 @@ const cards = [
   {
     _id: new ObjectID(),
     _recruit: recruits[1]._id,
-    date: new Date().setHours(6, 0, 0, 0),
+    date: new Date().setHours(6, 0, 0, 0) + 100000000,
     ableTimes: [
       {
         since: 480,
