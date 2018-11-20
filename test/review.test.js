@@ -18,6 +18,18 @@ beforeEach(populateReservation);
 beforeEach(populateReview);
 
 describe('Review', () => {
+  describe('GET /recruits/:recruit_id/reviews/:id', () => {
+    it('should get that review', done => {
+      request(app)
+        .get(`/recruits/${recruits[0]._id}/reviews/${reviews[0]._id}`)
+        .expect(200)
+        .expect(res => {
+          expect(res.body._id).toBe(reviews[0]._id.toHexString());
+        })
+        .end(done);
+    });
+  });
+
   describe('POST /recruits/:recruit_id/reviews', () => {
     it('should create new review with valid data', done => {
       const data = {
