@@ -19,13 +19,20 @@ beforeEach(populateReview);
 
 describe('Review', () => {
   describe('GET /recruits/:recruit_id/reviews/:id', () => {
-    it('should get that review', done => {
+    it('should get a review with valid id', done => {
       request(app)
         .get(`/recruits/${recruits[0]._id}/reviews/${reviews[0]._id}`)
         .expect(200)
         .expect(res => {
           expect(res.body._id).toBe(reviews[0]._id.toHexString());
         })
+        .end(done);
+    });
+
+    it('should return 400 with invalid id', done => {
+      request(app)
+        .get(`/recruits/${recruits[0]._id}/reviews/${new ObjectID()}`)
+        .expect(400)
         .end(done);
     });
   });
