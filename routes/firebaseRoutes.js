@@ -3,6 +3,7 @@ const express = require('express');
 const AWS = require('aws-sdk');
 const fs = require('fs');
 const firebase = require('firebase');
+const sharp = require('sharp');
 
 const formPromise = require('./helpers/formidablePromise');
 const { Recruit } = require('../model/recruit');
@@ -22,15 +23,20 @@ router.post('/upload', async (req, res) => {
 
     const promises = Object.keys(files).map(async fileType => {
       const s3 = new AWS.S3();
+      await sharp(files[fileType].path)
+        .rotate()
+        .toFile(`/home/ubuntu/${files[fileType].name}`);
+
       const params = {
         Bucket: 'dreamary',
         Key: randomNum + files[fileType].name,
         ACL: 'public-read',
-        Body: fs.createReadStream(files[fileType].path)
+        Body: fs.createReadStream(`/home/ubuntu/${files[fileType].name}`)
       };
 
       const data = await s3.upload(params).promise();
       fs.unlink(files[fileType].path);
+      fs.unlink(`/home/ubuntu/${files[fileType].name}`);
       if (['cert_mh', 'cert_jg', 'profile'].includes(fileType)) {
         await firebase
           .database()
