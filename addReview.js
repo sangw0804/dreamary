@@ -32,7 +32,7 @@ const makeReview = async (name, recruit_id, score, content, createdAt) => {
       }
     ]);
 
-    recruit._reviews = recruit._reviews.push(review_id);
+    recruit._reviews.push(review_id);
     recruit.score = addScore(recruit.score, score, recruit._reviews.length);
 
     await recruit.save();
