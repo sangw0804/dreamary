@@ -18,6 +18,18 @@ router.get('/', async (req, res) => {
   }
 });
 
+// POST /coupons/master
+router.post('/master', async (req, res) => {
+  try {
+    const { point, forDesigner } = req.body;
+    if (!point) throw new Error('invalid params!!!');
+    const masterCoupon = await Coupon.makeMasterCoupon(point, forDesigner);
+  } catch (e) {
+    logger && logger.error('POST /coupons/master %o', e);
+    res.status(400).send(e);
+  }
+});
+
 // POST /coupons
 router.post('/', async (req, res) => {
   try {

@@ -21,6 +21,12 @@ const couponSchema = new mongoose.Schema(
       ref: 'User',
       default: null
     },
+    _master_users: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      }
+    ],
     createdAt: {
       type: Number,
       required: true
@@ -45,6 +51,18 @@ couponSchema.statics.makeCoupons = async function(point, number, forDesigner) {
     );
   }
   return coupons;
+};
+
+couponSchema.statics.makeMasterCoupon = async function(point) {
+  const Coupon = this;
+  const masterCoupon = await Coupon.create({
+    point,
+    _id: Math.floor(Math.random() * 10 ** 12),
+    forDesigner: false,
+    _master_users: [],
+    createdAt: new Date().getTime()
+  });
+  return masterCoupon;
 };
 
 const Coupon = mongoose.model('Coupon', couponSchema);
