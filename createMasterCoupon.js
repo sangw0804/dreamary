@@ -9,6 +9,7 @@ const { Coupon } = require('./model/coupon');
 
 const createMasterCoupon = async point => {
   const masterCoupon = await Coupon.create({
+    _id: Math.floor(Math.random() * 10 ** 12),
     point,
     forDesigner: false,
     createdAt: new Date().getTime(),
