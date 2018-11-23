@@ -16,7 +16,7 @@ describe('Coupon', () => {
         .get('/coupons')
         .expect(200)
         .expect(res => {
-          expect(res.body.length).toBe(2);
+          expect(res.body.length).toBe(3);
         })
         .end(done);
     });
@@ -60,7 +60,7 @@ describe('Coupon', () => {
           try {
             if (err) throw new Error(err);
             const foundCoupons = await Coupon.find();
-            expect(foundCoupons.length).toBe(2);
+            expect(foundCoupons.length).toBe(3);
             done();
           } catch (e) {
             done(e);
@@ -132,6 +132,58 @@ describe('Coupon', () => {
 
             const coupon = await Coupon.findById(coupons[0]._id);
             expect(coupon._user).toBeNull();
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+    });
+  });
+
+  describe('PATCH /coupons/:id for masterCoupon', () => {
+    it('should update first using user', done => {
+      const data = {
+        _user: users[1]._id,
+        isD: false
+      };
+      request(app)
+        .patch(`/coupons/${coupons[2]._id}`)
+        .send(data)
+        .expect(200)
+        .end(async (err, res) => {
+          try {
+            if (err) throw new Error(err);
+
+            const masterCoupon = await Coupon.findById(coupons[2]._id);
+            expect(masterCoupon._user).toBeNull();
+            expect(masterCoupon._master_users[1].toHexString()).toBe(users[1]._id.toHexString());
+            const user = await User.findById(users[1]._id);
+            expect(user.point).toBe(coupons[2].point);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+    });
+
+    it('should throw error if used user', done => {
+      const data = {
+        _user: users[0]._id,
+        isD: false
+      };
+      request(app)
+        .patch(`/coupons/${coupons[2]._id}`)
+        .send(data)
+        .expect(400)
+        .end(async (err, res) => {
+          try {
+            if (err) throw new Error(err);
+
+            const masterCoupon = await Coupon.findById(coupons[2]._id);
+            expect(masterCoupon._user).toBeNull();
+            expect(masterCoupon._master_users.length).toBe(1);
+            const user = await User.findById(users[0]._id);
+            expect(user.point).toBe(0);
             done();
           } catch (e) {
             done(e);

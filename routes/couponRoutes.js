@@ -40,23 +40,32 @@ router.patch('/:id', async (req, res) => {
     const coupon = await Coupon.findById(+id);
     const user = await User.findById(_user);
     if (!coupon || !user) throw new Error('coupon || user not found!');
-    if (coupon._user) throw new Error('already used coupon!!');
     if (isD !== coupon.forDesigner) throw new Error('coupon type and user type not match!!!');
 
-    coupon._user = _user;
-    if (coupon.forDesigner) {
-      const ticket = await Ticket.create({ price: coupon.point, _user, createdAt: new Date().getTime() });
-      user._tickets.push(ticket._id);
-    } else {
-      user.point += coupon.point;
-    }
+    if (coupon.isMaster) {
+      // 마스터 쿠폰일 경우
+      const used = coupon.checkMasterUserInclude(user._id);
+      if (used) throw new Error('already use');
 
+      coupon._master_users.push(user._id);
+      user.point += coupon.point;
+    } else {
+      // 일반 쿠폰일 경우
+      if (coupon._user) throw new Error('already used coupon!!');
+
+      coupon._user = _user;
+      if (coupon.forDesigner) {
+        const ticket = await Ticket.create({ price: coupon.point, _user, createdAt: new Date().getTime() });
+        user._tickets.push(ticket._id);
+      } else {
+        user.point += coupon.point;
+      }
+    }
     await coupon.save();
     await user.save();
 
     res.status(200).send({ point: user.point });
   } catch (e) {
-    console.log(e);
     logger && logger.error('PATCH /coupons/:id %o', e);
     res.status(400).send(e);
   }
