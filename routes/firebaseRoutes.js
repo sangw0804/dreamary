@@ -16,7 +16,6 @@ AWS.config.region = 'ap-northeast-2';
 router.post('/upload', async (req, res) => {
   try {
     const { uid } = req.query;
-    const randomNum = Math.floor(Math.random() * 1000000);
 
     const { err, fields, files } = await formPromise(req);
     if (err) throw new Error(err);
@@ -26,17 +25,30 @@ router.post('/upload', async (req, res) => {
       await sharp(files[fileType].path)
         .rotate()
         .toFile(`/home/ubuntu/${files[fileType].name}`);
+      await sharp(files[fileType].path)
+        .rotate()
+        .resize(200, 200)
+        .toFile(`/home/ubuntu/${files[fileType].name}_thumb`);
 
+      const randomName = Math.floor(Math.random() * 1000000) + files[fileType].name;
       const params = {
         Bucket: 'dreamary',
-        Key: randomNum + files[fileType].name,
+        Key: randomName,
         ACL: 'public-read',
         Body: fs.createReadStream(`/home/ubuntu/${files[fileType].name}`)
       };
 
-      const data = await s3.upload(params).promise();
+      await s3
+        .upload({
+          ...params,
+          Body: fs.createReadStream(`/home/ubuntu/${files[fileType].name}_thumb`),
+          Key: `${randomName}_thumb`
+        })
+        .promise(); // thumb 이미지 저장
+      const data = await s3.upload(params).promise(); // 원본 이미지 저장
       fs.unlink(files[fileType].path);
       fs.unlink(`/home/ubuntu/${files[fileType].name}`);
+      fs.unlink(`/home/ubuntu/${files[fileType].name}_thumb`);
       if (['cert_mh', 'cert_jg', 'profile'].includes(fileType)) {
         await firebase
           .database()
