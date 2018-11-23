@@ -21,6 +21,10 @@ const couponSchema = new mongoose.Schema(
       ref: 'User',
       default: null
     },
+    isMaster: {
+      type: Boolean,
+      default: false
+    },
     _master_users: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -63,6 +67,12 @@ couponSchema.statics.makeMasterCoupon = async function(point) {
     createdAt: new Date().getTime()
   });
   return masterCoupon;
+};
+
+couponSchema.methods.checkMasterUserInclude = function(userId) {
+  const masterCoupon = this;
+  const userIdStrings = masterCoupon._master_users.map(objectId => objectId.toHexString());
+  return userIdStrings.includes(userId.toHexString());
 };
 
 const Coupon = mongoose.model('Coupon', couponSchema);
