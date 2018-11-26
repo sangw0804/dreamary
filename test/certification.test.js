@@ -7,7 +7,7 @@ describe('Certifacation', () => {
     it('should certification', done => {
       request(app)
         .post('/certification')
-        .send({ imp_uid: '12345' })
+        .send({ imp_uid: 'imp_448280090638' })
         .expect(400)
         .end(done);
     });

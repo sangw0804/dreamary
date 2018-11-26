@@ -1,5 +1,6 @@
 const express = require('express');
 const axios = require('axios');
+const { Iamporter, IamporterError } = require('iamporter');
 
 const router = express.Router({ mergeParams: true });
 const config = require('../config');
@@ -11,26 +12,17 @@ router.post('/', async (req, res) => {
     const { imp_uid } = req.body;
     if (!imp_uid) throw new Error('imp_uid is undefined!');
 
-    const {
-      response: { access_token }
-    } = await axios.post(
-      'https://api.iamport.kr/users/getToken',
-      {
-        imp_key: config.IMP_KEY,
-        imp_secret: config.IMP_SECRET
-      },
-      { headers: { 'Content-Type': 'multipart/form-data' } }
-    );
-    console.log(access_token);
-    // const { response, message } = await axios.get(`https://api.iamport.kr/certifications/${imp_uid}`, {
-    //   headers: { Authorization: access_token }
-    // });
-    // console.log(response);
-    // console.log(message);
-    // console.log(typeof message);
+    const iamporter = new Iamporter({
+      apiKey: config.IMP_KEY,
+      secret: config.IMP_SECRET
+    });
 
-    res.status(200).send('hi');
+    const result = await iamporter.getCertification(imp_uid);
+    console.log(result);
+
+    res.status(200).send(result);
   } catch (e) {
+    console.log(e);
     logger && logger.error(e);
     res.status(400).send(e);
   }

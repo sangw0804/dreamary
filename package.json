@@ -20,6 +20,7 @@
     "firebase": "^5.5.4",
     "firebase-admin": "^6.0.0",
     "formidable": "^1.2.1",
+    "iamporter": "^1.4.2",
     "moment": "^2.22.2",
     "mongodb": "^3.1.4",
     "mongoose": "^5.2.14",
