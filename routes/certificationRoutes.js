@@ -18,11 +18,9 @@ router.post('/', async (req, res) => {
     });
 
     const result = await iamporter.getCertification(imp_uid);
-    console.log(result);
 
     res.status(200).send(result);
   } catch (e) {
-    console.log(e);
     logger && logger.error(e);
     res.status(400).send(e);
   }
