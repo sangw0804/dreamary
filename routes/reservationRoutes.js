@@ -95,6 +95,10 @@ router.patch('/:id', async (req, res) => {
     await reservation.save();
     await reservation.updateRelatedDB();
 
+    // 유저가 24시간 내 취소한 경우를 제외하고 환불해주기
+    if (!reservation.cancelByUser || new Date().getTime() <= reservation.date) {
+    }
+
     res.status(200).send(reservation);
   } catch (e) {
     logger && logger.error('PATCH /users/:user_id/reservations/:id | %o', e);

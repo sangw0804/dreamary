@@ -1,4 +1,5 @@
 const axios = require('axios');
+const firebase = require('firebase');
 const { User } = require('../../model/user');
 const { Reservation } = require('../../model/reservation');
 const config = require('../../config');
@@ -27,14 +28,14 @@ const alarmTemplates = {
 };
 
 const alarmAxios = axios.create({
-  baseURL: 'http://api.apistore.co.kr/kko/1/msg/dreamary',
+  baseURL: 'http://api.apistore.co.kr/kko/1/msg_test/dreamary',
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8;',
     'x-waple-authorization': config.API_STORE_KEY
   }
 });
 
-const alarmTalk = async (template, user_id, designer_id, reservation_id, options) => {
+const alarmTalk = async (template, user_id, designer_id, reservation_id, options = {}) => {
   // options = {
   //   PHONE: '알람톡 보낼 번호',
   //
@@ -42,6 +43,7 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
   // template: '저 위에 있는 템플릿 key값'
   options.FAILED_TYPE = 'N';
   options.BTN_TYPES = '웹링크';
+  options.CALLBACK = '01041112486';
   [options.TEMPLATE_CODE, options.BTN_TXTS, options.BTN_URLS1, options.BTN_URLS2] = alarmTemplates[template];
 
   const user = await User.findById(user_id);
@@ -92,6 +94,17 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
       throw new Error('wrong template!!');
       break;
   }
+
+  // const snapshot = await firebase
+  //   .database()
+  //   .ref(`/users/${template.includes('USE') ? user._uid : designer._uid}`)
+  //   .once('value');
+  // const { phoneNumber } = snapshot.val();
+
+  // options.PHONE = phoneNumber;
+  options.PHONE = '01087623725';
+
+  console.log(options);
   return alarmAxios.post('/', options);
 };
 
