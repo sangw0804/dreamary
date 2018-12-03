@@ -198,6 +198,33 @@ describe('Reservation', () => {
 
             const card = await Card.findById(res.body._card);
             expect(card.reservedTimes.length).toBe(0);
+            const user = await User.findById(users[0]._id);
+            expect(user.point).toBe(5000);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+    });
+
+    it('should cancel reservation and remove from card reservedTime & before 24 user cancel no refund!', done => {
+      request(app)
+        .patch(`/users/${users[0]._id}/reservations/${reservations[0]._id}`)
+        .send({ isCanceled: 'true', cancelByUser: true })
+        .expect(200)
+        .expect(res => {
+          expect(res.body.isCanceled).toBe(true);
+        })
+        .end(async (err, res) => {
+          try {
+            if (err) {
+              throw new Error(err);
+            }
+
+            const card = await Card.findById(res.body._card);
+            expect(card.reservedTimes.length).toBe(0);
+            const user = await User.findById(users[0]._id);
+            expect(user.point).toBe(0);
             done();
           } catch (e) {
             done(e);

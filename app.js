@@ -19,6 +19,7 @@ const cardRoutes = require('./routes/cardRoutes');
 const firebaseRoutes = require('./routes/firebaseRoutes');
 const inquiryRoutes = require('./routes/inquiryRoutes');
 const couponRoutes = require('./routes/couponRoutes');
+const certificationRoutes = require('./routes/certificationRoutes');
 
 const { logging } = require('./middlewares/log');
 const { auth } = require('./middlewares/auth');
@@ -54,5 +55,6 @@ app.use('/kakao_login', kakaoRoutes);
 app.use('/firebase', firebaseRoutes);
 app.use('/inquiries', inquiryRoutes);
 app.use('/', cardRoutes);
+app.use('/certification', certificationRoutes);
 
 module.exports = { app };
