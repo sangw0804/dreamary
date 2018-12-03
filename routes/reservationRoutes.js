@@ -97,8 +97,9 @@ router.patch('/:id', async (req, res) => {
 
     // 유저가 24시간 내 취소한 경우를 제외하고 환불해주기
     if (
-      !reservation.cancelByUser ||
-      new Date().getTime() <= reservation.date - 32400000 + reservation.time.since * 60 * 1000 - 86400000
+      reservation.isCanceled &&
+      (!reservation.cancelByUser ||
+        new Date().getTime() <= reservation.date - 32400000 + reservation.time.since * 60 * 1000 - 86400000)
     ) {
       // 포인트 환불
       const user = await User.findById(reservation._user);
