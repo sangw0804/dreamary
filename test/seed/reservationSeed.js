@@ -11,7 +11,7 @@ const reservations = [
     _user: users[0]._id,
     _card: cards[0]._id,
     _designer: users[1]._id,
-    date: cards[0].date,
+    date: cards[0].date - 100000000,
     services: {
       cut: true
     },
