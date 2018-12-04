@@ -95,6 +95,7 @@ router.patch('/:id', async (req, res) => {
     await reservation.save();
     await reservation.updateRelatedDB();
 
+    const user = await User.findById(reservation._user);
     // 유저가 24시간 내 취소한 경우를 제외하고 환불해주기
     if (
       reservation.isCanceled &&
@@ -102,12 +103,11 @@ router.patch('/:id', async (req, res) => {
         new Date().getTime() <= reservation.date - 32400000 + reservation.time.since * 60 * 1000 - 86400000)
     ) {
       // 포인트 환불
-      const user = await User.findById(reservation._user);
       user.point += 5000;
       await user.save();
     }
 
-    res.status(200).send(reservation);
+    res.status(200).send(user);
   } catch (e) {
     logger && logger.error('PATCH /users/:user_id/reservations/:id | %o', e);
     res.status(400).send(e);
