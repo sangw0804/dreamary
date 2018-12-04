@@ -4,6 +4,7 @@ const router = express.Router({ mergeParams: true });
 const formidable = require('formidable');
 const AWS = require('aws-sdk');
 const fs = require('fs');
+const sharp = require('sharp');
 
 AWS.config.region = 'ap-northeast-2';
 
@@ -62,20 +63,37 @@ router.patch('/:id/images', async (req, res) => {
     const form = new formidable.IncomingForm();
     const { id } = req.params;
     const { fields, files } = await formidablePromise(req);
-    const fileLocations = [];
 
-    for (const fileKey in files) {
+    const promises = Object.keys(files).map(async fileKey => {
       const randomNum = Math.floor(Math.random() * 1000000);
       const s3 = new AWS.S3();
+      await sharp(files[fileKey].path)
+        .rotate()
+        .toFile(`/home/ubuntu/${files[fileKey].name}`);
       const params = {
         Bucket: 'dreamary',
         Key: randomNum + files[fileKey].name,
         ACL: 'public-read',
-        Body: fs.createReadStream(files[fileKey].path)
+        Body: fs.createReadStream(`/home/ubuntu/${files[fileKey].name}`)
       };
       const data = await s3.upload(params).promise();
-      fileLocations.push(data.Location);
-    }
+      return data.Location;
+    });
+
+    const fileLocations = await Promise.all(promises);
+
+    // for (const fileKey in files) {
+    //   const randomNum = Math.floor(Math.random() * 1000000);
+    //   const s3 = new AWS.S3();
+    //   const params = {
+    //     Bucket: 'dreamary',
+    //     Key: randomNum + files[fileKey].name,
+    //     ACL: 'public-read',
+    //     Body: fs.createReadStream(files[fileKey].path)
+    //   };
+    //   const data = await s3.upload(params).promise();
+    //   fileLocations.push(data.Location);
+    // }
     const updatedReview = await Review.findByIdAndUpdate(id, { $set: { images: fileLocations } });
 
     res.status(200).send(updatedReview);
