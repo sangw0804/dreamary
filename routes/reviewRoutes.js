@@ -72,19 +72,6 @@ router.patch('/:id/images', async (req, res) => {
     });
 
     const fileLocations = await Promise.all(promises);
-
-    // for (const fileKey in files) {
-    //   const randomNum = Math.floor(Math.random() * 1000000);
-    //   const s3 = new AWS.S3();
-    //   const params = {
-    //     Bucket: 'dreamary',
-    //     Key: randomNum + files[fileKey].name,
-    //     ACL: 'public-read',
-    //     Body: fs.createReadStream(files[fileKey].path)
-    //   };
-    //   const data = await s3.upload(params).promise();
-    //   fileLocations.push(data.Location);
-    // }
     const updatedReview = await Review.findByIdAndUpdate(id, { $set: { images: fileLocations } });
 
     res.status(200).send(updatedReview);
