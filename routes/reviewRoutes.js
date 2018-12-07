@@ -52,7 +52,7 @@ router.post('/', async (req, res) => {
 router.patch('/:id/images', async (req, res) => {
   try {
     const { id } = req.params;
-    const { err, files, fields } = formPromise(req);
+    const { err, files, fields } = await formPromise(req);
     if (err) throw new Error(err);
 
     const promises = Object.keys(files).map(async fileKey => {
