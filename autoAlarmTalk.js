@@ -18,6 +18,7 @@ const autoAlarmTalk = async () => {
       isCanceled: false,
       date: { $gt: nowTimeStamp, $lt: nowTimeStamp + 54000000 }
     });
+    console.log(reservations);
 
     return reservations.map(async reservation => {
       try {
@@ -34,4 +35,5 @@ const autoAlarmTalk = async () => {
 
 autoAlarmTalk()
   .then(promises => Promise.all(promises))
+  .then(() => console.log('success!'))
   .catch(e => console.log(e));

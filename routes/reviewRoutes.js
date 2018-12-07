@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router({ mergeParams: true });
-const formidable = require('formidable');
+
 const AWS = require('aws-sdk');
 const fs = require('fs');
 const sharp = require('sharp');
@@ -11,16 +11,7 @@ AWS.config.region = 'ap-northeast-2';
 const { Review } = require('../model/review');
 const { Recruit } = require('../model/recruit');
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
-
-function formidablePromise(req, opts) {
-  return new Promise(function(resolve, reject) {
-    const form = new formidable.IncomingForm(opts);
-    form.parse(req, function(err, fields, files) {
-      if (err) return reject(err);
-      resolve({ fields, files });
-    });
-  });
-}
+const formPromise = require('./helpers/formidablePromise');
 
 // GET /recruits/:recruit_id/reviews/:id
 router.get('/:id', async (req, res) => {
@@ -60,9 +51,9 @@ router.post('/', async (req, res) => {
 // PATCH /recruits/:recruit_id/reviews/:id/images
 router.patch('/:id/images', async (req, res) => {
   try {
-    const form = new formidable.IncomingForm();
     const { id } = req.params;
-    const { fields, files } = await formidablePromise(req);
+    const { err, files, fields } = formPromise(req);
+    if (err) throw new Error(err);
 
     const promises = Object.keys(files).map(async fileKey => {
       const randomNum = Math.floor(Math.random() * 1000000);
