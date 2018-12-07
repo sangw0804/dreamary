@@ -68,6 +68,9 @@ router.patch('/:id/images', async (req, res) => {
         Body: fs.createReadStream(`/home/ubuntu/${files[fileKey].name}`)
       };
       const data = await s3.upload(params).promise();
+
+      fs.unlink(files[fileKey].path);
+      fs.unlink(`/home/ubuntu/${files[fileKey].name}`);
       return data.Location;
     });
 
