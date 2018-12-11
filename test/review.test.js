@@ -105,12 +105,35 @@ describe('Review', () => {
         .send(data)
         .expect(400)
         .end(async (err, res) => {
-          if (err) {
-            done(err);
-          }
           try {
+            if (err) throw new Error(err);
             const foundReviews = await Review.find({});
             expect(foundReviews.length).toBe(1);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+    });
+  });
+
+  describe('PATCH /recruits/:recruit_id/reviews/:id', () => {
+    it('should update review with valid data', done => {
+      const data = {
+        score: 1.0,
+        content: '별로에요'
+      };
+      request(app)
+        .patch(`/recruits/${recruits[0]._id}/reviews/${reviews[0]._id}`)
+        .send(data)
+        .expect(200)
+        .end(async (err, res) => {
+          try {
+            if (err) throw new Error(err);
+            const review = await Review.findById(reviews[0]._id);
+            expect(review.score).toBe(1.0);
+            const recruit = await Recruit.findById(review._recruit);
+            expect(recruit.score).toBe(1.0);
             done();
           } catch (e) {
             done(e);

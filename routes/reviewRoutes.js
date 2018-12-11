@@ -40,6 +40,7 @@ router.post('/', async (req, res) => {
     };
 
     const createdReview = await Review.create(body);
+    await createdReview.updateRelatedDBs();
 
     res.status(200).send(createdReview);
   } catch (e) {
@@ -84,11 +85,33 @@ router.patch('/:id/images', async (req, res) => {
   }
 });
 
+// PATCH /recruits/:recruit_id/reviews/:id
+router.patch('/:id', async (req, res) => {
+  try {
+    const { content, score } = req.body;
+
+    const updatedReview = await Review.findById(req.params.id);
+    updatedReview.content = content;
+    const originalScore = updatedReview.score;
+    updatedReview.score = score;
+
+    await updatedReview.save();
+    await updatedReview.updateRelatedDBs(originalScore);
+
+    res.status(200).send(updatedReview);
+  } catch (e) {
+    console.log(e);
+    if (logger) logger.error('PATCH /recruits/:recruit_id/reviews/:id | %o', e);
+    res.status(400).send(e);
+  }
+});
+
 // DELETE /recruits/:recruit_id/reviews/:id
 router.delete('/:id', async (req, res) => {
   try {
     const review = await Review.findById(req.params.id);
     await review.remove();
+    await review.removeRelatedDBs();
     res.status(200).send({});
   } catch (e) {
     logger && logger.error('DELETE /recruits/:recruit_id/reviews/:id | %o', e);
