@@ -21,7 +21,7 @@ router.get('/:id', async (req, res) => {
 
     res.status(200).send(review);
   } catch (e) {
-    logger && logger.error('GET /recruits/:recruit_id/reviews/:id | %o', e);
+    if (logger) logger.error('GET /recruits/:recruit_id/reviews/:id | %o', e);
     res.status(400).send(e);
   }
 });
@@ -44,7 +44,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).send(createdReview);
   } catch (e) {
-    logger && logger.error('POST /recruits/:recruit_id/reviews | %o', e);
+    if (logger) logger.error('POST /recruits/:recruit_id/reviews | %o', e);
     res.status(400).send(e);
   }
 });
@@ -80,7 +80,7 @@ router.patch('/:id/images', async (req, res) => {
 
     res.status(200).send(updatedReview);
   } catch (e) {
-    logger && logger.error('PATCH /recruits/:recruit_id/reviews/:id/images | %o', e);
+    if (logger) logger.error('PATCH /recruits/:recruit_id/reviews/:id/images | %o', e);
     res.status(400).send(e);
   }
 });
@@ -100,7 +100,6 @@ router.patch('/:id', async (req, res) => {
 
     res.status(200).send(updatedReview);
   } catch (e) {
-    console.log(e);
     if (logger) logger.error('PATCH /recruits/:recruit_id/reviews/:id | %o', e);
     res.status(400).send(e);
   }
@@ -114,7 +113,7 @@ router.delete('/:id', async (req, res) => {
     await review.removeRelatedDBs();
     res.status(200).send({});
   } catch (e) {
-    logger && logger.error('DELETE /recruits/:recruit_id/reviews/:id | %o', e);
+    if (logger) logger.error('DELETE /recruits/:recruit_id/reviews/:id | %o', e);
     res.status(400).send(e);
   }
 });

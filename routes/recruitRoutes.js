@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
       .exec();
     res.status(200).send(foundRecruits);
   } catch (e) {
-    logger && logger.error('GET /recruits | %o', e);
+    if (logger) logger.error('GET /recruits | %o', e);
     res.status(400).send(e);
   }
 });
@@ -34,7 +34,7 @@ router.get('/:id', async (req, res) => {
     }
     res.status(200).send(foundRecruit);
   } catch (e) {
-    logger && logger.error('GET /recruits/:id | %o', e);
+    if (logger) logger.error('GET /recruits/:id | %o', e);
     res.status(400).send(e);
   }
 });
@@ -59,7 +59,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).send(createdRecruit);
   } catch (e) {
-    logger && logger.error('POST /recruits | %o', e);
+    if (logger) logger.error('POST /recruits | %o', e);
     res.status(400).send(e);
   }
 });
@@ -75,7 +75,7 @@ router.patch('/:id/updateportpolios', async (req, res) => {
 
     res.status(200).send(foundRecruit);
   } catch (e) {
-    logger && logger.error('PATCH /recruits/:id | %o', e);
+    if (logger) logger.error('PATCH /recruits/:id | %o', e);
     res.status(400).send(e);
   }
 });
@@ -94,7 +94,7 @@ router.patch('/:id', async (req, res) => {
     }
     res.status(200).send(updatedRecruit);
   } catch (e) {
-    logger && logger.error('PATCH /recruits/:id | %o', e);
+    if (logger) logger.error('PATCH /recruits/:id | %o', e);
     res.status(400).send(e);
   }
 });
@@ -107,7 +107,7 @@ router.delete('/:id', async (req, res) => {
     await recruit.removeRelatedDB();
     res.status(200).send({});
   } catch (e) {
-    logger && logger.error('DELETE /recruits/:id | %o', e);
+    if (logger) logger.error('DELETE /recruits/:id | %o', e);
     res.status(400).send(e);
   }
 });

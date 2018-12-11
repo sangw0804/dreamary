@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
     const foundTickets = await Ticket.find({ _user: foundUser._id });
     res.status(200).send(foundTickets);
   } catch (e) {
-    logger && logger.error('GET /users/:id/tickets | %o', e);
+    if (logger) logger.error('GET /users/:id/tickets | %o', e);
     res.status(400).send(e);
   }
 });
@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).send(createdTicket);
   } catch (e) {
-    logger && logger.error('POST /users/:id/tickets | %o', e);
+    if (logger) logger.error('POST /users/:id/tickets | %o', e);
     res.status(400).send(e);
   }
 });
@@ -59,7 +59,7 @@ router.patch('/:ticket_id', async (req, res) => {
 
     res.status(200).send(savedTicket);
   } catch (e) {
-    logger && logger.error('PATCH /users/:id/tickets | %o', e);
+    if (logger) logger.error('PATCH /users/:id/tickets | %o', e);
     res.status(400).send(e);
   }
 });

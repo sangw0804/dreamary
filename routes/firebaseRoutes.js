@@ -78,7 +78,7 @@ router.post('/upload', async (req, res) => {
 
     res.status(200).send(req.files);
   } catch (e) {
-    logger && logger.error('/upload | %o', e);
+    if (logger) logger.error('/upload | %o', e);
     res.status(400).send(e);
   }
 });

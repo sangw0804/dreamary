@@ -18,7 +18,7 @@ router.get('/all', async (req, res) => {
       .exec();
     res.status(200).send(foundReservations);
   } catch (e) {
-    logger && logger.error('GET /users/:user_id/reservations/all | %o', e);
+    if (logger) logger.error('GET /users/:user_id/reservations/all | %o', e);
     res.status(400).send(e);
   }
 });
@@ -36,7 +36,7 @@ router.get('/:id', async (req, res) => {
 
     res.status(200).send(foundReservation);
   } catch (e) {
-    logger && logger.error('GET /users/:user_id/reservations | %o', e);
+    if (logger) logger.error('GET /users/:user_id/reservations | %o', e);
     res.status(400).send(e);
   }
 });
@@ -54,7 +54,7 @@ router.get('/', async (req, res) => {
 
     res.status(200).send(foundReservations);
   } catch (e) {
-    logger && logger.error('GET /users/:user_id/reservations | %o', e);
+    if (logger) logger.error('GET /users/:user_id/reservations | %o', e);
     res.status(400).send(e);
   }
 });
@@ -81,7 +81,7 @@ router.post('/', async (req, res) => {
     // await alarmTalk('userReservationInformNow', _user, _designer, createdReservation._id);
     // await alarmTalk('designerReservationInformNow', _user, _designer, createdReservation._id);
   } catch (e) {
-    logger && logger.error('POST /users/:user_id/reservations | %o', e);
+    if (logger) logger.error('POST /users/:user_id/reservations | %o', e);
     res.status(400).send(e);
   }
 });
@@ -126,7 +126,7 @@ router.patch('/:id', async (req, res) => {
     //   await alarmTalk('userPleaseReview', reservation._user, reservation._designer, reservation._id);
     // }
   } catch (e) {
-    logger && logger.error('PATCH /users/:user_id/reservations/:id | %o', e);
+    if (logger) logger.error('PATCH /users/:user_id/reservations/:id | %o', e);
     res.status(400).send(e);
   }
 });
@@ -143,7 +143,7 @@ router.delete('/:id', async (req, res) => {
 
     res.status(200).send();
   } catch (e) {
-    logger && logger.error('DELETE /users/:user_id/reservations/:id | %o', e);
+    if (logger) logger.error('DELETE /users/:user_id/reservations/:id | %o', e);
     res.status(400).send(e);
   }
 });
