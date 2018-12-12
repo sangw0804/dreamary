@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
 
     res.status(200).send(coupons);
   } catch (e) {
-    logger && logger.error('GET /coupons %o', e);
+    if (logger) logger.error('GET /coupons %o', e);
     res.status(400).send(e);
   }
 });
@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).send(coupons);
   } catch (e) {
-    logger && logger.error('POST /coupons %o', e);
+    if (logger) logger.error('POST /coupons %o', e);
     res.status(400).send(e);
   }
 });
@@ -66,7 +66,7 @@ router.patch('/:id', async (req, res) => {
 
     res.status(200).send({ point: user.point });
   } catch (e) {
-    logger && logger.error('PATCH /coupons/:id %o', e);
+    if (logger) logger.error('PATCH /coupons/:id %o', e);
     res.status(400).send(e);
   }
 });

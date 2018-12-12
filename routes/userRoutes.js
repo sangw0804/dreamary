@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
     const foundUsers = await User.find();
     res.status(200).send(foundUsers);
   } catch (e) {
-    logger && logger.error('GET /users | %o', e);
+    if (logger) logger.error('GET /users | %o', e);
     res.status(400).send(e);
   }
 });
@@ -21,7 +21,7 @@ router.get('/:id', async (req, res) => {
     const foundUser = await User.findById(req.params.id);
     res.status(200).send(foundUser);
   } catch (e) {
-    logger && logger.error('GET /users/:id | %o', e);
+    if (logger) logger.error('GET /users/:id | %o', e);
     res.status(400).send(e);
   }
 });
@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).send(createdUser);
   } catch (e) {
-    logger && logger.error('POST /users | %o', e);
+    if (logger) logger.error('POST /users | %o', e);
     res.status(400).send(e);
   }
 });
@@ -51,12 +51,12 @@ router.patch('/:id/addpoint', async (req, res) => {
 
     res.status(200).send(foundUser);
   } catch (e) {
-    logger && logger.error('PATCH /users/:id/addpoint | %o', e);
+    if (logger) logger.error('PATCH /users/:id/addpoint | %o', e);
     res.status(400).send(e);
   }
 });
 
-//PATCH /users/:id
+// PATCH /users/:id
 router.patch('/:id', async (req, res) => {
   try {
     const { name } = req.body;
@@ -67,7 +67,7 @@ router.patch('/:id', async (req, res) => {
 
     res.status(200).send(foundUser);
   } catch (e) {
-    logger && logger.error('PATCH /users/:id | %o', e);
+    if (logger) logger.error('PATCH /users/:id | %o', e);
     res.status(400).send(e);
   }
 });

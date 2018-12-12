@@ -19,7 +19,7 @@ router.get('/cards', async (req, res) => {
     });
     res.status(200).send(cards);
   } catch (e) {
-    logger && logger.error('GET /cards || %o', e);
+    if (logger) logger.error('GET /cards || %o', e);
     res.status(400).send(e);
   }
 });
@@ -37,7 +37,7 @@ router.get('/recruits/:recruit_id/cards', async (req, res) => {
     });
     res.status(200).send(cards);
   } catch (e) {
-    logger && logger.error('GET /recruits/:recruit_id/cards || %o', e);
+    if (logger) logger.error('GET /recruits/:recruit_id/cards || %o', e);
     res.status(400).send(e);
   }
 });
@@ -81,7 +81,7 @@ router.post('/recruits/:recruit_id/cards', async (req, res) => {
     await createdCard.updateRecruitDB();
     res.status(200).send(createdCard);
   } catch (e) {
-    logger && logger.error('POST /recruits/:recruit_id/cards || %o', e);
+    if (logger) logger.error('POST /recruits/:recruit_id/cards || %o', e);
     res.status(400).send(e);
   }
 });
@@ -104,7 +104,7 @@ router.delete('/recruits/:recruit_id/cards/:id', async (req, res) => {
 
     res.status(200).send({});
   } catch (e) {
-    logger && logger.error('DELETE /recruits/:recruit_id/cards/:id || %o', e);
+    if (logger) logger.error('DELETE /recruits/:recruit_id/cards/:id || %o', e);
     res.status(400).send(e);
   }
 });

@@ -6,6 +6,7 @@ const { User } = require('../model/user');
 const { Card } = require('../model/card');
 const { Recruit } = require('../model/recruit');
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
+const { alarmTalk } = require('./helpers/alarmTalk');
 
 // GET /users/:user_id/reservations/all
 router.get('/all', async (req, res) => {
@@ -17,7 +18,7 @@ router.get('/all', async (req, res) => {
       .exec();
     res.status(200).send(foundReservations);
   } catch (e) {
-    logger && logger.error('GET /users/:user_id/reservations/all | %o', e);
+    if (logger) logger.error('GET /users/:user_id/reservations/all | %o', e);
     res.status(400).send(e);
   }
 });
@@ -35,7 +36,7 @@ router.get('/:id', async (req, res) => {
 
     res.status(200).send(foundReservation);
   } catch (e) {
-    logger && logger.error('GET /users/:user_id/reservations | %o', e);
+    if (logger) logger.error('GET /users/:user_id/reservations | %o', e);
     res.status(400).send(e);
   }
 });
@@ -53,7 +54,7 @@ router.get('/', async (req, res) => {
 
     res.status(200).send(foundReservations);
   } catch (e) {
-    logger && logger.error('GET /users/:user_id/reservations | %o', e);
+    if (logger) logger.error('GET /users/:user_id/reservations | %o', e);
     res.status(400).send(e);
   }
 });
@@ -77,8 +78,10 @@ router.post('/', async (req, res) => {
     await createdReservation.updateRelatedDB();
 
     res.status(200).send(createdReservation);
+    // await alarmTalk('userReservationInformNow', _user, _designer, createdReservation._id);
+    // await alarmTalk('designerReservationInformNow', _user, _designer, createdReservation._id);
   } catch (e) {
-    logger && logger.error('POST /users/:user_id/reservations | %o', e);
+    if (logger) logger.error('POST /users/:user_id/reservations | %o', e);
     res.status(400).send(e);
   }
 });
@@ -96,20 +99,34 @@ router.patch('/:id', async (req, res) => {
     await reservation.updateRelatedDB();
 
     const user = await User.findById(reservation._user);
+    const isBefore24hours =
+      new Date().getTime() <= reservation.date - 32400000 + reservation.time.since * 60 * 1000 - 86400000;
     // 유저가 24시간 내 취소한 경우를 제외하고 환불해주기
-    if (
-      reservation.isCanceled &&
-      (!reservation.cancelByUser ||
-        new Date().getTime() <= reservation.date - 32400000 + reservation.time.since * 60 * 1000 - 86400000)
-    ) {
+    if (reservation.isCanceled && (!reservation.cancelByUser || isBefore24hours)) {
       // 포인트 환불
       user.point += 5000;
       await user.save();
     }
 
     res.status(200).send(user);
+    // if (isCanceled && cancelByUser && isBefore24hours) {
+    //   // 유저가 24시간 내에 취소한 경우
+    //   await alarmTalk('userCancelInDay', reservation._user, reservation._designer, reservation._id);
+    //   await alarmTalk('userCancelInformDesigner', reservation._user, reservation._designer, reservation._id);
+    // } else if (isCanceled && cancelByUser && !isBefore24hours) {
+    //   // 유저가 24시간 지나고 취소한 경우
+    //   await alarmTalk('userCancelAfterDay', reservation._user, reservation._designer, reservation._id);
+    //   await alarmTalk('userCancelInformDesigner', reservation._user, reservation._designer, reservation._id);
+    // } else if (isCanceled && !cancelByUser) {
+    //   // 디자이너가 취소한 경우
+    //   await alarmTalk('designerCancelInformUser', reservation._user, reservation._designer, reservation._id);
+    //   await alarmTalk('designerCancel', reservation._user, reservation._designer, reservation._id);
+    // } else {
+    //   // 디자이너가 서비스 완료 버튼 누른 경우
+    //   await alarmTalk('userPleaseReview', reservation._user, reservation._designer, reservation._id);
+    // }
   } catch (e) {
-    logger && logger.error('PATCH /users/:user_id/reservations/:id | %o', e);
+    if (logger) logger.error('PATCH /users/:user_id/reservations/:id | %o', e);
     res.status(400).send(e);
   }
 });
@@ -126,7 +143,7 @@ router.delete('/:id', async (req, res) => {
 
     res.status(200).send();
   } catch (e) {
-    logger && logger.error('DELETE /users/:user_id/reservations/:id | %o', e);
+    if (logger) logger.error('DELETE /users/:user_id/reservations/:id | %o', e);
     res.status(400).send(e);
   }
 });

@@ -12,15 +12,13 @@ router.post('/', async ({ body: { userToken } }, res) => {
   };
 
   try {
-
-	logger.info('%o', options);
     const response = await request(options);
     const userData = JSON.parse(response);
-	logger.info('%o',userData.id)
+
     const customToken = await admin.auth().createCustomToken(String(userData.id));
     res.status(200).send({ token: customToken, userData });
   } catch (e) {
-    logger && logger.error('kakao_route | %o', e);
+    if (logger) logger.error('kakao_route | %o', e);
     res.status(400).send(e);
   }
 });
