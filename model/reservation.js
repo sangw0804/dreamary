@@ -68,8 +68,8 @@ reservationSchema.methods.updateRelatedDB = async function() {
   const designer = await User.findById(reservation._designer);
   const card = await Card.findById(reservation._card);
 
-  if (!user || !designer || !card) {
-    throw new Error('user || card || recruit not found!!');
+  if (!user || !designer) {
+    throw new Error('user || designer not found!!');
   }
 
   const temp = user._reservations.map(r => r.toHexString());
