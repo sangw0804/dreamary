@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
 
     res.status(200).send(inquiries);
   } catch (e) {
-    logger && logger.error('GET /inquiries || %o', e);
+    if (logger) logger.error('GET /inquiries || %o', e);
     res.status(400).send(e);
   }
 });
@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).send(inquiry);
   } catch (e) {
-    logger && logger.error('POST /inquiries || %o', e);
+    if (logger) logger.error('POST /inquiries || %o', e);
     res.status(400).send(e);
   }
 });

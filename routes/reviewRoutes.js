@@ -1,25 +1,17 @@
 const express = require('express');
 
 const router = express.Router({ mergeParams: true });
-const formidable = require('formidable');
+
 const AWS = require('aws-sdk');
 const fs = require('fs');
+const sharp = require('sharp');
 
 AWS.config.region = 'ap-northeast-2';
 
 const { Review } = require('../model/review');
 const { Recruit } = require('../model/recruit');
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
-
-function formidablePromise(req, opts) {
-  return new Promise(function(resolve, reject) {
-    const form = new formidable.IncomingForm(opts);
-    form.parse(req, function(err, fields, files) {
-      if (err) return reject(err);
-      resolve({ fields, files });
-    });
-  });
-}
+const formPromise = require('./helpers/formidablePromise');
 
 // GET /recruits/:recruit_id/reviews/:id
 router.get('/:id', async (req, res) => {
@@ -29,7 +21,7 @@ router.get('/:id', async (req, res) => {
 
     res.status(200).send(review);
   } catch (e) {
-    logger && logger.error('GET /recruits/:recruit_id/reviews/:id | %o', e);
+    if (logger) logger.error('GET /recruits/:recruit_id/reviews/:id | %o', e);
     res.status(400).send(e);
   }
 });
@@ -48,10 +40,11 @@ router.post('/', async (req, res) => {
     };
 
     const createdReview = await Review.create(body);
+    await createdReview.updateRelatedDBs();
 
     res.status(200).send(createdReview);
   } catch (e) {
-    logger && logger.error('POST /recruits/:recruit_id/reviews | %o', e);
+    if (logger) logger.error('POST /recruits/:recruit_id/reviews | %o', e);
     res.status(400).send(e);
   }
 });
@@ -59,28 +52,55 @@ router.post('/', async (req, res) => {
 // PATCH /recruits/:recruit_id/reviews/:id/images
 router.patch('/:id/images', async (req, res) => {
   try {
-    const form = new formidable.IncomingForm();
     const { id } = req.params;
-    const { fields, files } = await formidablePromise(req);
-    const fileLocations = [];
+    const { err, files, fields } = await formPromise(req);
+    if (err) throw new Error(err);
 
-    for (const fileKey in files) {
+    const promises = Object.keys(files).map(async fileKey => {
       const randomNum = Math.floor(Math.random() * 1000000);
       const s3 = new AWS.S3();
+      await sharp(files[fileKey].path)
+        .rotate()
+        .toFile(`/home/ubuntu/${files[fileKey].name}`);
       const params = {
         Bucket: 'dreamary',
         Key: randomNum + files[fileKey].name,
         ACL: 'public-read',
-        Body: fs.createReadStream(files[fileKey].path)
+        Body: fs.createReadStream(`/home/ubuntu/${files[fileKey].name}`)
       };
       const data = await s3.upload(params).promise();
-      fileLocations.push(data.Location);
-    }
+
+      fs.unlink(files[fileKey].path);
+      fs.unlink(`/home/ubuntu/${files[fileKey].name}`);
+      return data.Location;
+    });
+
+    const fileLocations = await Promise.all(promises);
     const updatedReview = await Review.findByIdAndUpdate(id, { $set: { images: fileLocations } });
 
     res.status(200).send(updatedReview);
   } catch (e) {
-    logger && logger.error('PATCH /recruits/:recruit_id/reviews/:id/images | %o', e);
+    if (logger) logger.error('PATCH /recruits/:recruit_id/reviews/:id/images | %o', e);
+    res.status(400).send(e);
+  }
+});
+
+// PATCH /recruits/:recruit_id/reviews/:id
+router.patch('/:id', async (req, res) => {
+  try {
+    const { content, score } = req.body;
+
+    const updatedReview = await Review.findById(req.params.id);
+    updatedReview.content = content;
+    const originalScore = updatedReview.score;
+    updatedReview.score = score;
+
+    await updatedReview.save();
+    await updatedReview.updateRelatedDBs(originalScore);
+
+    res.status(200).send(updatedReview);
+  } catch (e) {
+    if (logger) logger.error('PATCH /recruits/:recruit_id/reviews/:id | %o', e);
     res.status(400).send(e);
   }
 });
@@ -90,9 +110,10 @@ router.delete('/:id', async (req, res) => {
   try {
     const review = await Review.findById(req.params.id);
     await review.remove();
+    await review.removeRelatedDBs();
     res.status(200).send({});
   } catch (e) {
-    logger && logger.error('DELETE /recruits/:recruit_id/reviews/:id | %o', e);
+    if (logger) logger.error('DELETE /recruits/:recruit_id/reviews/:id | %o', e);
     res.status(400).send(e);
   }
 });

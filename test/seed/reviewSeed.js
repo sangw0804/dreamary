@@ -11,6 +11,7 @@ const reviews = [
     _id: new ObjectID(),
     _recruit: recruits[0]._id,
     _user: users[0]._id,
+    _reservation: reservations[0]._id,
     score: 4.0,
     content: '상당히 잘 자르시네요',
     createdAt: new Date().getTime()

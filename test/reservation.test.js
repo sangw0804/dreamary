@@ -187,16 +187,11 @@ describe('Reservation', () => {
         .patch(`/users/${users[0]._id}/reservations/${reservations[0]._id}`)
         .send({ isCanceled: 'true' })
         .expect(200)
-        .expect(res => {
-          expect(res.body.isCanceled).toBe(true);
-        })
         .end(async (err, res) => {
           try {
-            if (err) {
-              throw new Error(err);
-            }
+            if (err) throw new Error(err);
 
-            const card = await Card.findById(res.body._card);
+            const card = await Card.findById(reservations[0]._card);
             expect(card.reservedTimes.length).toBe(0);
             const user = await User.findById(users[0]._id);
             expect(user.point).toBe(5000);
@@ -212,16 +207,11 @@ describe('Reservation', () => {
         .patch(`/users/${users[0]._id}/reservations/${reservations[0]._id}`)
         .send({ isCanceled: 'true', cancelByUser: true })
         .expect(200)
-        .expect(res => {
-          expect(res.body.isCanceled).toBe(true);
-        })
         .end(async (err, res) => {
           try {
-            if (err) {
-              throw new Error(err);
-            }
+            if (err) throw new Error(err);
 
-            const card = await Card.findById(res.body._card);
+            const card = await Card.findById(reservations[0]._card);
             expect(card.reservedTimes.length).toBe(0);
             const user = await User.findById(users[0]._id);
             expect(user.point).toBe(0);
@@ -237,16 +227,11 @@ describe('Reservation', () => {
         .patch(`/users/${users[0]._id}/reservations/${reservations[0]._id}`)
         .send({ isDone: 'true' })
         .expect(200)
-        .expect(res => {
-          expect(res.body.isDone).toBe(true);
-        })
         .end(async (err, res) => {
           try {
-            if (err) {
-              throw new Error(err);
-            }
+            if (err) throw new Error(err);
 
-            const card = await Card.findById(res.body._card);
+            const card = await Card.findById(reservations[0]._card);
             expect(card.reservedTimes.length).toBe(0);
             done();
           } catch (e) {

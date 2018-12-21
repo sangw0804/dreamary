@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).send(result);
   } catch (e) {
-    logger && logger.error(e);
+    if (logger) logger.error(e);
     res.status(400).send(e);
   }
 });
