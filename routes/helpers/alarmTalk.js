@@ -231,20 +231,22 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
         break;
     }
 
-    // const snapshot = await firebase
-    //   .database()
-    //   .ref(`/users/${template.includes('USE') ? user._uid : designer._uid}`)
-    //   .once('value');
-    // const { phoneNumber } = snapshot.val();
+    const snapshot = await firebase
+      .database()
+      .ref(`/users/${template.includes('USE') ? user._uid : designer._uid}`)
+      .once('value');
+    const { phoneNumber } = snapshot.val();
 
-    // options.PHONE = phoneNumber;
-    options.PHONE = '01087623725';
+    options.PHONE = phoneNumber;
+    // options.PHONE = '01087623725';
 
     console.log(options);
-    return alarmAxios.post('/', querystring.stringify(options));
+    const result = await alarmAxios.post('/', querystring.stringify(options));
+    console.log(result);
   } catch (e) {
     if (logger) logger.error('alarmTalk Error : %o', e);
     if (logger) logger.error('alarmTalk Error : %o', options);
+    console.log(e);
     await sendMailPromise(e, options);
   }
 };
