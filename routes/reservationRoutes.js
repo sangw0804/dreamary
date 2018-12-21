@@ -77,9 +77,9 @@ router.post('/', async (req, res) => {
 
     await createdReservation.updateRelatedDB();
 
+    await alarmTalk('userReservationInformNow', _user, _designer, createdReservation._id);
+    await alarmTalk('designerReservationInformNow', _user, _designer, createdReservation._id);
     res.status(200).send(createdReservation);
-    // await alarmTalk('userReservationInformNow', _user, _designer, createdReservation._id);
-    // await alarmTalk('designerReservationInformNow', _user, _designer, createdReservation._id);
   } catch (e) {
     if (logger) logger.error('POST /users/:user_id/reservations | %o', e);
     res.status(400).send(e);
