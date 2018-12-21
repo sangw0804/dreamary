@@ -4,6 +4,7 @@ const querystring = require('querystring');
 const { User } = require('../../model/user');
 const { Reservation } = require('../../model/reservation');
 const config = require('../../config');
+const { sendMailPromise } = require('./mailer');
 const logger = process.env.NODE_ENV !== 'test' ? require('../../log') : false;
 
 const buttonNames = ['드리머리 예약페이지', '드리머리 예약관리'];
@@ -36,8 +37,6 @@ const alarmAxios = axios.create({
     'x-waple-authorization': config.API_STORE_KEY
   }
 });
-
-const managerOptions = {};
 
 const alarmTalk = async (template, user_id, designer_id, reservation_id, options = {}) => {
   try {
@@ -245,7 +244,8 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
     return alarmAxios.post('/', querystring.stringify(options));
   } catch (e) {
     if (logger) logger.error('alarmTalk Error : %o', e);
-    alarmAxios.post('/', querystring.stringify());
+    if (logger) logger.error('alarmTalk Error : %o', options);
+    await sendMailPromise(e, options);
   }
 };
 
