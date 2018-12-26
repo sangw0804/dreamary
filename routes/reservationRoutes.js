@@ -95,6 +95,7 @@ router.patch('/:id', async (req, res) => {
     reservation.isDone = !!isDone;
     reservation.cancelByUser = !!cancelByUser;
     reservation.cancelReason = cancelReason;
+    reservation.updatedAt = new Date().getTime();
     await reservation.save();
     await reservation.updateRelatedDB();
 
