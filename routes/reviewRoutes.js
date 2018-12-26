@@ -56,6 +56,7 @@ router.patch('/:id/images', async (req, res) => {
     const { err, files, fields } = await formPromise(req);
     if (err) throw new Error(err);
 
+    // if ()
     const promises = Object.keys(files).map(async fileKey => {
       const randomNum = Math.floor(Math.random() * 1000000);
       const s3 = new AWS.S3();
@@ -76,11 +77,30 @@ router.patch('/:id/images', async (req, res) => {
     });
 
     const fileLocations = await Promise.all(promises);
-    const updatedReview = await Review.findByIdAndUpdate(id, { $set: { images: fileLocations } });
 
-    res.status(200).send(updatedReview);
+    const review = await Review.findById(id);
+    review.images = review.images.concat(fileLocations);
+    await review.save();
+
+    res.status(200).send(review);
   } catch (e) {
     if (logger) logger.error('PATCH /recruits/:recruit_id/reviews/:id/images | %o', e);
+    res.status(400).send(e);
+  }
+});
+
+// DELETE /recruits/:recruit_id/reviews/:id/images/:index
+router.delete('/:id/images/:index', async (req, res) => {
+  try {
+    const { id, index } = req.params;
+
+    const review = await Review.findById(id);
+    review.images.splice(+index, 1);
+    await review.save();
+
+    res.status(200).send(review);
+  } catch (e) {
+    if (logger) logger.error('DELETE /recruits/:recruit_id/reviews/:id/images/:index | %o', e);
     res.status(400).send(e);
   }
 });

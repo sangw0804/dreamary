@@ -5,7 +5,7 @@ const { User } = require('../../model/user');
 const users = [
   {
     _id: new ObjectID(),
-    _uid: '123',
+    _uid: '950342021',
     tickets: [],
     reservations: [],
     point: 0,
@@ -13,7 +13,7 @@ const users = [
   },
   {
     _id: new ObjectID(),
-    _uid: '456',
+    _uid: '953409359',
     tickets: [],
     reservations: [],
     point: 0,
