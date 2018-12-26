@@ -78,8 +78,9 @@ router.patch('/:id/images', async (req, res) => {
 
     const fileLocations = await Promise.all(promises);
 
-    const review = Review.findById(id);
+    const review = await Review.findById(id);
     review.images = review.images.concat(fileLocations);
+    await review.save();
 
     res.status(200).send(review);
   } catch (e) {
