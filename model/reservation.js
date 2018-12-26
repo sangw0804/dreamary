@@ -55,6 +55,9 @@ const reservationSchema = new mongoose.Schema(
     createdAt: {
       type: Number,
       required: true
+    },
+    updatedAt: {
+      type: Number
     }
   },
   {
