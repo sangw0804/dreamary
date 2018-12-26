@@ -56,6 +56,7 @@ router.patch('/:id/images', async (req, res) => {
     const { err, files, fields } = await formPromise(req);
     if (err) throw new Error(err);
 
+    if ()
     const promises = Object.keys(files).map(async fileKey => {
       const randomNum = Math.floor(Math.random() * 1000000);
       const s3 = new AWS.S3();
@@ -76,7 +77,7 @@ router.patch('/:id/images', async (req, res) => {
     });
 
     const fileLocations = await Promise.all(promises);
-    const updatedReview = await Review.findByIdAndUpdate(id, { $set: { images: fileLocations } });
+    if (fileLocations.length) await Review.findByIdAndUpdate(id, { $set: { images: fileLocations } });
 
     res.status(200).send(updatedReview);
   } catch (e) {
