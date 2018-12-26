@@ -79,7 +79,7 @@ router.patch('/:id/images', async (req, res) => {
     const fileLocations = await Promise.all(promises);
     if (fileLocations.length) await Review.findByIdAndUpdate(id, { $set: { images: fileLocations } });
 
-    res.status(200).send(updatedReview);
+    res.status(200).send({});
   } catch (e) {
     if (logger) logger.error('PATCH /recruits/:recruit_id/reviews/:id/images | %o', e);
     res.status(400).send(e);
