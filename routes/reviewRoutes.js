@@ -90,7 +90,7 @@ router.patch('/:id/images', async (req, res) => {
 });
 
 // DELETE /recruits/:recruit_id/reviews/:id/images/:index
-router.delete('/recruits/:recruit_id/reviews/:id/images/:index', async (req, res) => {
+router.delete('/:id/images/:index', async (req, res) => {
   try {
     const { id, index } = req.params;
 
