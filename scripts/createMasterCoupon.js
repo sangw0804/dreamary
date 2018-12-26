@@ -5,7 +5,7 @@ mongoose.connect(
   { useNewUrlParser: true }
 );
 
-const { Coupon } = require('./model/coupon');
+const { Coupon } = require('../model/coupon');
 
 const createMasterCoupon = async point => {
   const masterCoupon = await Coupon.create({

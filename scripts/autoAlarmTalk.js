@@ -7,9 +7,9 @@ mongoose.connect(
 
 // 매일 19:50분에 내일 시술 예정인 취소되지 않은 예약을 찾아 예디 & 유저에게 알림톡 발송
 
-const { alarmTalk } = require('./routes/helpers/alarmTalk');
-const { User } = require('./model/user');
-const { Reservation } = require('./model/reservation');
+const { alarmTalk } = require('../routes/helpers/alarmTalk');
+const { User } = require('../model/user');
+const { Reservation } = require('../model/reservation');
 
 const autoAlarmTalk = async () => {
   try {

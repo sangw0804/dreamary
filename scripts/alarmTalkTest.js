@@ -5,9 +5,9 @@ mongoose.connect(
   { useNewUrlParser: true }
 );
 
-const { alarmTalk } = require('./routes/helpers/alarmTalk');
-const { User } = require('./model/user');
-const { Reservation } = require('./model/reservation');
+const { alarmTalk } = require('../routes/helpers/alarmTalk');
+const { User } = require('../model/user');
+const { Reservation } = require('../model/reservation');
 
 alarmTalk(
   'userReservationInformNow',
