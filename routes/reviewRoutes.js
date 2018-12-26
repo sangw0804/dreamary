@@ -56,7 +56,7 @@ router.patch('/:id/images', async (req, res) => {
     const { err, files, fields } = await formPromise(req);
     if (err) throw new Error(err);
 
-    if ()
+    // if ()
     const promises = Object.keys(files).map(async fileKey => {
       const randomNum = Math.floor(Math.random() * 1000000);
       const s3 = new AWS.S3();
