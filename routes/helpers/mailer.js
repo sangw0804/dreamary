@@ -23,7 +23,6 @@ const sendMailPromise = (alarmTalkError, options) =>
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) reject(error);
       else resolve(info);
-      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
     });
   });
 
