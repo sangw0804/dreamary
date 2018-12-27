@@ -196,7 +196,7 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
 
   예약하신 아래의 서비스는 고객님의 사정으로 인해 취소되었습니다.
 
-  일시: ${dateString} 
+  일시: ${dateString} ${startTimeString}
   장소: ${card.fullAddress} ${card.shop}
   고객명: ${user.name}님
   서비스종류: ${servicesString} 
