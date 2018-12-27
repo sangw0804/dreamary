@@ -69,7 +69,7 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
       case 'userReservationInformNow':
         options.MSG = `${user.name}님! 드리머리 서비스를 예약해주셔서 감사합니다. 
 
-  일시: ${dateString} ${startTimeString}
+  일시: ${dateString}, ${startTimeString}
   장소: ${card.fullAddress}, ${card.shop}
   예디명: ${designer.name} 예디
   서비스종류: ${servicesString}
@@ -233,21 +233,23 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
 
     const snapshot = await firebase
       .database()
-      .ref(`/users/${template.includes('USE') ? user._uid : designer._uid}`)
+      .ref(`/users/${alarmTemplates[template][0].includes('USE') ? user._uid : designer._uid}`)
       .once('value');
     const { phoneNumber } = snapshot.val();
 
     options.PHONE = phoneNumber;
     // options.PHONE = '01087623725';
 
-    console.log(options);
-    const result = await alarmAxios.post('/', querystring.stringify(options));
-    console.log(result);
+    const { data } = await alarmAxios.post('/', querystring.stringify(options));
+    if (data.result_code !== '200') throw new Error(data);
   } catch (e) {
     if (logger) logger.error('alarmTalk Error : %o', e);
     if (logger) logger.error('alarmTalk Error : %o', options);
-    console.log(e);
-    await sendMailPromise(e, options);
+    try {
+      await sendMailPromise(e, options);
+    } catch (err) {
+      if (logger) logger.error('alarmTalk Error - Send Mail : %o', err);
+    }
   }
 };
 
