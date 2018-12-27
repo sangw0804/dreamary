@@ -6,7 +6,7 @@ const { User } = require('../model/user');
 const { Card } = require('../model/card');
 const { Recruit } = require('../model/recruit');
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
-// const { alarmTalk } = require('./helpers/alarmTalk');
+const { alarmTalk } = require('./helpers');
 
 // GET /users/:user_id/reservations/all
 router.get('/all', async (req, res) => {
@@ -77,7 +77,7 @@ router.post('/', async (req, res) => {
 
     await createdReservation.updateRelatedDB();
 
-    // await alarmTalk('userReservationInformNow', _user, _designer, createdReservation._id);
+    await alarmTalk('userReservationInformNow', _user, _designer, createdReservation._id);
     // await alarmTalk('designerReservationInformNow', _user, _designer, createdReservation._id);
     res.status(200).send(createdReservation);
   } catch (e) {
