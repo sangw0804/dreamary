@@ -23,7 +23,7 @@ const alarmTemplates = {
   userCancelAfterDay: ['USER004', buttonNames[0], urls[0], urls[0]],
   designerCancelInformUser: ['USER005', buttonNames[0], urls[0], urls[0]],
   userPleaseReview: ['USER006', buttonNames[0], urls[0], urls[0]],
-  designerReservationInformNow: ['DESI001', buttonNames[1], urls[1], urls[1]],
+  designerReservationInformNow: ['DESI007', buttonNames[1], urls[1], urls[1]],
   designerReservationInformAgain: ['DESI002', buttonNames[1], urls[1], urls[1]],
   userCancelInformDesigner: ['DESI003', buttonNames[1], urls[1], urls[1]],
   designerCancel: ['DESI004', buttonNames[1], urls[1], urls[1]],
@@ -160,9 +160,9 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
       case 'designerReservationInformNow':
         options.MSG = `${designer.name}님! 새로운 예약이 있습니다.
 
-  성명: ${user.name}
   일시: ${dateString} ${startTimeString}
   장소: ${card.fullAddress} ${card.shop}
+  모델명: ${user.name}님
   서비스종류: ${servicesString} 
 
   고객님과의 구체적인 상담을 위해 페이지 우측 상단의 메시지 기능을 활용해주시기 바랍니다.
@@ -176,9 +176,9 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
       case 'designerReservationInformAgain':
         options.MSG = `${designer.name}님! 내일은 서비스가 예약되어 있는 날입니다. 
 
-  성명: ${user.name}
   일시: ${dateString} ${startTimeString}
-  장소: ${card.fullAddress}, ${card.shop} 
+  장소: ${card.fullAddress}, ${card.shop}
+  모델명: ${user.name}님
   서비스종류: ${servicesString} 
 
   개인 사정으로 서비스가 어려운 경우 필히 드리머리에 접속해서 미리 ‘예약취소’ 를 클릭해주세요.
@@ -196,9 +196,9 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
 
   예약하신 아래의 서비스는 고객님의 사정으로 인해 취소되었습니다.
 
-  일시: ${dateString}, ${startTimeString}
-  장소: ${card.fullAddress}, ${card.shop}
-  고객명: ${user.name}님
+  일시: ${dateString} ${startTimeString}
+  장소: ${card.fullAddress} ${card.shop}
+  모델명: ${user.name}님
   서비스종류: ${servicesString} 
 
   취소사유: ${reservation.cancelReason} 
