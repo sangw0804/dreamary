@@ -60,7 +60,6 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
     const dateString = `${dateObj.getFullYear()}년 ${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일`;
     const startTimeString = `${Math.floor(reservation.time.since / 60)}:${reservation.time.since % 60}`;
     const servicesString = Object.keys(reservation.services)
-      .filter(serviceName => reservation.services[serviceName])
       .map(serviceName => serviceNiceName[serviceName])
       .join(', ');
 
