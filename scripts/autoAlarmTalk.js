@@ -21,7 +21,7 @@ const autoAlarmTalk = async () => {
     const nowTimeStamp = new Date().getTime();
     const reservations = await Reservation.find({
       isCanceled: false,
-      date: { $gt: nowTimeStamp, $lt: nowTimeStamp + 54000000 }
+      date: { $gt: nowTimeStamp, $lt: nowTimeStamp + 86400000 }
     });
     console.log(reservations);
 
