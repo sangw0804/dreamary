@@ -136,11 +136,13 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
 
   취소사유: ${reservation.cancelReason} 
 
-  드리머리는 노쇼/당일취소 방지를 위해 해당 개인들에 대해서 서비스 영구사용 제한 등의 조치를 취하고 있습니다. 다시는 이런 사례가 없도록 더욱 발전하는 드리머리가 되겠습니다. 다시 한 번 고개숙여 사과드립니다.
+  드리머리는 노쇼/당일취소 방지를 위해 당사자들에 대해 서비스 영구사용 제한 등의 조치를 취하고 있습니다. 
+
+  다시는 이런 사례가 없도록 더욱 발전하는 드리머리가 되겠습니다. 다시 한 번 고개숙여 사과드립니다.
 
   ${user.name}님의 계정에 5,000P가 환급되었습니다.
 
-  이의신청/문의사항은 플러스친구 ‘드리머리’로 부탁드립니다.
+  문의사항은 플러스친구 ‘드리머리’로 부탁드립니다.
 
   www.dreamary.net`;
         break;
@@ -151,9 +153,9 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
 
   ${designer.name} 예디님의 서비스에 만족하셨다면 꿈을 응원하는 의미로 정성스런 리뷰를 작성해주세요!
 
-  혹시 서비스가 정상적으로 이루어지지 않았거나 문의사항이 있으시다면 플러스친구 ‘드리머리’로 부탁드립니다.
+  www.dreamary.net
 
-  www.dreamary.net`;
+  혹시 서비스가 정상적으로 이루어지지 않았거나 문의사항이 있으시다면 플러스친구 ‘드리머리’로 부탁드립니다.`;
         break;
 
       // 디자이너 예약 바로안내 * * * * * * * * * * * * * * * * * * * *
@@ -246,7 +248,6 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
     const { phoneNumber } = snapshot.val();
 
     options.PHONE = phoneNumber;
-    // options.PHONE = '01087623725';
 
     const { data } = await alarmAxios.post('/', querystring.stringify(options));
     if (data.result_code !== '200') throw new Error(data);
