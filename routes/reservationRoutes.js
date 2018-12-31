@@ -79,7 +79,7 @@ router.post('/', async (req, res) => {
 
     if (process.env.NODE_ENV !== 'test') {
       await alarmTalk('userReservationInformNow', _user, _designer, createdReservation._id);
-      // await alarmTalk('designerReservationInformNow', _user, _designer, createdReservation._id);
+      await alarmTalk('designerReservationInformNow', _user, _designer, createdReservation._id);
     }
     res.status(200).send(createdReservation);
   } catch (e) {
