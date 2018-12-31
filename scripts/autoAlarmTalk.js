@@ -1,22 +1,26 @@
 const mongoose = require('mongoose');
+const firebase = require('firebase');
+
+const config = require('../config');
 
 mongoose.connect(
-  'mongodb://localhost:27017/dreamary',
+  config.MONGODB_URI,
   { useNewUrlParser: true }
 );
 
 // 매일 19:50분에 내일 시술 예정인 취소되지 않은 예약을 찾아 예디 & 유저에게 알림톡 발송
 
-const { alarmTalk } = require('./routes/helpers/alarmTalk');
-const { User } = require('./model/user');
-const { Reservation } = require('./model/reservation');
+firebase.initializeApp(config.FIREBASE_CONFIG);
+
+const { alarmTalk } = require('../routes/helpers/alarmTalk');
+const { Reservation } = require('../model/reservation');
 
 const autoAlarmTalk = async () => {
   try {
     const nowTimeStamp = new Date().getTime();
     const reservations = await Reservation.find({
       isCanceled: false,
-      date: { $gt: nowTimeStamp, $lt: nowTimeStamp + 54000000 }
+      date: { $gt: nowTimeStamp, $lt: nowTimeStamp + 86400000 }
     });
     console.log(reservations);
 

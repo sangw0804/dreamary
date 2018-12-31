@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
 
+const config = require('../config');
+
 mongoose.connect(
-  'mongodb://localhost:27017/dreamary',
+  config.MONGODB_URI,
   { useNewUrlParser: true }
 );
 
-const { Coupon } = require('./model/coupon');
+const { Coupon } = require('../model/coupon');
 
 const createMasterCoupon = async point => {
   const masterCoupon = await Coupon.create({

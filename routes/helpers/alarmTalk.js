@@ -23,7 +23,7 @@ const alarmTemplates = {
   userCancelAfterDay: ['USER004', buttonNames[0], urls[0], urls[0]],
   designerCancelInformUser: ['USER005', buttonNames[0], urls[0], urls[0]],
   userPleaseReview: ['USER006', buttonNames[0], urls[0], urls[0]],
-  designerReservationInformNow: ['DESI001', buttonNames[1], urls[1], urls[1]],
+  designerReservationInformNow: ['DESI007', buttonNames[1], urls[1], urls[1]],
   designerReservationInformAgain: ['DESI002', buttonNames[1], urls[1], urls[1]],
   userCancelInformDesigner: ['DESI003', buttonNames[1], urls[1], urls[1]],
   designerCancel: ['DESI004', buttonNames[1], urls[1], urls[1]],
@@ -40,11 +40,6 @@ const alarmAxios = axios.create({
 
 const alarmTalk = async (template, user_id, designer_id, reservation_id, options = {}) => {
   try {
-    // options = {
-    //   PHONE: '알람톡 보낼 번호',
-    //
-    // };
-    // template: '저 위에 있는 템플릿 key값'
     options.FAILED_TYPE = 'N';
     options.BTN_TYPES = '웹링크';
     options.CALLBACK = '01041112486';
@@ -58,9 +53,9 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
     const card = reservation._card;
     const dateObj = new Date(reservation.date);
     const dateString = `${dateObj.getFullYear()}년 ${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일`;
-    const startTimeString = `${Math.floor(reservation.time.since / 60)}:${reservation.time.since % 60}`;
+    const startTimeString = `${Math.floor(reservation.time.since / 60)}:${reservation.time.since % 60 ? 30 : '00'}`;
     const servicesString = Object.keys(reservation.services)
-      .filter(serviceName => reservation.services[serviceName])
+	  .filter(key => key !== '$init' && reservation.services[key] === true)
       .map(serviceName => serviceNiceName[serviceName])
       .join(', ');
 
@@ -69,7 +64,7 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
       case 'userReservationInformNow':
         options.MSG = `${user.name}님! 드리머리 서비스를 예약해주셔서 감사합니다. 
 
-  일시: ${dateString} ${startTimeString}
+  일시: ${dateString}, ${startTimeString}
   장소: ${card.fullAddress}, ${card.shop}
   예디명: ${designer.name} 예디
   서비스종류: ${servicesString}
@@ -85,7 +80,7 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
       case 'userReservationInformAgain':
         options.MSG = `${user.name}님! 내일은 서비스가 예약되어 있는 날입니다. 
 
-  일시: ${dateString} ${startTimeString}
+  일시: ${dateString}, ${startTimeString}
   장소: ${card.fullAddress}, ${card.shop}
   예디명: ${designer.name} 예디
   서비스종류: ${servicesString} 
@@ -112,8 +107,10 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
 
       // 고객 24시간이내 취소 안내 * * * * * * * * * * * * * * * *
       case 'userCancelAfterDay':
-        options.MSG = `${user.name}님! ${dateString}에 예약된 서비스를 취소하셨습니다. 
-  서비스가 24시간이 남지 않은 시점에 취소가 이루어 졌으므로 포인트는 환급되지 않습니다. 
+        options.MSG = `${user.name}님! ${dateString}에 예약된 서비스를 취소하셨습니다.
+
+  서비스가 24시간이 남지 않은 시점에 취소가 이루어 졌으므로 포인트는 환급되지 않습니다.
+
   당일 취소 3회 시 서비스 사용이 영구적으로 제한됩니다.
 
   이의신청/문의사항은 플러스친구 ‘드리머리’로 부탁드립니다.
@@ -134,11 +131,13 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
 
   취소사유: ${reservation.cancelReason} 
 
-  드리머리는 노쇼/당일취소 방지를 위해 해당 개인들에 대해서 서비스 영구사용 제한 등의 조치를 취하고 있습니다. 다시는 이런 사례가 없도록 더욱 발전하는 드리머리가 되겠습니다. 다시 한 번 고개숙여 사과드립니다.
+  드리머리는 노쇼/당일취소 방지를 위해 당사자들에 대해 서비스 영구사용 제한 등의 조치를 취하고 있습니다. 
+
+  다시는 이런 사례가 없도록 더욱 발전하는 드리머리가 되겠습니다. 다시 한 번 고개숙여 사과드립니다.
 
   ${user.name}님의 계정에 5,000P가 환급되었습니다.
 
-  이의신청/문의사항은 플러스친구 ‘드리머리’로 부탁드립니다.
+  문의사항은 플러스친구 ‘드리머리’로 부탁드립니다.
 
   www.dreamary.net`;
         break;
@@ -146,19 +145,21 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
       // 고객 서비스리뷰 부탁 안내 * * * * * * * * * * * * * * * * * *
       case 'userPleaseReview':
         options.MSG = `${user.name}님! 오늘 서비스는 어떠셨나요?
-  ${designer.name} 예디님의 서비스에 만족하셨다면 꿈을 응원하는 의미로 정성스런 리뷰를 작성해주세요!
-  혹시 서비스가 정상적으로 이루어지지 않았거나 문의사항이 있으시다면 플러스친구 ‘드리머리’로 부탁드립니다.
 
-  www.dreamary.net`;
+  ${designer.name} 예디님의 서비스에 만족하셨다면 꿈을 응원하는 의미로 정성스런 리뷰를 작성해주세요!
+
+  www.dreamary.net
+
+  혹시 서비스가 정상적으로 이루어지지 않았거나 문의사항이 있으시다면 플러스친구 ‘드리머리’로 부탁드립니다.`;
         break;
 
       // 디자이너 예약 바로안내 * * * * * * * * * * * * * * * * * * * *
       case 'designerReservationInformNow':
         options.MSG = `${designer.name}님! 새로운 예약이 있습니다.
 
-  성명: ${user.name}
   일시: ${dateString} ${startTimeString}
   장소: ${card.fullAddress} ${card.shop}
+  모델명: ${user.name}님
   서비스종류: ${servicesString} 
 
   고객님과의 구체적인 상담을 위해 페이지 우측 상단의 메시지 기능을 활용해주시기 바랍니다.
@@ -172,13 +173,15 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
       case 'designerReservationInformAgain':
         options.MSG = `${designer.name}님! 내일은 서비스가 예약되어 있는 날입니다. 
 
-  성명: ${user.name}
   일시: ${dateString} ${startTimeString}
-  장소: ${card.fullAddress}, ${card.shop} 
+  장소: ${card.fullAddress}, ${card.shop}
+  모델명: ${user.name}님
   서비스종류: ${servicesString} 
 
-  개인 사정으로 서비스가 어려운 경우 필히 드리머리에 접속해서 미리 ‘예약취소’ 를 클릭해주세요. 
+  개인 사정으로 서비스가 어려운 경우 필히 드리머리에 접속해서 미리 ‘예약취소’ 를 클릭해주세요.
+ 
   노쇼는 누군가의 시간과 정성에 대한 결례입니다.
+
   문의사항은 플러스친구 ‘드리머리’로 부탁드립니다.
 
   www.dreamary.net`;
@@ -190,9 +193,9 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
 
   예약하신 아래의 서비스는 고객님의 사정으로 인해 취소되었습니다.
 
-  일시: ${dateString} 
+  일시: ${dateString} ${startTimeString}
   장소: ${card.fullAddress} ${card.shop}
-  고객명: ${user.name}님
+  모델명: ${user.name}님
   서비스종류: ${servicesString} 
 
   취소사유: ${reservation.cancelReason} 
@@ -208,8 +211,10 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
 
       // 디자이너가 취소한 경우 알림톡 * * * * * * * * * * * * * * * *
       case 'designerCancel':
-        options.MSG = `${designer.name}님! ${dateString}에 예약된 서비스를 취소하셨습니다. 
+        options.MSG = `${designer.name}님! ${dateString}에 예약된 서비스를 취소하셨습니다.
+
   합당한 사유 없이 예약을 취소하신 경우 향후 불이익이 발생할 수 있습니다.
+
   이의신청/문의사항은 플러스친구 ‘드리머리’로 부탁드립니다.
 
   www.dreamary.net`;
@@ -233,21 +238,22 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
 
     const snapshot = await firebase
       .database()
-      .ref(`/users/${template.includes('USE') ? user._uid : designer._uid}`)
+      .ref(`/users/${alarmTemplates[template][0].includes('USE') ? user._uid : designer._uid}`)
       .once('value');
     const { phoneNumber } = snapshot.val();
 
     options.PHONE = phoneNumber;
-    // options.PHONE = '01087623725';
 
-    console.log(options);
-    const result = await alarmAxios.post('/', querystring.stringify(options));
-    console.log(result);
+    const { data } = await alarmAxios.post('/', querystring.stringify(options));
+    if (data.result_code !== '200') throw new Error(data);
   } catch (e) {
     if (logger) logger.error('alarmTalk Error : %o', e);
     if (logger) logger.error('alarmTalk Error : %o', options);
-    console.log(e);
-    await sendMailPromise(e, options);
+    try {
+      await sendMailPromise(e, options);
+    } catch (err) {
+      if (logger) logger.error('alarmTalk Error - Send Mail : %o', err);
+    }
   }
 };
 

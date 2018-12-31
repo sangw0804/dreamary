@@ -6,6 +6,7 @@
   "scripts": {
     "test": "NODE_ENV=test jest --runInBand --detectOpenHandles test/*.test.js",
     "test-cover": "NODE_ENV=test jest --runInBand --detectOpenHandles --coverage test/*.test.js",
+    "test-spec": "NODE_ENV=test jest --runInBand --detectOpenHandles ",
     "start": "node server.js"
   },
   "author": "NEXT",

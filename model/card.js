@@ -99,6 +99,7 @@ function sortTimes(next) {
 async function updateReservable() {
   const card = this;
   const { reservedTimes, ableTimes, must } = card;
+
   let largestAbleTime = 0;
   ableTimes.forEach(time => {
     const reserveds = reservedTimes.filter(rt => rt.until <= time.until && rt.since >= time.since);

@@ -6,7 +6,7 @@ const { User } = require('../model/user');
 const { Card } = require('../model/card');
 const { Recruit } = require('../model/recruit');
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
-const { alarmTalk } = require('./helpers/alarmTalk');
+const { alarmTalk } = require('./helpers');
 
 // GET /users/:user_id/reservations/all
 router.get('/all', async (req, res) => {
@@ -77,8 +77,10 @@ router.post('/', async (req, res) => {
 
     await createdReservation.updateRelatedDB();
 
-    await alarmTalk('userReservationInformNow', _user, _designer, createdReservation._id);
-    await alarmTalk('designerReservationInformNow', _user, _designer, createdReservation._id);
+    if (process.env.NODE_ENV !== 'test') {
+      await alarmTalk('userReservationInformNow', _user, _designer, createdReservation._id);
+      await alarmTalk('designerReservationInformNow', _user, _designer, createdReservation._id);
+    }
     res.status(200).send(createdReservation);
   } catch (e) {
     if (logger) logger.error('POST /users/:user_id/reservations | %o', e);
@@ -110,22 +112,24 @@ router.patch('/:id', async (req, res) => {
     }
 
     res.status(200).send(user);
-    // if (isCanceled && cancelByUser && isBefore24hours) {
-    //   // 유저가 24시간 내에 취소한 경우
-    //   await alarmTalk('userCancelInDay', reservation._user, reservation._designer, reservation._id);
-    //   await alarmTalk('userCancelInformDesigner', reservation._user, reservation._designer, reservation._id);
-    // } else if (isCanceled && cancelByUser && !isBefore24hours) {
-    //   // 유저가 24시간 지나고 취소한 경우
-    //   await alarmTalk('userCancelAfterDay', reservation._user, reservation._designer, reservation._id);
-    //   await alarmTalk('userCancelInformDesigner', reservation._user, reservation._designer, reservation._id);
-    // } else if (isCanceled && !cancelByUser) {
-    //   // 디자이너가 취소한 경우
-    //   await alarmTalk('designerCancelInformUser', reservation._user, reservation._designer, reservation._id);
-    //   await alarmTalk('designerCancel', reservation._user, reservation._designer, reservation._id);
-    // } else {
-    //   // 디자이너가 서비스 완료 버튼 누른 경우
-    //   await alarmTalk('userPleaseReview', reservation._user, reservation._designer, reservation._id);
-    // }
+    if (process.env.NODE_ENV !== 'test') {
+      if (isCanceled && cancelByUser && isBefore24hours) {
+        // 유저가 24시간 내에 취소한 경우
+        await alarmTalk('userCancelInDay', reservation._user, reservation._designer, reservation._id);
+        await alarmTalk('userCancelInformDesigner', reservation._user, reservation._designer, reservation._id);
+      } else if (isCanceled && cancelByUser && !isBefore24hours) {
+        // 유저가 24시간 지나고 취소한 경우
+        await alarmTalk('userCancelAfterDay', reservation._user, reservation._designer, reservation._id);
+        await alarmTalk('userCancelInformDesigner', reservation._user, reservation._designer, reservation._id);
+      } else if (isCanceled && !cancelByUser) {
+        // 디자이너가 취소한 경우
+        await alarmTalk('designerCancelInformUser', reservation._user, reservation._designer, reservation._id);
+        await alarmTalk('designerCancel', reservation._user, reservation._designer, reservation._id);
+      } else {
+        // 디자이너가 서비스 완료 버튼 누른 경우
+        await alarmTalk('userPleaseReview', reservation._user, reservation._designer, reservation._id);
+      }
+    }
   } catch (e) {
     if (logger) logger.error('PATCH /users/:user_id/reservations/:id | %o', e);
     res.status(400).send(e);
