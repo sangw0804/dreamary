@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const firebase = require('firebase');
 
 const config = require('../config');
 
@@ -8,6 +9,8 @@ mongoose.connect(
 );
 
 // 매일 19:50분에 내일 시술 예정인 취소되지 않은 예약을 찾아 예디 & 유저에게 알림톡 발송
+
+firebase.initializeApp(config.FIREBASE_CONFIG);
 
 const { alarmTalk } = require('../routes/helpers/alarmTalk');
 const { User } = require('../model/user');
