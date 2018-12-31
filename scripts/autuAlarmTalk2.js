@@ -8,7 +8,7 @@ mongoose.connect(
   { useNewUrlParser: true }
 );
 
-// 매일 19:50분에 내일 시술 예정인 취소되지 않은 예약을 찾아 예디 & 유저에게 알림톡 발송
+// 매일 09:05 에 전날에 완료되었어야 하는데 완료되지 않은 예약 찾아서 디자이너에게 알람톡 보내기.
 
 firebase.initializeApp(config.FIREBASE_CONFIG);
 
@@ -20,14 +20,14 @@ const autoAlarmTalk = async () => {
     const nowTimeStamp = new Date().getTime();
     const reservations = await Reservation.find({
       isCanceled: false,
-      date: { $gt: nowTimeStamp, $lt: nowTimeStamp + 86400000 }
+      isDone: false,
+      date: { $gt: nowTimeStamp - 140000000, $lt: nowTimeStamp - 7200000 }
     });
     console.log(reservations);
 
     return reservations.map(async reservation => {
       try {
-        await alarmTalk('userReservationInformAgain', reservation._user, reservation._designer, reservation._id);
-        await alarmTalk('designerReservationInformAgain', reservation._user, reservation._designer, reservation._id);
+        await alarmTalk('designerServiceDone', reservation._user, reservation._designer, reservation._id);
       } catch (e) {
         console.log(e);
       }
