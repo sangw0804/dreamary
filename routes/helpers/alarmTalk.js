@@ -40,11 +40,6 @@ const alarmAxios = axios.create({
 
 const alarmTalk = async (template, user_id, designer_id, reservation_id, options = {}) => {
   try {
-    // options = {
-    //   PHONE: '알람톡 보낼 번호',
-    //
-    // };
-    // template: '저 위에 있는 템플릿 key값'
     options.FAILED_TYPE = 'N';
     options.BTN_TYPES = '웹링크';
     options.CALLBACK = '01041112486';
@@ -58,8 +53,9 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
     const card = reservation._card;
     const dateObj = new Date(reservation.date);
     const dateString = `${dateObj.getFullYear()}년 ${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일`;
-    const startTimeString = `${Math.floor(reservation.time.since / 60)}:${reservation.time.since % 60}`;
+    const startTimeString = `${Math.floor(reservation.time.since / 60)}:${reservation.time.since % 60 ? 30 : '00'}`;
     const servicesString = Object.keys(reservation.services)
+	  .filter(key => key !== '$init' && reservation.services[key] === true)
       .map(serviceName => serviceNiceName[serviceName])
       .join(', ');
 
