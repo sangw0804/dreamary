@@ -16,9 +16,12 @@ const migrate = () => {
     .database()
     .ref('/users')
     .once('value', res => {
-      Object.values(res.val()).forEach(async user => {
+      Object.values(res.val()).forEach(async (user, index) => {
+        if (index > 3) return;
         console.log(user._id);
-        console.log(await User.findById(user._id));
+        let mongoUser = await User.findById(user._id);
+        mongoUser = { ...mongoUser, ...user };
+        console.log(mongoUser);
       });
     });
 };
