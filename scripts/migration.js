@@ -19,8 +19,9 @@ const migrate = () => {
       Object.values(res.val()).forEach(async (user, index) => {
         if (index > 3) return;
         console.log(user._id);
-        let mongoUser = await User.findById(user._id);
-        mongoUser = { ...mongoUser, ...user };
+        const mongoUser = await User.findByIdAndUpdate(user._id, { $set: { ...user } });
+        // mongoUser.
+        // mongoUser._doc = { ...mongoUser._doc, ...user };
         console.log(mongoUser);
       });
     });
