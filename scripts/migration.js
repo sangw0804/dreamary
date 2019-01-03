@@ -17,9 +17,8 @@ const migrate = () => {
     .ref('/users')
     .once('value', res => {
       Object.values(res.val()).forEach(async (user, index) => {
-        console.log(user._id);
-        let mongoUser = await User.findByIdAndUpdate(user._id, {$set:{...user}},{new:true});
-		console.log(mongoUser);
+        let mongoUser = await User.findByIdAndUpdate(user._id, { $set: { ...user } }, { new: true });
+        console.log(mongoUser);
       });
     });
 };

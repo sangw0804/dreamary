@@ -19,9 +19,7 @@ router.get('/', async (req, res) => {
 
 router.get('/uid/:uid', async (req, res) => {
   try {
-	logger.info('%o', req.params.uid);
-    const foundUser = (await User.find({"_uid": req.params.uid}))[0];
-	logger.info('%o', foundUser);
+    const foundUser = (await User.find({ _uid: req.params.uid }))[0];
 
     res.status(200).send(foundUser || {});
   } catch (e) {
