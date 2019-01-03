@@ -91,7 +91,7 @@ router.patch('/recruits/:id/cards/:card_id', async (req, res) => {
   try {
     const card = await Card.findById(req.params.card_id);
     card.reservable = false;
-	card.reservedTimes = [...card.ableTimes];
+    card.reservedTimes = [...card.ableTimes];
     await card.save();
 
     res.status(200).send(card);

@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Recruit'
     },
-    address: [
+    addresses: [
       {
         extraAddress: String,
         fullAddress: String,
