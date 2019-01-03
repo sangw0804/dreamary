@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 
 router.get('/uid/:uid', async (req, res) => {
   try {
-    const foundUser = await User.findOne({ _uid: req.params.uid });
+    const foundUser = await User.findById(req.params.uid);
 
     res.status(200).send(foundUser || {});
   } catch (e) {
