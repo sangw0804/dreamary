@@ -89,8 +89,9 @@ router.post('/recruits/:recruit_id/cards', async (req, res) => {
 // PATCH /recruits/:id/cards/:card_id
 router.patch('/recruits/:id/cards/:card_id', async (req, res) => {
   try {
-    const card = await Card.findOne({ _id: req.params.card_id });
+    const card = await Card.findById(req.params.card_id);
     card.reservable = false;
+	card.reservedTimes = [...card.ableTimes];
     await card.save();
 
     res.status(200).send(card);
