@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const firebase = require('firebase');
 
 const config = require('../config');
+const logger = require('../log');
 
 mongoose.connect(
   config.MONGODB_URI,
@@ -23,21 +24,21 @@ const autoAlarmTalk = async () => {
       isDone: false,
       date: { $gt: nowTimeStamp - 140000000, $lt: nowTimeStamp - 7200000 }
     });
-    console.log(reservations);
+    logger.info(reservations);
 
     return reservations.map(async reservation => {
       try {
         await alarmTalk('designerServiceDone', reservation._user, reservation._designer, reservation._id);
       } catch (e) {
-        console.log(e);
+        logger.error(e);
       }
     });
   } catch (e) {
-    console.log(e);
+    logger.error(e);
   }
 };
 
 autoAlarmTalk()
   .then(promises => Promise.all(promises))
-  .then(() => console.log('success!'))
-  .catch(e => console.log(e));
+  .then(() => logger.info('success!'))
+  .catch(e => logger.error(e));

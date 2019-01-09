@@ -72,13 +72,10 @@ router.patch('/:id/addpoint', async (req, res) => {
 // PATCH /users/:id
 router.patch('/:id', async (req, res) => {
   try {
-    const { name } = req.body;
-    const foundUser = await User.findById(req.params.id);
-    if (!foundUser) throw new Error('user not found!');
-    foundUser.name = name;
-    await foundUser.save();
+    const updatedUser = await User.findOneAndUpdate({ _id: req.params.id }, { $set: { ...req.body } }, { new: true });
+    if (!updatedUser) throw new Error('user not found!');
 
-    res.status(200).send(foundUser);
+    res.status(200).send(updatedUser);
   } catch (e) {
     if (logger) logger.error('PATCH /users/:id | %o', e);
     res.status(400).send(e);
