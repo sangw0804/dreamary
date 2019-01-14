@@ -71,6 +71,25 @@ describe('Card', () => {
     });
   });
 
+  describe('GET /recruits/:id/cards/:card_id', () => {
+    it('should get card of required id', done => {
+      request(app)
+        .get(`/recruits/${recruits[0]._id}/cards/${cards[0]._id}`)
+        .expect(200)
+        .expect(res => {
+          expect(res.body._id).toBe(cards[0]._id.toHexString());
+        })
+        .end(done);
+    });
+
+    it('should get 400 with invalid card id', done => {
+      request(app)
+        .get(`/recruits/${recruits[0]._id}/cards/sdf`)
+        .expect(400)
+        .end(done);
+    });
+  });
+
   describe('POST /recruits/:id/cards', () => {
     it('should create new card with correct recruit id', done => {
       const data = {

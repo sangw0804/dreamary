@@ -24,6 +24,17 @@ router.get('/cards', async (req, res) => {
   }
 });
 
+// GET /recruits/:recruit_id/cards/:card_id
+router.get('/recruits/:recruit_id/cards/:card_id', async (req, res) => {
+  try {
+    const card = await Card.findById(req.params.card_id);
+    res.status(200).send(card);
+  } catch (e) {
+    if (logger) logger.error('GET /recruits/:recruit_id/cards/:card_id || %o', e);
+    res.status(400).send(e);
+  }
+});
+
 // GET /recruits/:recruit_id/cards
 router.get('/recruits/:recruit_id/cards', async (req, res) => {
   try {
