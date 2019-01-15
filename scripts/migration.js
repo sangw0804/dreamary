@@ -7,7 +7,7 @@ const { User } = require('../model/user');
 firebase.initializeApp(config.FIREBASE_CONFIG);
 
 mongoose.connect(
-  'mongodb://localhost:27017/dreamary',
+  config.MONGODB_URI,
   { useNewUrlParser: true }
 );
 
@@ -17,7 +17,7 @@ const migrate = () => {
     .ref('/users')
     .once('value', res => {
       Object.values(res.val()).forEach(async (user, index) => {
-        let mongoUser = await User.findByIdAndUpdate(user._id, { $set: { ...user } }, { new: true });
+        // let mongoUser = await User.findByIdAndUpdate(user._id, { $set: { ...user } }, { new: true });
         console.log(mongoUser);
       });
     });
