@@ -11,13 +11,13 @@ app.listen(port, () => {
   logger.info(`listening to port : ${port}`);
 });
 
-https
-  .createServer(
-    {
-      ca: fs.readFileSync('/etc/letsencrypt/archive/dreamaryserver.ga/chain1.pem'),
-      key: fs.readFileSync('/etc/letsencrypt/archive/dreamaryserver.ga/privkey1.pem'),
-      cert: fs.readFileSync('/etc/letsencrypt/archive/dreamaryserver.ga/cert1.pem')
-    },
-    app
-  )
-  .listen(port2, () => console.log(`https listening to port : ${port2}`));
+// https
+//   .createServer(
+//     {
+//       ca: fs.readFileSync('/etc/letsencrypt/archive/dreamaryserver.ga/chain1.pem'),
+//       key: fs.readFileSync('/etc/letsencrypt/archive/dreamaryserver.ga/privkey1.pem'),
+//       cert: fs.readFileSync('/etc/letsencrypt/archive/dreamaryserver.ga/cert1.pem')
+//     },
+//     app
+//   )
+//   .listen(port2, () => console.log(`https listening to port : ${port2}`));

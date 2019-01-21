@@ -77,16 +77,30 @@ router.patch('/:id/images', async (req, res) => {
       await sharp(files[fileKey].path)
         .rotate()
         .toFile(`/home/ubuntu/${files[fileKey].name}`);
+      await sharp(files[fileKey].path)
+        .rotate()
+        .resize(200, 200)
+        .toFile(`/home/ubuntu/${files[fileKey].name}_thumb`);
+
       const params = {
         Bucket: 'dreamary',
         Key: randomNum + files[fileKey].name,
         ACL: 'public-read',
         Body: fs.createReadStream(`/home/ubuntu/${files[fileKey].name}`)
       };
+
+      await s3
+        .upload({
+          ...params,
+          Body: fs.createReadStream(`/home/ubuntu/${files[fileKey].name}_thumb`),
+          Key: `${randomNum + files[fileKey].name}_thumb`
+        })
+        .promise();
       const data = await s3.upload(params).promise();
 
       fs.unlink(files[fileKey].path);
       fs.unlink(`/home/ubuntu/${files[fileKey].name}`);
+      fs.unlink(`/home/ubuntu/${files[fileKey].name}_thumb`);
 
       if (fileKey === 'cert_jg') {
         user.cert_jg = data.Location;
