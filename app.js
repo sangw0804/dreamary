@@ -20,6 +20,8 @@ const firebaseRoutes = require('./routes/firebaseRoutes');
 const inquiryRoutes = require('./routes/inquiryRoutes');
 const couponRoutes = require('./routes/couponRoutes');
 const certificationRoutes = require('./routes/certificationRoutes');
+const noticeRoutes = require('./routes/noticeRoutes');
+const eventRoutes = require('./routes/eventRoutes');
 
 const { logging } = require('./middlewares/log');
 const { auth } = require('./middlewares/auth');
@@ -56,5 +58,7 @@ app.use('/firebase', firebaseRoutes);
 app.use('/inquiries', inquiryRoutes);
 app.use('/', cardRoutes);
 app.use('/certification', certificationRoutes);
+app.use('/notices', noticeRoutes);
+app.use('/events', eventRoutes);
 
 module.exports = { app };

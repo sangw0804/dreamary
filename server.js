@@ -14,7 +14,7 @@ app.listen(port, () => {
 https
   .createServer(
     {
-	  ca: fs.readFileSync('/etc/letsencrypt/archive/dreamaryserver.ga/chain1.pem'),
+      ca: fs.readFileSync('/etc/letsencrypt/archive/dreamaryserver.ga/chain1.pem'),
       key: fs.readFileSync('/etc/letsencrypt/archive/dreamaryserver.ga/privkey1.pem'),
       cert: fs.readFileSync('/etc/letsencrypt/archive/dreamaryserver.ga/cert1.pem')
     },
