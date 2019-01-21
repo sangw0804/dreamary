@@ -136,4 +136,20 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
+// DELETE /users/:id/images/:index
+router.delete('/:id/images/:index', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) throw new Error('user not found!');
+
+    user.portfolios.splice(req.params.index, 1);
+    await user.save();
+
+    res.status(200).send(user);
+  } catch (e) {
+    if (logger) logger.error('DELETE /users/:id/images/:index | %o', e);
+    res.status(400).send(e);
+  }
+});
+
 module.exports = router;
