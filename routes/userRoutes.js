@@ -37,7 +37,10 @@ router.get('/uid/:uid', async (req, res) => {
 // GET /users/:id
 router.get('/:id', async (req, res) => {
   try {
-    const foundUser = await User.findById(req.params.id);
+    const foundUser = await User.findById(req.params.id)
+      .populate({ path: '_recruit' })
+      .populate({ path: '_reservations' })
+      .exec();
     res.status(200).send(foundUser);
   } catch (e) {
     if (logger) logger.error('GET /users/:id | %o', e);
