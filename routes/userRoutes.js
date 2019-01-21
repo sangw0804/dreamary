@@ -69,6 +69,7 @@ router.patch('/:id/images', async (req, res) => {
     const user = await User.findById(id);
 
     const promises = Object.keys(files).map(async fileKey => {
+	  logger.info("%o", files);
       const randomNum = Math.floor(Math.random() * 1000000);
       const s3 = new AWS.S3();
       await sharp(files[fileKey].path)
