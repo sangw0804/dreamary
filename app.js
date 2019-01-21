@@ -57,4 +57,8 @@ app.use('/inquiries', inquiryRoutes);
 app.use('/', cardRoutes);
 app.use('/certification', certificationRoutes);
 
+app.get('/', (req, res) => {
+  res.send('hi');
+});
+
 module.exports = { app };
