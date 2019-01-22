@@ -81,6 +81,10 @@ router.post('/', async (req, res) => {
       await alarmTalk('userReservationInformNow', _user, _designer, createdReservation._id);
       await alarmTalk('designerReservationInformNow', _user, _designer, createdReservation._id);
     }
+
+    createdReservation._user = await User.findById(_user);
+    createdReservation._designer = await User.findById(_designer);
+
     res.status(200).send(createdReservation);
   } catch (e) {
     if (logger) logger.error('POST /users/:user_id/reservations | %o', e);
