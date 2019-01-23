@@ -13,7 +13,10 @@ AWS.config.region = 'ap-northeast-2';
 // GET /users
 router.get('/', async (req, res) => {
   try {
-    const foundUsers = await User.find();
+    const foundUsers = await User.find()
+      .populate('_recruit')
+      .populate('_reservations')
+      .exec();
     res.status(200).send(foundUsers);
   } catch (e) {
     if (logger) logger.error('GET /users | %o', e);
