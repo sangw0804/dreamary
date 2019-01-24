@@ -25,7 +25,7 @@ router.get('/:id', async (req, res) => {
       .populate('_designer')
       .populate({
         path: '_reviews',
-        populate: { path: '_user' }
+        populate: { path: ['_user', '_reservation'] }
       })
       .populate('_cards')
       .exec();
