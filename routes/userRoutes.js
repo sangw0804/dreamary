@@ -14,7 +14,7 @@ AWS.config.region = 'ap-northeast-2';
 router.get('/', async (req, res) => {
   try {
     const foundUsers = await User.find()
-      .populate('_recruit')
+      .populate({ path: '_recruit', populate: { path: '_cards' } })
       .populate('_reservations')
       .exec();
     res.status(200).send(foundUsers);
