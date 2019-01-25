@@ -117,15 +117,17 @@ async function updateReservable() {
   });
 
   const { requireTime } = await Recruit.findById(card._recruit);
-  let times = [];
+  const times = [];
 
   Object.keys(must).forEach(key => {
     if (key !== '$init' && must[key]) times.push(requireTime[key]);
   });
 
-  if (!times.length) times = Object.values(requireTime);
+  let leastNeededTime = times.reduce((accu, curr) => accu + curr, 0);
 
-  card.reservable = largestAbleTime >= Math.min(...times);
+  if (!times.length) leastNeededTime = Math.min(Object.values(requireTime));
+
+  card.reservable = largestAbleTime >= leastNeededTime;
 }
 
 async function validateRecruit() {
