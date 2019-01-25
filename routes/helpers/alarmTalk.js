@@ -55,7 +55,7 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
     const dateString = `${dateObj.getFullYear()}년 ${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일`;
     const startTimeString = `${Math.floor(reservation.time.since / 60)}:${reservation.time.since % 60 ? 30 : '00'}`;
     const servicesString = Object.keys(reservation.services)
-	  .filter(key => key !== '$init' && reservation.services[key] === true)
+      .filter(key => key !== '$init' && reservation.services[key] === true)
       .map(serviceName => serviceNiceName[serviceName])
       .join(', ');
 
@@ -236,13 +236,13 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
         break;
     }
 
-    const snapshot = await firebase
-      .database()
-      .ref(`/users/${alarmTemplates[template][0].includes('USE') ? user._uid : designer._uid}`)
-      .once('value');
-    const { phoneNumber } = snapshot.val();
+    // const snapshot = await firebase
+    //   .database()
+    //   .ref(`/users/${alarmTemplates[template][0].includes('USE') ? user._uid : designer._uid}`)
+    //   .once('value');
+    // const { phoneNumber } = snapshot.val();
 
-    options.PHONE = phoneNumber;
+    options.PHONE = alarmTemplates[template][0].includes('USE') ? user.phoneNumber : designer.phoneNumber;
 
     const { data } = await alarmAxios.post('/', querystring.stringify(options));
     if (data.result_code !== '200') throw new Error(data);
