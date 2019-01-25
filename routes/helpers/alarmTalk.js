@@ -11,7 +11,7 @@ const buttonNames = ['드리머리 예약페이지', '드리머리 예약관리'
 const urls = ['http://dreamary.net/#/reservations', 'http://dreamary.net/#/designer/reservations'];
 
 const serviceNiceName = {
-  cut: '컷트',
+  cut: '커트',
   perm: '펌',
   dye: '염색'
 };
