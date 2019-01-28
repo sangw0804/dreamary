@@ -124,9 +124,7 @@ async function updateReservable() {
   });
 
   let leastNeededTime = times.reduce((accu, curr) => accu + curr, 0);
-
-  if (!times.length) leastNeededTime = Math.min(Object.values(requireTime));
-
+  if (!times.length) leastNeededTime = Math.min(...Object.values(requireTime).filter(t => typeof t === 'number'));
   card.reservable = largestAbleTime >= leastNeededTime;
 }
 
