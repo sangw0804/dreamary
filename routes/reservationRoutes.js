@@ -117,11 +117,11 @@ router.patch('/:id', async (req, res) => {
 
     res.status(200).send(user);
     if (process.env.NODE_ENV !== 'test') {
-      if (isCanceled && cancelByUser && isBefore24hours) {
+      if (isCanceled && cancelByUser && isGonnaRefund) {
         // 유저가 24시간 내에 취소한 경우
         await alarmTalk('userCancelInDay', reservation._user, reservation._designer, reservation._id);
         await alarmTalk('userCancelInformDesigner', reservation._user, reservation._designer, reservation._id);
-      } else if (isCanceled && cancelByUser && !isBefore24hours) {
+      } else if (isCanceled && cancelByUser && !isGonnaRefund) {
         // 유저가 24시간 지나고 취소한 경우
         await alarmTalk('userCancelAfterDay', reservation._user, reservation._designer, reservation._id);
         await alarmTalk('userCancelInformDesigner', reservation._user, reservation._designer, reservation._id);
