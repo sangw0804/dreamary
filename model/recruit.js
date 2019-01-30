@@ -44,6 +44,9 @@ const recruitSchema = new mongoose.Schema(
       type: Number,
       default: 0.0
     },
+    updatedAt: {
+      type: Number
+    },
     createdAt: {
       type: Number,
       required: true

@@ -87,7 +87,11 @@ router.patch('/:id/updateportpolios', async (req, res) => {
 // PATCH /recruits/:id
 router.patch('/:id', async (req, res) => {
   try {
-    const updatedRecruit = await Recruit.findByIdAndUpdate(req.params.id, { $set: { ...req.body } }, { new: true });
+    const updatedRecruit = await Recruit.findByIdAndUpdate(
+      req.params.id,
+      { $set: { ...req.body, updatedAt: new Date().getTime() } },
+      { new: true }
+    );
     if (!updatedRecruit) {
       throw new Error('user not found!');
     }
