@@ -107,10 +107,10 @@ router.patch('/:id', async (req, res) => {
 
     const user = await User.findById(reservation._user);
     const isBefore24hours =
-      new Date().getTime() <= reservation.date - 32400000 + reservation.time.since * 60 * 1000 - 86400000;
+      new Date().getTime() > reservation.date - 32400000 + reservation.time.since * 60 * 1000 - 86400000;
     // 유저가 24시간 내 취소한 경우를 제외하고 환불해주기
     if (reservation.isCanceled && (!reservation.cancelByUser || isBefore24hours)) {
-      // 포인트 환불
+      // 포인트 환급
       user.point += 5000;
       await user.save();
     }
