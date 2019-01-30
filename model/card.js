@@ -113,6 +113,7 @@ async function updateReservable() {
       tempLargest = Math.max(tempLargest, reserved.since - endPoint);
       endPoint = reserved.until;
     });
+    tempLargest = Math.max(tempLargest, time.until - endPoint);
     largestAbleTime = Math.max(largestAbleTime, tempLargest);
   });
 
