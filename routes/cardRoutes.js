@@ -87,13 +87,19 @@ router.post('/recruits/:recruit_id/cards', async (req, res) => {
 });
 
 // PATCH /recruits/:id/cards/:card_id
-// router.patch('/recruits/:id/cards/:card_id', async (req, res) => {
-//   try {
-//     const updatedCard = await Card.findByIdAndUpdate(req.params.card_id, );
-//   } catch (e) {
+router.patch('/recruits/:id/cards/:card_id', async (req, res) => {
+  try {
+    const card = await Card.findById(req.params.card_id);
+    card.reservable = false;
+    card.reservedTimes = [...card.ableTimes];
+    await card.save();
 
-//   }
-// });
+    res.status(200).send(card);
+  } catch (e) {
+    if (logger) logger.error('PATCH /recruits/:id/cards/:card_id || %o', e);
+    res.status(400).send(e);
+  }
+});
 
 // DELETE /recruits/:recruit_id/cards/:id
 router.delete('/recruits/:recruit_id/cards/:id', async (req, res) => {

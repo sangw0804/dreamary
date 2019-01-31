@@ -30,6 +30,8 @@ router.post('/upload', async (req, res) => {
         .resize(200, 200)
         .toFile(`/home/ubuntu/${files[fileType].name}_thumb`);
 
+	  logger.info("%o", fileType);
+
       const randomName = Math.floor(Math.random() * 1000000) + files[fileType].name;
       const params = {
         Bucket: 'dreamary',
