@@ -9,6 +9,7 @@ const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
 router.get('/', async (req, res) => {
   try {
     const foundUser = await User.findOne({ _id: req.params.id });
+
     if (!foundUser) {
       throw new Error('user not found!');
     }

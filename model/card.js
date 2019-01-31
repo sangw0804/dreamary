@@ -113,19 +113,20 @@ async function updateReservable() {
       tempLargest = Math.max(tempLargest, reserved.since - endPoint);
       endPoint = reserved.until;
     });
+    tempLargest = Math.max(tempLargest, time.until - endPoint);
     largestAbleTime = Math.max(largestAbleTime, tempLargest);
   });
 
   const { requireTime } = await Recruit.findById(card._recruit);
-  let times = [];
+  const times = [];
 
   Object.keys(must).forEach(key => {
     if (key !== '$init' && must[key]) times.push(requireTime[key]);
   });
 
-  if (!times.length) times = Object.values(requireTime);
-
-  card.reservable = largestAbleTime >= Math.min(...times);
+  let leastNeededTime = times.reduce((accu, curr) => accu + curr, 0);
+  if (!times.length) leastNeededTime = Math.min(...Object.values(requireTime).filter(t => typeof t === 'number'));
+  card.reservable = largestAbleTime >= leastNeededTime;
 }
 
 async function validateRecruit() {

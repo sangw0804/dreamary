@@ -27,6 +27,10 @@ router.get('/:id', async (req, res) => {
         path: '_reviews',
         populate: { path: '_user' }
       })
+      .populate({
+        path: '_reviews',
+        populate: { path: '_reservation' }
+      })
       .populate('_cards')
       .exec();
     if (!foundRecruit) {
@@ -83,10 +87,9 @@ router.patch('/:id/updateportpolios', async (req, res) => {
 // PATCH /recruits/:id
 router.patch('/:id', async (req, res) => {
   try {
-    const { title, _designer, _cards, portfolios, requireTime, requirement, _reviews, shops } = req.body;
     const updatedRecruit = await Recruit.findByIdAndUpdate(
       req.params.id,
-      { $set: { title, _designer, _cards, portfolios, requireTime, requirement, _reviews, shops } },
+      { $set: { ...req.body, updatedAt: new Date().getTime() } },
       { new: true }
     );
     if (!updatedRecruit) {

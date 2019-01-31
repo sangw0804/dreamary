@@ -81,6 +81,10 @@ router.post('/', async (req, res) => {
       await alarmTalk('userReservationInformNow', _user, _designer, createdReservation._id);
       await alarmTalk('designerReservationInformNow', _user, _designer, createdReservation._id);
     }
+
+    createdReservation._user = await User.findById(_user);
+    createdReservation._designer = await User.findById(_designer);
+
     res.status(200).send(createdReservation);
   } catch (e) {
     if (logger) logger.error('POST /users/:user_id/reservations | %o', e);
@@ -102,22 +106,22 @@ router.patch('/:id', async (req, res) => {
     await reservation.updateRelatedDB();
 
     const user = await User.findById(reservation._user);
-    const isBefore24hours =
+    const isGonnaRefund =
       new Date().getTime() <= reservation.date - 32400000 + reservation.time.since * 60 * 1000 - 86400000;
     // 유저가 24시간 내 취소한 경우를 제외하고 환불해주기
-    if (reservation.isCanceled && (!reservation.cancelByUser || isBefore24hours)) {
-      // 포인트 환불
+    if (reservation.isCanceled && (!reservation.cancelByUser || isGonnaRefund)) {
+      // 포인트 환급
       user.point += 5000;
       await user.save();
     }
 
     res.status(200).send(user);
     if (process.env.NODE_ENV !== 'test') {
-      if (isCanceled && cancelByUser && isBefore24hours) {
+      if (isCanceled && cancelByUser && isGonnaRefund) {
         // 유저가 24시간 내에 취소한 경우
         await alarmTalk('userCancelInDay', reservation._user, reservation._designer, reservation._id);
         await alarmTalk('userCancelInformDesigner', reservation._user, reservation._designer, reservation._id);
-      } else if (isCanceled && cancelByUser && !isBefore24hours) {
+      } else if (isCanceled && cancelByUser && !isGonnaRefund) {
         // 유저가 24시간 지나고 취소한 경우
         await alarmTalk('userCancelAfterDay', reservation._user, reservation._designer, reservation._id);
         await alarmTalk('userCancelInformDesigner', reservation._user, reservation._designer, reservation._id);
