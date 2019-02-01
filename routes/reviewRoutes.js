@@ -52,11 +52,11 @@ router.post('/', async (req, res) => {
 // PATCH /recruits/:recruit_id/reviews/:id/images
 router.patch('/:id/images', async (req, res) => {
   try {
+    // TODO: 사진 업로드 로직이 여러군데에서 사용중, 모듈화 하기
     const { id } = req.params;
     const { err, files, fields } = await formPromise(req);
     if (err) throw new Error(err);
 
-    // if ()
     const promises = Object.keys(files).map(async fileKey => {
       const randomNum = Math.floor(Math.random() * 1000000);
       const s3 = new AWS.S3();
@@ -131,6 +131,7 @@ router.delete('/:id', async (req, res) => {
     const review = await Review.findById(req.params.id);
     await review.remove();
     await review.removeRelatedDBs();
+
     res.status(200).send({});
   } catch (e) {
     if (logger) logger.error('DELETE /recruits/:recruit_id/reviews/:id | %o', e);

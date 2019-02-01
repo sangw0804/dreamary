@@ -17,6 +17,7 @@ router.get('/', async (req, res) => {
       .populate({ path: '_recruit', populate: { path: '_cards' } })
       .populate('_reservations')
       .exec();
+
     res.status(200).send(foundUsers);
   } catch (e) {
     if (logger) logger.error('GET /users | %o', e);
@@ -44,6 +45,7 @@ router.get('/:id', async (req, res) => {
       .populate({ path: '_recruit' })
       .populate({ path: '_reservations' })
       .exec();
+
     res.status(200).send(foundUser);
   } catch (e) {
     if (logger) logger.error('GET /users/:id | %o', e);
@@ -68,6 +70,7 @@ router.post('/', async (req, res) => {
 // PATCH /users/:id/images
 router.patch('/:id/images', async (req, res) => {
   try {
+    // TODO: 사진 업로드 로직이 여러군데에서 사용중, 모듈화 하기
     const { id } = req.params;
     const { err, files, fields } = await formPromise(req);
     if (err) throw new Error(err);
@@ -75,7 +78,7 @@ router.patch('/:id/images', async (req, res) => {
     const user = await User.findById(id);
 
     const promises = Object.keys(files).map(async fileKey => {
-	  logger.info("%o", files);
+      logger.info('%o', files);
       const randomNum = Math.floor(Math.random() * 1000000);
       const s3 = new AWS.S3();
       await sharp(files[fileKey].path)

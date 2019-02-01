@@ -16,6 +16,7 @@ router.get('/all', async (req, res) => {
       .populate({ path: '_designer', populate: { path: '_recruit' } })
       .populate('_card')
       .exec();
+
     res.status(200).send(foundReservations);
   } catch (e) {
     if (logger) logger.error('GET /users/:user_id/reservations/all | %o', e);
@@ -64,7 +65,6 @@ router.post('/', async (req, res) => {
   try {
     const { _user, _designer, time, _card, date, services } = req.body;
 
-    // const recruit = await Recruit.findById(req.params.id);
     const createdReservation = await Reservation.create({
       _user,
       _designer,
@@ -97,11 +97,13 @@ router.patch('/:id', async (req, res) => {
   try {
     const { isCanceled, isDone, cancelByUser, cancelReason } = req.body;
     const reservation = await Reservation.findById(req.params.id);
+
     reservation.isCanceled = !!isCanceled;
     reservation.isDone = !!isDone;
     reservation.cancelByUser = !!cancelByUser;
     reservation.cancelReason = cancelReason;
     reservation.updatedAt = new Date().getTime();
+
     await reservation.save();
     await reservation.updateRelatedDB();
 
@@ -116,6 +118,7 @@ router.patch('/:id', async (req, res) => {
     }
 
     res.status(200).send(user);
+
     if (process.env.NODE_ENV !== 'test') {
       if (isCanceled && cancelByUser && isGonnaRefund) {
         // 유저가 24시간 내에 취소한 경우
@@ -144,9 +147,9 @@ router.patch('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const reservation = await Reservation.findById(req.params.id);
-    if (!reservation) {
-      throw new Error('reservation not found!!');
-    }
+
+    if (!reservation) throw new Error('reservation not found!!');
+
     await reservation.remove();
     await reservation.removeRelatedDB();
 

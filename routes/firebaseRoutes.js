@@ -13,6 +13,8 @@ const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
 
 AWS.config.region = 'ap-northeast-2';
 
+// TODO : 이제 이 로직 자체 필요없지않나??? 논의 후 삭제
+
 router.post('/upload', async (req, res) => {
   try {
     const { uid } = req.query;
