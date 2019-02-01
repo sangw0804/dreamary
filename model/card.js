@@ -136,14 +136,14 @@ async function validateRecruit() {
   if (!recruit) throw new Error('recruit not found!');
 }
 
-cardSchema.methods.updateRecruitDB = async function() {
+cardSchema.methods.updateRecruitDB = async function updateHandler() {
   const recruit = await Recruit.findById(this._recruit);
 
   recruit._cards = updateIdArray(recruit._cards, this._id);
   await recruit.save();
 };
 
-cardSchema.methods.removeRecruitDB = async function() {
+cardSchema.methods.removeRecruitDB = async function removeHandler() {
   const recruit = await Recruit.findById(this._recruit);
 
   recruit._cards = recruit._cards.filter(_card => _card._id.toHexString() !== this._id.toHexString());

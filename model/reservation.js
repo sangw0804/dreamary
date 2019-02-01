@@ -65,15 +65,13 @@ const reservationSchema = new mongoose.Schema(
   }
 );
 
-reservationSchema.methods.updateRelatedDB = async function() {
+reservationSchema.methods.updateRelatedDB = async function updateHandler() {
   const reservation = this;
   const user = await User.findById(reservation._user);
   const designer = await User.findById(reservation._designer);
   const card = await Card.findById(reservation._card);
 
-  if (!user || !designer) {
-    throw new Error('user || designer not found!!');
-  }
+  if (!user || !designer) throw new Error('user || designer not found!!');
 
   const temp = user._reservations.map(r => r.toHexString());
   if (temp.includes(reservation._id.toHexString())) {
@@ -81,6 +79,7 @@ reservationSchema.methods.updateRelatedDB = async function() {
     await card.save();
     return;
   }
+
   user._reservations = updateIdArray(user._reservations, reservation._id);
   designer._reservations = updateIdArray(designer._reservations, reservation._id);
   card.reservedTimes = updateTimeArray(card.reservedTimes, reservation.time);
@@ -90,8 +89,9 @@ reservationSchema.methods.updateRelatedDB = async function() {
   await card.save();
 };
 
-reservationSchema.methods.removeRelatedDB = async function() {
+reservationSchema.methods.removeRelatedDB = async function removeHandler() {
   const reservation = this;
+
   const user = await User.findById(reservation._user);
   user._reservations = user._reservations.filter(reserve => reserve.toHexString() !== reservation._id);
   const designer = await User.findById(reservation._designer);

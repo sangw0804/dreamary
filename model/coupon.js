@@ -41,7 +41,7 @@ const couponSchema = new mongoose.Schema(
   }
 );
 
-couponSchema.statics.makeCoupons = async function(point, number, forDesigner) {
+couponSchema.statics.makeCoupons = async function makeCouponHandler(point, number, forDesigner) {
   const Coupon = this;
   const coupons = [];
   for (let i = 0; i < number; i++) {
@@ -57,7 +57,7 @@ couponSchema.statics.makeCoupons = async function(point, number, forDesigner) {
   return coupons;
 };
 
-couponSchema.methods.checkMasterUserInclude = function(userId) {
+couponSchema.methods.checkMasterUserInclude = function checkHandler(userId) {
   const masterCoupon = this;
   const userIdStrings = masterCoupon._master_users.map(objectId => objectId.toHexString());
   return userIdStrings.includes(userId.toHexString());

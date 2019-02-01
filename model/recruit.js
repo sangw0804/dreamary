@@ -57,14 +57,14 @@ const recruitSchema = new mongoose.Schema(
   }
 );
 
-recruitSchema.methods.updateRelatedDB = async function() {
+recruitSchema.methods.updateRelatedDB = async function updateHandler() {
   const recruit = this;
   const user = await User.findById(recruit._designer);
   user._recruit = recruit._id;
   await user.save();
 };
 
-recruitSchema.methods.removeRelatedDB = async function() {
+recruitSchema.methods.removeRelatedDB = async function removeHandler() {
   const recruit = this;
   const user = await User.findById(recruit._designer);
   user._recruit = null;
