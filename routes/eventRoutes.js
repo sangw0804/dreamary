@@ -51,6 +51,7 @@ router.post('/', async (req, res) => {
 // PATCH /events/:id/images
 router.patch('/:id/images', async (req, res) => {
   try {
+    // TODO: 사진 업로드 로직이 여러군데에서 사용중, 모듈화 하기
     const { err, files, fields } = await formPromise(req);
     if (err) throw new Error(err);
 

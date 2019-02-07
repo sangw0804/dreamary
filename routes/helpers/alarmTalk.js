@@ -236,12 +236,6 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
         break;
     }
 
-    // const snapshot = await firebase
-    //   .database()
-    //   .ref(`/users/${alarmTemplates[template][0].includes('USE') ? user._uid : designer._uid}`)
-    //   .once('value');
-    // const { phoneNumber } = snapshot.val();
-
     options.PHONE = alarmTemplates[template][0].includes('USE') ? user.phoneNumber : designer.phoneNumber;
 
     const { data } = await alarmAxios.post('/', querystring.stringify(options));

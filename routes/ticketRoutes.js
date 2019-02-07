@@ -10,9 +10,8 @@ router.get('/', async (req, res) => {
   try {
     const foundUser = await User.findOne({ _id: req.params.id });
 
-    if (!foundUser) {
-      throw new Error('user not found!');
-    }
+    if (!foundUser) throw new Error('user not found!');
+
     const foundTickets = await Ticket.find({ _user: foundUser._id });
     res.status(200).send(foundTickets);
   } catch (e) {
@@ -25,15 +24,13 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.params.id });
-    if (!user) {
-      throw new Error('user not found!!');
-    }
+
+    if (!user) throw new Error('user not found!!');
 
     const { price } = req.body;
     const createdTicket = await Ticket.create({ price, _user: req.params.id, createdAt: new Date().getTime() });
 
     user._tickets.push(createdTicket._id);
-
     await user.save();
 
     res.status(200).send(createdTicket);
@@ -47,10 +44,9 @@ router.post('/', async (req, res) => {
 router.patch('/:ticket_id', async (req, res) => {
   try {
     const { id, ticket_id } = req.params;
+
     const foundUser = await User.findOne({ _id: id });
-    if (!foundUser) {
-      throw new Error('user not found!!');
-    }
+    if (!foundUser) throw new Error('user not found!!');
 
     const foundTicket = await Ticket.findById(ticket_id);
     foundTicket.activate();

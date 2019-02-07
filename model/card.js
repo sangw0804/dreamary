@@ -107,6 +107,7 @@ async function updateReservable() {
       largestAbleTime = Math.max(largestAbleTime, time.until - time.since);
       return;
     }
+
     let endPoint = time.since;
     let tempLargest = 0;
     reserveds.forEach(reserved => {
@@ -131,21 +132,20 @@ async function updateReservable() {
 
 async function validateRecruit() {
   const recruit = await Recruit.findById(this._recruit);
-  if (!recruit) {
-    throw new Error('recruit not found!');
-  }
+
+  if (!recruit) throw new Error('recruit not found!');
 }
 
-cardSchema.methods.updateRecruitDB = async function() {
+cardSchema.methods.updateRecruitDB = async function updateHandler() {
   const recruit = await Recruit.findById(this._recruit);
-  logger.info('%o', recruit);
+
   recruit._cards = updateIdArray(recruit._cards, this._id);
-  logger.info('%o', recruit);
   await recruit.save();
 };
 
-cardSchema.methods.removeRecruitDB = async function() {
+cardSchema.methods.removeRecruitDB = async function removeHandler() {
   const recruit = await Recruit.findById(this._recruit);
+
   recruit._cards = recruit._cards.filter(_card => _card._id.toHexString() !== this._id.toHexString());
   await recruit.save();
 };

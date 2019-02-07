@@ -11,6 +11,7 @@ router.get('/', async (req, res) => {
       .populate('_designer')
       .populate('_cards')
       .exec();
+
     res.status(200).send(foundRecruits);
   } catch (e) {
     if (logger) logger.error('GET /recruits | %o', e);
@@ -33,9 +34,9 @@ router.get('/:id', async (req, res) => {
       })
       .populate('_cards')
       .exec();
-    if (!foundRecruit) {
-      throw new Error('recruit not found!!');
-    }
+
+    if (!foundRecruit) throw new Error('recruit not found!!');
+
     res.status(200).send(foundRecruit);
   } catch (e) {
     if (logger) logger.error('GET /recruits/:id | %o', e);
@@ -48,6 +49,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { title, _designer, _cards, portfolios, requireTime, requirement, _reviews, shops } = req.body;
+
     const createdRecruit = await Recruit.create({
       title,
       _designer,
@@ -73,7 +75,9 @@ router.patch('/:id/updateportpolios', async (req, res) => {
   try {
     const { remove } = req.body;
     const foundRecruit = await Recruit.findById(req.params.id);
+
     if (!foundRecruit) throw new Error('Recruit not found!!');
+
     foundRecruit.portfolios = foundRecruit.portfolios.filter(url => url !== remove);
     await foundRecruit.save();
 
@@ -92,9 +96,9 @@ router.patch('/:id', async (req, res) => {
       { $set: { ...req.body, updatedAt: new Date().getTime() } },
       { new: true }
     );
-    if (!updatedRecruit) {
-      throw new Error('user not found!');
-    }
+
+    if (!updatedRecruit) throw new Error('user not found!');
+
     res.status(200).send(updatedRecruit);
   } catch (e) {
     if (logger) logger.error('PATCH /recruits/:id | %o', e);
@@ -106,8 +110,10 @@ router.patch('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const recruit = await Recruit.findById(req.params.id);
+
     await recruit.remove();
     await recruit.removeRelatedDB();
+
     res.status(200).send({});
   } catch (e) {
     if (logger) logger.error('DELETE /recruits/:id | %o', e);
