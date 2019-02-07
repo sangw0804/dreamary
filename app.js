@@ -44,6 +44,7 @@ admin.initializeApp({
   databaseURL: config.FIREBASE_CONFIG.databaseURL
 });
 
+
 // routes
 if (process.env.NODE_ENV !== 'test') app.use(logging);
 if (process.env.NODE_ENV !== 'test') app.use(auth);
