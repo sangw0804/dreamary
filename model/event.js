@@ -10,7 +10,7 @@ const eventSchema = new mongoose.Schema({
     required: true
   },
   until: {
-    type: Number,
+    type: String,
     required: true
   },
   images: [String],
