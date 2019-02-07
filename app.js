@@ -44,6 +44,7 @@ admin.initializeApp({
   databaseURL: config.FIREBASE_CONFIG.databaseURL
 });
 
+
 // routes
 if (process.env.NODE_ENV !== 'test') app.use(logging);
 if (process.env.NODE_ENV !== 'test') app.use(auth);
@@ -61,4 +62,4 @@ app.use('/certification', certificationRoutes);
 app.use('/notices', noticeRoutes);
 app.use('/events', eventRoutes);
 
-module.exports = { app };
+module.exports = { app, transporter };
