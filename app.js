@@ -62,4 +62,4 @@ app.use('/certification', certificationRoutes);
 app.use('/notices', noticeRoutes);
 app.use('/events', eventRoutes);
 
-module.exports = { app, transporter };
+module.exports = { app };
