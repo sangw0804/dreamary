@@ -39,4 +39,4 @@ autoAlarmTalk()
   .then(promises => Promise.all(promises))
   .then(() => logger.info('autoAlarmTalk : success!'))
   .catch(e => logger.error('autoAlarmTalk : %e', e))
-  .finally(() => mongoose.disconnect());
+  .then(() => mongoose.disconnect());

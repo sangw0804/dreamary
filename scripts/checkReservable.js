@@ -26,7 +26,7 @@ const checkReservable = async () => {
 };
 
 if (process.env.CHECK_RUN) {
-  checkReservable().finally(() => mongoose.disconnect());
+  checkReservable().then(() => mongoose.disconnect());
 } else {
   module.exports = { checkReservable };
 }
