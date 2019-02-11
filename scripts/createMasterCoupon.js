@@ -2,10 +2,7 @@ const mongoose = require('mongoose');
 
 const config = require('../config');
 
-// mongoose.connect(
-//   config.MONGODB_URI,
-//   { useNewUrlParser: true }
-// );
+mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true });
 
 const { Coupon } = require('../model/coupon');
 
@@ -21,6 +18,7 @@ const createMasterCoupon = async point => {
   });
 
   console.log(masterCoupon);
+  mongoose.disconnect();
 };
 
 createMasterCoupon(5000);
