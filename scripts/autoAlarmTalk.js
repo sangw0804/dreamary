@@ -4,10 +4,7 @@ const firebase = require('firebase');
 const config = require('../config');
 const logger = require('../log');
 
-mongoose.connect(
-  config.MONGODB_URI,
-  { useNewUrlParser: true }
-);
+mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true });
 
 // 매일 19:50분에 내일 시술 예정인 취소되지 않은 예약을 찾아 예디 & 유저에게 알림톡 발송
 
@@ -41,4 +38,5 @@ const autoAlarmTalk = async () => {
 autoAlarmTalk()
   .then(promises => Promise.all(promises))
   .then(() => logger.info('autoAlarmTalk : success!'))
-  .catch(e => logger.error('autoAlarmTalk : %e', e));
+  .catch(e => logger.error('autoAlarmTalk : %e', e))
+  .then(() => mongoose.disconnect());

@@ -4,10 +4,7 @@ const config = require('../config');
 const { Card } = require('../model/card');
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
 
-mongoose.connect(
-  config.MONGODB_URI,
-  { useNewUrlParser: true }
-);
+mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true });
 
 const checkReservable = async () => {
   try {
@@ -29,7 +26,7 @@ const checkReservable = async () => {
 };
 
 if (process.env.CHECK_RUN) {
-  checkReservable();
+  checkReservable().then(() => mongoose.disconnect());
 } else {
   module.exports = { checkReservable };
 }
