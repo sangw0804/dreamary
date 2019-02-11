@@ -4,10 +4,10 @@ const firebase = require('firebase');
 const config = require('../config');
 const logger = require('../log');
 
-mongoose.connect(
-  config.MONGODB_URI,
-  { useNewUrlParser: true }
-);
+// mongoose.connect(
+//   config.MONGODB_URI,
+//   { useNewUrlParser: true }
+// );
 
 // 매일 09:05 에 전날에 완료되었어야 하는데 완료되지 않은 예약 찾아서 디자이너에게 알람톡 보내기.
 
