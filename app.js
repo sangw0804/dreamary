@@ -54,7 +54,6 @@ app.use('/recruits/:recruit_id/reviews', reviewRoutes);
 app.use('/recruits', recruitRoutes);
 app.use('/coupons', couponRoutes);
 app.use('/kakao_login', kakaoRoutes);
-app.use('/firebase', firebaseRoutes);
 app.use('/inquiries', inquiryRoutes);
 app.use('/', cardRoutes);
 app.use('/certification', certificationRoutes);
