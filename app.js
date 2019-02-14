@@ -16,7 +16,6 @@ const reservationRoutes = require('./routes/reservationRoutes');
 const kakaoRoutes = require('./routes/kakaoRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const cardRoutes = require('./routes/cardRoutes');
-const firebaseRoutes = require('./routes/firebaseRoutes');
 const inquiryRoutes = require('./routes/inquiryRoutes');
 const couponRoutes = require('./routes/couponRoutes');
 const certificationRoutes = require('./routes/certificationRoutes');
