@@ -2,17 +2,11 @@ const express = require('express');
 
 const router = express.Router({ mergeParams: true });
 
-const AWS = require('aws-sdk');
-const fs = require('fs');
-const sharp = require('sharp');
-
-AWS.config.region = 'ap-northeast-2';
-
 const { Review } = require('../model/review');
 const { Recruit } = require('../model/recruit');
 const { User } = require('../model/user');
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
-const formPromise = require('./helpers/formidablePromise');
+const { uploadFile } = require('./helpers/fileUpload');
 
 // GET /recruits/:recruit_id/reviews/:id
 router.get('/:id', async (req, res) => {
@@ -45,9 +39,9 @@ router.post('/', async (req, res) => {
 
     const recruit = await Recruit.findById(body._recruit);
     const plusPoint = recruit._reviews.length === 1 ? 5000 : 1000;
-    await User.findByIdAndUpdate(_user, { $inc: { point: plusPoint } });
+    const user = await User.findByIdAndUpdate(_user, { $inc: { point: plusPoint } }, { new: true });
 
-    res.status(200).send(createdReview);
+    res.status(200).send(user);
   } catch (e) {
     if (logger) logger.error('POST /recruits/:recruit_id/reviews | %o', e);
     res.status(400).send(e);
@@ -57,31 +51,9 @@ router.post('/', async (req, res) => {
 // PATCH /recruits/:recruit_id/reviews/:id/images
 router.patch('/:id/images', async (req, res) => {
   try {
-    // TODO: 사진 업로드 로직이 여러군데에서 사용중, 모듈화 하기
     const { id } = req.params;
-    const { err, files, fields } = await formPromise(req);
-    if (err) throw new Error(err);
 
-    const promises = Object.keys(files).map(async fileKey => {
-      const randomNum = Math.floor(Math.random() * 1000000);
-      const s3 = new AWS.S3();
-      await sharp(files[fileKey].path)
-        .rotate()
-        .toFile(`/home/ubuntu/${files[fileKey].name}`);
-      const params = {
-        Bucket: 'dreamary',
-        Key: randomNum + files[fileKey].name,
-        ACL: 'public-read',
-        Body: fs.createReadStream(`/home/ubuntu/${files[fileKey].name}`)
-      };
-      const data = await s3.upload(params).promise();
-
-      fs.unlink(files[fileKey].path);
-      fs.unlink(`/home/ubuntu/${files[fileKey].name}`);
-      return data.Location;
-    });
-
-    const fileLocations = await Promise.all(promises);
+    const fileLocations = await uploadFile(req);
 
     const review = await Review.findById(id);
     review.images = review.images.concat(fileLocations);
