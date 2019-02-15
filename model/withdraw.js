@@ -37,6 +37,10 @@ const withdrawSchema = new mongoose.Schema({
   money: {
     type: mongoose.Schema.Types.Number,
     required: true
+  },
+  createdAt: {
+    type: mongoose.Schema.Types.Number,
+    required: true
   }
 });
 
