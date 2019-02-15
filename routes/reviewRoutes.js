@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
     const plusPoint = recruit._reviews.length === 1 ? 5000 : 1000;
     await User.findByIdAndUpdate(_user, { $inc: { point: plusPoint } });
 
-    await createdReview.populate({ path: '_user' }).exec();
+    await createdReview.populate({ path: '_user' });
 
     res.status(200).send(createdReview);
   } catch (e) {
