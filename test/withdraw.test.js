@@ -57,7 +57,7 @@ describe('Withdraw', () => {
 
     it('should return 400 with invalid data', done => {
       const data = {
-        _user: users[0]._id.toHexString()
+        _designer: users[0]._id.toHexString()
       };
       request(app)
         .post('/withdraws')
