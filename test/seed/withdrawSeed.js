@@ -15,6 +15,19 @@ const withdraws = [
     money: 10000,
     email: 'dreamary@korea.ac.kr',
     createdAt: new Date().getTime()
+  },
+  {
+    _id: new ObjectID(),
+    _designer: users[1]._id,
+    name: '박지윤',
+    socialId: '941114-1234567',
+    address: '서울시 성북구 안암로 123-16',
+    accountHolder: '심건우',
+    bank: '국민은행',
+    accountNumber: '123-456-123456',
+    money: 30000,
+    email: 'dreamary@korea.ac.kr',
+    createdAt: new Date().getTime()
   }
 ];
 

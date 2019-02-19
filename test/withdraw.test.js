@@ -22,6 +22,19 @@ describe('Withdraw', () => {
     });
   });
 
+  describe('GET /withdraws/:user_id', () => {
+    it("should get specific user's withdraws", done => {
+      request(app)
+        .get(`/withdraws/${users[1]._id}`)
+        .expect(200)
+        .expect(res => {
+          expect(res.body.length).toBe(1);
+          expect(res.body[0]._id).toBe(withdraws[1]._id.toHexString());
+        })
+        .end(done);
+    });
+  });
+
   describe('POST /withdraws', () => {
     it('should create new withdraw with valid data', done => {
       const data = {
@@ -47,7 +60,7 @@ describe('Withdraw', () => {
             if (err) throw new Error(err);
 
             const foundWithdraw = await Withdraw.find({});
-            expect(foundWithdraw.length).toBe(2);
+            expect(foundWithdraw.length).toBe(3);
             done();
           } catch (e) {
             done(e);
@@ -68,7 +81,7 @@ describe('Withdraw', () => {
             if (err) throw new Error(err);
 
             const foundWithdraws = await Withdraw.find({});
-            expect(foundWithdraws.length).toBe(1);
+            expect(foundWithdraws.length).toBe(2);
             done();
           } catch (e) {
             done(e);

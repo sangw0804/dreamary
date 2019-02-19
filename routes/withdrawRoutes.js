@@ -4,6 +4,18 @@ const router = express.Router({ mergeParams: true });
 const { Withdraw } = require('../model/withdraw');
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
 
+// GET /withdraws/:user_id
+router.get('/:user_id', async (req, res) => {
+  try {
+    const withdraws = await Withdraw.find({ _designer: req.params.user_id });
+
+    res.status(200).send(withdraws);
+  } catch (e) {
+    if (logger) logger.error('GET /withdraws/:user_id || %o', e);
+    res.status(400).send(e);
+  }
+});
+
 // GET /withdraws
 router.get('/', async (req, res) => {
   try {
@@ -35,7 +47,6 @@ router.post('/', async (req, res) => {
 
     res.status(200).send(withdraws);
   } catch (e) {
-    console.log(e);
     if (logger) logger.error('POST /withdraws || %o', e);
     res.status(400).send(e);
   }
