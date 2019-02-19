@@ -52,4 +52,24 @@ router.post('/', async (req, res) => {
   }
 });
 
+// PATCH /withdraws/:id
+router.patch('/:id', async (req, res) => {
+  try {
+    const { isRefused } = req.body;
+
+    if (typeof isRefused !== 'boolean') throw new Error('isRefused is not valid!');
+
+    const updatedWithdraw = await Withdraw.findByIdAndUpdate(
+      req.params.id,
+      { updatedAt: new Date().getTime(), isRefused },
+      { new: true }
+    );
+
+    res.status(200).send(updatedWithdraw);
+  } catch (e) {
+    if (logger) logger.error('PATCH /withdraws/:id || %o', e);
+    res.status(400).send(e);
+  }
+});
+
 module.exports = router;

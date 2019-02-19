@@ -89,4 +89,51 @@ describe('Withdraw', () => {
         });
     });
   });
+
+  describe('PATCH /withdraws/:id', () => {
+    it('should update specific withdraw with valid data', done => {
+      const data = {
+        isRefused: true
+      };
+      request(app)
+        .patch(`/withdraws/${withdraws[0]._id}`)
+        .send(data)
+        .expect(200)
+        .end(async (err, res) => {
+          try {
+            if (err) throw new Error(err);
+
+            const foundWithdraw = await Withdraw.findById(withdraws[0]._id);
+
+            expect(typeof foundWithdraw.updatedAt).toBe('number');
+            expect(foundWithdraw.isRefused).toBe(true);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+    });
+
+    it('should return 400 with invalid data', done => {
+      const invalidData = {
+        isRefused: 'hi'
+      };
+      request(app)
+        .patch(`/withdraws/${withdraws[0]._id}`)
+        .send(invalidData)
+        .expect(400)
+        .end(async (err, res) => {
+          try {
+            if (err) throw new Error(err);
+
+            const foundWithdraw = await Withdraw.findById(withdraws[0]._id);
+
+            expect(foundWithdraw.updatedAt).toBeNull();
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+    });
+  });
 });

@@ -38,6 +38,14 @@ const withdrawSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.Number,
     required: true
   },
+  isRefused: {
+    type: mongoose.Schema.Types.Boolean,
+    default: false
+  },
+  updatedAt: {
+    type: mongoose.Schema.Types.Number,
+    default: null
+  },
   createdAt: {
     type: mongoose.Schema.Types.Number,
     required: true
