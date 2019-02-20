@@ -7,6 +7,7 @@ const router = express.Router();
 const { User } = require('../model/user');
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
 const formPromise = require('./helpers/formidablePromise');
+const { uploadFile } = require('./helpers/fileUpload');
 
 AWS.config.region = 'ap-northeast-2';
 
@@ -72,55 +73,15 @@ router.patch('/:id/images', async (req, res) => {
   try {
     // TODO: 사진 업로드 로직이 여러군데에서 사용중, 모듈화 하기
     const { id } = req.params;
-    const { err, files, fields } = await formPromise(req);
-    if (err) throw new Error(err);
+
+    const { fileLocations, profileLocation, certLocation } = await uploadFile(req, true);
 
     const user = await User.findById(id);
 
-    const promises = Object.keys(files).map(async fileKey => {
-      logger.info('%o', files);
-      const randomNum = Math.floor(Math.random() * 1000000);
-      const s3 = new AWS.S3();
-      await sharp(files[fileKey].path)
-        .rotate()
-        .toFile(`/home/ubuntu/${files[fileKey].name}`);
-      await sharp(files[fileKey].path)
-        .rotate()
-        .resize(200, 200)
-        .toFile(`/home/ubuntu/${files[fileKey].name}_thumb`);
-
-      const params = {
-        Bucket: 'dreamary',
-        Key: randomNum + files[fileKey].name,
-        ACL: 'public-read',
-        Body: fs.createReadStream(`/home/ubuntu/${files[fileKey].name}`)
-      };
-
-      await s3
-        .upload({
-          ...params,
-          Body: fs.createReadStream(`/home/ubuntu/${files[fileKey].name}_thumb`),
-          Key: `${randomNum + files[fileKey].name}_thumb`
-        })
-        .promise();
-      const data = await s3.upload(params).promise();
-
-      fs.unlink(files[fileKey].path);
-      fs.unlink(`/home/ubuntu/${files[fileKey].name}`);
-      fs.unlink(`/home/ubuntu/${files[fileKey].name}_thumb`);
-
-      if (fileKey === 'cert_jg') {
-        user.cert_jg = data.Location;
-      } else if (fileKey === 'profile') {
-        user.profile = data.Location;
-      } else {
-        return data.Location;
-      }
-    });
-
-    const fileLocations = (await Promise.all(promises)).filter(loc => loc);
-
     user.portfolios = user.portfolios.concat(fileLocations);
+    user.cert_jg = certLocation;
+    user.profile = profileLocation;
+
     await user.save();
 
     res.status(200).send(user);

@@ -55,7 +55,7 @@ router.patch('/:id/images', async (req, res) => {
   try {
     const { id } = req.params;
 
-    const fileLocations = await uploadFile(req);
+    const { fileLocations } = await uploadFile(req);
 
     const review = await Review.findById(id);
     review.images = review.images.concat(fileLocations);

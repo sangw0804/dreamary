@@ -46,10 +46,10 @@ router.post('/', async (req, res) => {
 // PATCH /events/:id/images
 router.patch('/:id/images', async (req, res) => {
   try {
-    const locations = await uploadFile(req, true);
+    const { fileLocations } = await uploadFile(req, true);
 
     const event = await Event.findById(req.params.id);
-    event.images = event.images.concat(locations);
+    event.images = event.images.concat(fileLocations);
     await event.save();
 
     res.status(200).send(event);

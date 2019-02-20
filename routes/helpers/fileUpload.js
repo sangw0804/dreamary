@@ -7,6 +7,8 @@ const formPromise = require('./formidablePromise');
 AWS.config.region = 'ap-northeast-2';
 
 const uploadFile = async (req, thumbnail = false) => {
+  let certLocation;
+  let profileLocation;
   const { err, files, fields } = await formPromise(req);
   if (err) throw new Error(err);
 
@@ -47,11 +49,18 @@ const uploadFile = async (req, thumbnail = false) => {
     fs.unlink(files[fileKey].path);
     fs.unlink(`/home/ubuntu/${files[fileKey].name}`);
 
-    return data.Location;
+    if (fileKey === 'cert_jg') {
+      certLocation = data.Location;
+    } else if (fileKey === 'profile') {
+      profileLocation = data.Location;
+    } else {
+      return data.Location;
+    }
   });
 
-  const fileLocations = await Promise.all(promises);
-  return fileLocations;
+  const fileLocations = (await Promise.all(promises)).filter(loc => loc);
+
+  return { fileLocations, certLocation, profileLocation };
 };
 
 module.exports = { uploadFile };
