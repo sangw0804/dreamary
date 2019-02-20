@@ -236,7 +236,7 @@ describe('Reservation', () => {
 
             const designer = await User.findById(reservations[0]._designer);
             expect(designer.reservationCount).toBe(3);
-            expect(designer.money).toBe(5000);
+            expect(designer.money).toBe(25000);
             done();
           } catch (e) {
             done(e);

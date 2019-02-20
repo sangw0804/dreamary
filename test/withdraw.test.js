@@ -3,6 +3,7 @@ const request = require('supertest');
 const { ObjectID } = require('mongodb');
 const { app } = require('../app');
 const { Withdraw } = require('../model/withdraw');
+const { User } = require('../model/user');
 const { populateUsers, users } = require('./seed/userSeed');
 const { populateWithdraws, withdraws } = require('./seed/withdrawSeed');
 
@@ -52,15 +53,15 @@ describe('Withdraw', () => {
         .post('/withdraws')
         .send(data)
         .expect(200)
-        .expect(res => {
-          expect(res.body.money).toBe(data.money);
-        })
         .end(async (err, res) => {
           try {
             if (err) throw new Error(err);
 
             const foundWithdraw = await Withdraw.find({});
             expect(foundWithdraw.length).toBe(3);
+
+            const designer = await User.findById(users[1]._id);
+            expect(designer.money).toBe(0);
             done();
           } catch (e) {
             done(e);

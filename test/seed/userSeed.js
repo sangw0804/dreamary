@@ -17,6 +17,7 @@ const users = [
     tickets: [],
     reservations: [],
     point: 0,
+    money: 20000,
     createdAt: new Date().getTime(),
     reservationCount: 2
   },

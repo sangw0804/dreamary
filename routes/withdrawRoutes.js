@@ -1,7 +1,9 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
 const router = express.Router({ mergeParams: true });
 const { Withdraw } = require('../model/withdraw');
+const { User } = require('../model/user');
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
 
 // GET /withdraws/:user_id
@@ -30,9 +32,12 @@ router.get('/', async (req, res) => {
 
 // POST /withdraws
 router.post('/', async (req, res) => {
+  let withdraw;
+
   try {
     const { _designer, name, socialId, address, email, bank, accountHolder, accountNumber, money } = req.body;
-    const withdraws = await Withdraw.create({
+
+    withdraw = await Withdraw.create({
       _designer,
       name,
       socialId,
@@ -45,8 +50,15 @@ router.post('/', async (req, res) => {
       createdAt: new Date().getTime()
     });
 
-    res.status(200).send(withdraws);
+    const designer = await User.findById(_designer);
+
+    designer.money -= money;
+    const savedDesigner = await designer.save();
+
+    res.status(200).send(savedDesigner);
   } catch (e) {
+    if (withdraw) await Withdraw.findByIdAndRemove(withdraw._id);
+
     if (logger) logger.error('POST /withdraws || %o', e);
     res.status(400).send(e);
   }
