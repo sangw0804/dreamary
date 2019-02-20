@@ -136,16 +136,18 @@ router.patch('/:id', async (req, res) => {
       } else {
         // 디자이너가 서비스 완료 버튼 누른 경우
         await alarmTalk('userPleaseReview', reservation._user, reservation._designer, reservation._id);
-
-        const designer = await User.findById(reservation._designer);
-        designer.reservationCount += 1;
-
-        if (designer.reservationCount >= 3) {
-          designer.money += 5000;
-        }
-
-        await designer.save();
       }
+    }
+
+    if (isDone) {
+      const designer = await User.findById(reservation._designer);
+      designer.reservationCount += 1;
+
+      if (designer.reservationCount >= 3) {
+        designer.money += 5000;
+      }
+
+      await designer.save();
     }
   } catch (e) {
     if (logger) logger.error('PATCH /users/:user_id/reservations/:id | %o', e);

@@ -17,7 +17,8 @@ const users = [
     tickets: [],
     reservations: [],
     point: 0,
-    createdAt: new Date().getTime()
+    createdAt: new Date().getTime(),
+    reservationCount: 2
   },
   {
     _id: new ObjectID(),
