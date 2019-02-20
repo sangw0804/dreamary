@@ -52,6 +52,7 @@ router.patch('/:ticket_id', async (req, res) => {
     foundTicket.activate();
     const savedTicket = await foundTicket.save();
     foundUser.expiredAt = foundTicket.expiredAt;
+    foundUser.reservationCount = 0;
     await foundUser.save();
 
     res.status(200).send(savedTicket);

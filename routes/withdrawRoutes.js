@@ -61,7 +61,7 @@ router.patch('/:id', async (req, res) => {
 
     const updatedWithdraw = await Withdraw.findByIdAndUpdate(
       req.params.id,
-      { updatedAt: new Date().getTime(), isRefused },
+      { $set: { updatedAt: new Date().getTime(), isRefused } },
       { new: true }
     );
 

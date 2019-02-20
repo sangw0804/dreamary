@@ -233,6 +233,8 @@ describe('Reservation', () => {
 
             const card = await Card.findById(reservations[0]._card);
             expect(card.reservedTimes.length).toBe(0);
+
+            const designer = await User.findById(reservations[0]._designer);
             done();
           } catch (e) {
             done(e);

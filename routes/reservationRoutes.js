@@ -5,6 +5,7 @@ const { Reservation } = require('../model/reservation');
 const { User } = require('../model/user');
 const { Card } = require('../model/card');
 const { Recruit } = require('../model/recruit');
+const { Ticket } = require('../model/ticket');
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
 const { alarmTalk } = require('./helpers');
 
@@ -135,6 +136,15 @@ router.patch('/:id', async (req, res) => {
       } else {
         // 디자이너가 서비스 완료 버튼 누른 경우
         await alarmTalk('userPleaseReview', reservation._user, reservation._designer, reservation._id);
+
+        const designer = await User.findById(reservation._designer);
+        designer.reservationCount += 1;
+
+        if (designer.reservationCount >= 3) {
+          designer.money += 5000;
+        }
+
+        await designer.save();
       }
     }
   } catch (e) {
