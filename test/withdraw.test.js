@@ -105,9 +105,11 @@ describe('Withdraw', () => {
             if (err) throw new Error(err);
 
             const foundWithdraw = await Withdraw.findById(withdraws[0]._id);
-
             expect(typeof foundWithdraw.updatedAt).toBe('number');
             expect(foundWithdraw.isRefused).toBe(true);
+
+            const foundDesigner = await User.findById(foundWithdraw._designer);
+            expect(foundDesigner.money).toBe(10000);
             done();
           } catch (e) {
             done(e);
