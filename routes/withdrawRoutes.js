@@ -77,6 +77,13 @@ router.patch('/:id', async (req, res) => {
       { new: true }
     );
 
+    const designer = await User.findById(updatedWithdraw._designer);
+
+    if (isRefused) {
+      designer.money += updatedWithdraw.money;
+      await designer.save();
+    }
+
     res.status(200).send(updatedWithdraw);
   } catch (e) {
     if (logger) logger.error('PATCH /withdraws/:id || %o', e);
