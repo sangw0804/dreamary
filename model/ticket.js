@@ -39,6 +39,12 @@ ticketSchema.methods.activate = function activateHandler() {
   ticket.expiredAt = ticket.activatedAt + 2678400000 * kind; // add 31 days or 93 days
 };
 
+ticketSchema.methods.extend = function extendHandler() {
+  const ticket = this;
+
+  ticket.expiredAt += 2678400000;
+};
+
 const Ticket = mongoose.model('Ticket', ticketSchema);
 
 module.exports = { Ticket };
