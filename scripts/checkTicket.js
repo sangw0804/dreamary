@@ -11,6 +11,8 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true });
 
 const checkTicket = async () => {
   try {
+    console.log(await User.find());
+
     const expiredDesigners = await User.find({
       isD: true,
       expiredAt: { $gt: 0, $lt: new Date().getTime() },
@@ -18,6 +20,8 @@ const checkTicket = async () => {
     })
       .populate('_tickets')
       .exec();
+
+    console.log(expiredDesigners);
 
     const promises = expiredDesigners.map(async designer => {
       const ticket = designer._tickets.find(t => t.expiredAt === designer.expiredAt);
