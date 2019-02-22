@@ -7,8 +7,12 @@ const config = require('../../config');
 const { sendMailPromise } = require('./mailer');
 const logger = process.env.NODE_ENV !== 'test' ? require('../../log') : false;
 
-const buttonNames = ['드리머리 예약페이지', '드리머리 예약관리'];
-const urls = ['http://dreamary.net/#/reservations', 'http://dreamary.net/#/designer/reservations'];
+const buttonNames = ['드리머리 예약페이지', '드리머리 예약관리', '드리머리 이용권 관리'];
+const urls = [
+  'http://dreamary.net/#/reservations',
+  'http://dreamary.net/#/designer/reservations',
+  'https://dreamary.net/users/designer/membership'
+];
 
 const serviceNiceName = {
   cut: '커트',
@@ -27,7 +31,10 @@ const alarmTemplates = {
   designerReservationInformAgain: ['DESI002', buttonNames[1], urls[1], urls[1]],
   userCancelInformDesigner: ['DESI003', buttonNames[1], urls[1], urls[1]],
   designerCancel: ['DESI004', buttonNames[1], urls[1], urls[1]],
-  designerServiceDone: ['DESI005', buttonNames[1], urls[1], urls[1]]
+  designerServiceDone: ['DESI005', buttonNames[1], urls[1], urls[1]],
+  designerTicketDone: ['DESI011', buttonNames[2], urls[2], urls[2]],
+  designerTicketDoneExtend: ['DESI013', buttonNames[2], urls[2], urls[2]],
+  designerTicketWillDone: ['DESI012', buttonNames[2], urls[2], urls[2]]
 };
 
 const alarmAxios = axios.create({
@@ -229,6 +236,33 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
   혹시 서비스가 정상적으로 이루어지지 않았거나 문의사항이 있으시다면 플러스친구 ‘드리머리’로 부탁드립니다.
 
   www.dreamary.net`;
+        break;
+
+      // 디자이너 이용권 만료되었을 때 보내는 알림톡 (3명 이상 자른 경우) * * * * * * * * * * *
+      case 'designerTicketDone':
+        options.MSG = `안녕하세요 ${designer.name}님! 드리머리 이용권이 만료되었습니다.
+계속되는 매칭을 위해서 이용권 구매를 부탁드리겠습니다.
+
+궁금하신 점은 언제든지 이곳으로 문의주세요.
+감사합니다.`;
+        break;
+
+      // 디자이너 이용권 만료되었을 때 연장내용 보내는 알림톡 (2명 이하 자른 경우) * * * * * * * * * * *
+      case 'designerTicketDoneExtend':
+        options.MSG = `안녕하세요 ${designer.name}님! 드리머리 서비스를 이용해주셔서 감사합니다.
+현재 ${
+          designer.name
+        }님의 이용권 기간은 공식적으로 만료가 되었습니다. 하지만 최근 1달간 2분 이상의 모델을 구인하지 않으셔서 자동으로 이용권을 연장시켜드렸습니다.`;
+        break;
+
+      // 디자이너 이용권 만료 3일 남았을 때 보내는 알림톡  * * * * * * * * * * *
+      case 'designerTicketWillDone':
+        options.MSG = `안녕하세요 ${designer.name}님! 드리머리 서비스를 이용해주셔서 감사합니다.
+이용권 만료 기간이 3일 남아, 향후 서비스 시술을 진행하기 위해서는 이용권을 연장해주셔야 합니다.
+*두 명의 디자이너분을 가입시킬 시 1개월 이용권을 무료로 드리고 있습니다! (추천인 코드를 활용해보세요!)
+
+궁금하신 점은 언제든지 이곳으로 문의주세요.
+감사합니다.`;
         break;
 
       default:

@@ -4,10 +4,16 @@ const config = require('../config');
 const logger = require('../log');
 const { User } = require('../model/user');
 const { Ticket } = require('../model/ticket');
+const { alarmTalk } = require('../routes/helpers/alarmTalk');
 
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true });
 
-// 매일 00:02분에 티켓이 만료되었지만 성사된 예약이 2건 이하인 디자이너에게 티켓 유효기간 연장
+/*
+  매일 00:02분에
+  1. 티켓이 만료되었지만 성사된 예약이 2건 이하인 디자이너에게 티켓 유효기간 연장 & 알림톡
+  2. 티켓이 만료되었고 성사된 예약이 3건 이상인 디자이너에게 알림톡
+  3. 3일 뒤 티켓이 만료되는 디자이너에게 알림톡
+  */
 
 const checkTicket = async () => {
   try {
