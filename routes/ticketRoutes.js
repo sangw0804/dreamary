@@ -27,13 +27,17 @@ router.post('/', async (req, res) => {
 
     if (!user) throw new Error('user not found!!');
 
-    const { price } = req.body;
+    const { price, money } = req.body;
+
     const createdTicket = await Ticket.create({ price, _user: req.params.id, createdAt: new Date().getTime() });
 
     user._tickets.push(createdTicket._id);
-    await user.save();
 
-    res.status(200).send(createdTicket);
+    if (money) user.money -= money;
+
+    const createdUser = await user.save();
+
+    res.status(200).send({ ticket: createdTicket, userData: createdUser });
   } catch (e) {
     if (logger) logger.error('POST /users/:id/tickets | %o', e);
     res.status(400).send(e);

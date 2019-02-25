@@ -52,19 +52,24 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
     options.CALLBACK = '01041112486';
     [options.TEMPLATE_CODE, options.BTN_TXTS, options.BTN_URLS1, options.BTN_URLS2] = alarmTemplates[template];
 
-    const user = await User.findById(user_id);
+    let user, reservation, card, dateString, startTimeString, servicesString;
+    if (user_id) {
+      user = await User.findById(user_id);
+    }
     const designer = await User.findById(designer_id);
-    const reservation = await Reservation.findById(reservation_id)
-      .populate({ path: '_card' })
-      .exec();
-    const card = reservation._card;
-    const dateObj = new Date(reservation.date);
-    const dateString = `${dateObj.getFullYear()}년 ${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일`;
-    const startTimeString = `${Math.floor(reservation.time.since / 60)}:${reservation.time.since % 60 ? 30 : '00'}`;
-    const servicesString = Object.keys(reservation.services)
-      .filter(key => key !== '$init' && reservation.services[key] === true)
-      .map(serviceName => serviceNiceName[serviceName])
-      .join(', ');
+    if (reservation_id) {
+      reservation = await Reservation.findById(reservation_id)
+        .populate({ path: '_card' })
+        .exec();
+      card = reservation._card;
+      const dateObj = new Date(reservation.date);
+      dateString = `${dateObj.getFullYear()}년 ${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일`;
+      startTimeString = `${Math.floor(reservation.time.since / 60)}:${reservation.time.since % 60 ? 30 : '00'}`;
+      servicesString = Object.keys(reservation.services)
+        .filter(key => key !== '$init' && reservation.services[key] === true)
+        .map(serviceName => serviceNiceName[serviceName])
+        .join(', ');
+    }
 
     switch (template) {
       // 고객 예약 바로안내 * * * * * * * * * * * * * * * *

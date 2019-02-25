@@ -21,28 +21,39 @@ const checkTicket = async () => {
 
     const expiredDesigners = await User.find({
       isD: true,
-      expiredAt: { $gt: 0, $lt: new Date().getTime() },
-      reservationCount: { $lte: 2 }
+      expiredAt: { $gt: 0, $lt: new Date().getTime() }
     })
       .populate('_tickets')
       .exec();
 
-    console.log(expiredDesigners);
+    const willExpireDesigners = await User.find({
+      isD: true,
+      expiredAt: { $gt: new Date().getTime() + 86400000 * 2, $lt: new Date().getTime() + 86400000 * 3 }
+    });
 
     const promises = expiredDesigners.map(async designer => {
-      const ticket = designer._tickets.find(t => t.expiredAt === designer.expiredAt);
-      console.log(designer);
-      console.log(ticket);
+      if (designer.reservationCount <= 2) {
+        const ticket = designer._tickets.find(t => t.expiredAt === designer.expiredAt);
 
-      ticket.extend();
-      // await ticket.save();
+        ticket.extend();
+        await ticket.save();
 
-      designer.expiredAt = ticket.expiredAt;
-      console.log(ticket);
-      console.log(designer);
-      console.log('* * * * * * * * * * * * * * * * * * * * * ');
-      // await designer.save();
+        designer.expiredAt = ticket.expiredAt;
+        await designer.save();
+        // 2개 이하인 경우 알람톡.
+        await alarmTalk('designerTicketDoneExtend', undefined, designer._id);
+      } else {
+        // 3개 이상인 경우 알람톡.
+        await alarmTalk('designerTicketDone', undefined, designer._id);
+      }
     });
+
+    promises.concat(
+      willExpireDesigners.map(async designer => {
+        // 만료 3일 전 알람톡
+        await alarmTalk('designerTicketWillDone', undefined, designer._id);
+      })
+    );
 
     return Promise.all(promises);
   } catch (e) {
