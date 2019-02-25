@@ -1,5 +1,4 @@
 const axios = require('axios');
-const firebase = require('firebase');
 const querystring = require('querystring');
 const { User } = require('../../model/user');
 const { Reservation } = require('../../model/reservation');

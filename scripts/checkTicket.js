@@ -17,8 +17,6 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true });
 
 const checkTicket = async () => {
   try {
-    console.log(await User.find());
-
     const expiredDesigners = await User.find({
       isD: true,
       expiredAt: { $gt: 0, $lt: new Date().getTime() }
@@ -39,6 +37,7 @@ const checkTicket = async () => {
         await ticket.save();
 
         designer.expiredAt = ticket.expiredAt;
+        designer.reservationCount = 0;
         await designer.save();
         // 2개 이하인 경우 알람톡.
         await alarmTalk('designerTicketDoneExtend', undefined, designer._id);
