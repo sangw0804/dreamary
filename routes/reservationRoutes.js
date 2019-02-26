@@ -118,8 +118,6 @@ router.patch('/:id', async (req, res) => {
       await user.save();
     }
 
-    res.status(200).send(user);
-
     if (process.env.NODE_ENV !== 'test') {
       if (isCanceled && cancelByUser && isGonnaRefund) {
         // 유저가 24시간 내에 취소한 경우
@@ -148,6 +146,10 @@ router.patch('/:id', async (req, res) => {
       }
 
       await designer.save();
+      res.status(200).send(designer);
+    }
+    if (isCanceled) {
+      res.status(200).send(user);
     }
   } catch (e) {
     if (logger) logger.error('PATCH /users/:user_id/reservations/:id | %o', e);
