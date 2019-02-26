@@ -61,6 +61,9 @@ router.patch('/:id/images', async (req, res) => {
     review.images = review.images.concat(fileLocations);
     await review.save();
 
+    const newUser = await User.findByIdAndUpdate(review._user, { $inc: { point: 1000 } }, { new: true });
+    review._user = newUser;
+
     res.status(200).send(review);
   } catch (e) {
     if (logger) logger.error('PATCH /recruits/:recruit_id/reviews/:id/images | %o', e);
