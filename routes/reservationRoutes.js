@@ -118,6 +118,21 @@ router.patch('/:id', async (req, res) => {
       await user.save();
     }
 
+    if (isDone) {
+      const designer = await User.findById(reservation._designer);
+      designer.reservationCount += 1;
+
+      if (designer.reservationCount >= 3) {
+        designer.money += 5000;
+      }
+
+      await designer.save();
+      res.status(200).send(designer);
+    }
+    if (isCanceled) {
+      res.status(200).send(user);
+    }
+
     if (process.env.NODE_ENV !== 'test') {
       if (isCanceled && cancelByUser && isGonnaRefund) {
         // 유저가 24시간 내에 취소한 경우
@@ -135,21 +150,6 @@ router.patch('/:id', async (req, res) => {
         // 디자이너가 서비스 완료 버튼 누른 경우
         await alarmTalk('userPleaseReview', reservation._user, reservation._designer, reservation._id);
       }
-    }
-
-    if (isDone) {
-      const designer = await User.findById(reservation._designer);
-      designer.reservationCount += 1;
-
-      if (designer.reservationCount >= 3) {
-        designer.money += 5000;
-      }
-
-      await designer.save();
-      res.status(200).send(designer);
-    }
-    if (isCanceled) {
-      res.status(200).send(user);
     }
   } catch (e) {
     if (logger) logger.error('PATCH /users/:user_id/reservations/:id | %o', e);
