@@ -31,17 +31,21 @@ const checkTicket = async () => {
 
     const promises = expiredDesigners.map(async designer => {
       if (designer.reservationCount <= 2) {
-        const ticket = designer._tickets.find(t => t.expiredAt === designer.expiredAt);
+		console.log('예약 2개 이하');
+		console.log(designer);
+        /*const ticket = designer._tickets.find(t => t.expiredAt === designer.expiredAt);
 
         ticket.extend();
         await ticket.save();
 
         designer.expiredAt = ticket.expiredAt;
         designer.reservationCount = 0;
-        await designer.save();
+        await designer.save();*/
         // 2개 이하인 경우 알람톡.
         await alarmTalk('designerTicketDoneExtend', undefined, designer._id);
       } else {
+		console.log('예약 3개 이하');
+		console.log(designer);
         // 3개 이상인 경우 알람톡.
         await alarmTalk('designerTicketDone', undefined, designer._id);
       }
@@ -49,6 +53,8 @@ const checkTicket = async () => {
 
     promises.concat(
       willExpireDesigners.map(async designer => {
+		console.log('만료 3일 전');
+		console.log(designer);
         // 만료 3일 전 알람톡
         await alarmTalk('designerTicketWillDone', undefined, designer._id);
       })

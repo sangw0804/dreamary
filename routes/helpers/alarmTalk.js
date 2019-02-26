@@ -277,8 +277,10 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
     options.PHONE = alarmTemplates[template][0].includes('USE') ? user.phoneNumber : designer.phoneNumber;
 
     const { data } = await alarmAxios.post('/', querystring.stringify(options));
+	console.log(data);
     if (data.result_code !== '200') throw new Error(data);
   } catch (e) {
+	console.log(e);
     if (logger) logger.error('alarmTalk Error : %o', e);
     if (logger) logger.error('alarmTalk Error : %o', options);
     try {
