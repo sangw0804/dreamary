@@ -19,7 +19,7 @@ const checkTicket = async () => {
   try {
     const expiredDesigners = await User.find({
       isD: true,
-      expiredAt: { $gt: 0, $lt: new Date().getTime() }
+      expiredAt: { $gt: new Date().getTime() - 86400000, $lt: new Date().getTime() }
     })
       .populate('_tickets')
       .exec();
