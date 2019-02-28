@@ -1,7 +1,11 @@
 const generateCondition = (date, kinds, gender, sido, sigungu) => {
+  const nowDate = new Date();
+  if (nowDate.getHours() >= 19) nowDate.setHours(34);
+  else if (nowDate.getHours() <= 9) nowDate.setHours(10);
+
   const condition = {
     // requireGender: { $in: [gender, 'both'] }
-    date: { $gte: new Date().getTime() },
+    date: { $gte: nowDate.getTime() },
     reservable: true
   };
   if (gender) condition.requireGender = { $in: [gender, 'both'] };

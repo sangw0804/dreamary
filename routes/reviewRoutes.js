@@ -2,16 +2,11 @@ const express = require('express');
 
 const router = express.Router({ mergeParams: true });
 
-const AWS = require('aws-sdk');
-const fs = require('fs');
-const sharp = require('sharp');
-
-AWS.config.region = 'ap-northeast-2';
-
 const { Review } = require('../model/review');
 const { Recruit } = require('../model/recruit');
+const { User } = require('../model/user');
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
-const formPromise = require('./helpers/formidablePromise');
+const { uploadFile } = require('./helpers/fileUpload');
 
 // GET /recruits/:recruit_id/reviews/:id
 router.get('/:id', async (req, res) => {
@@ -42,6 +37,12 @@ router.post('/', async (req, res) => {
     const createdReview = await Review.create(body);
     await createdReview.updateRelatedDBs();
 
+    const recruit = await Recruit.findById(body._recruit);
+    const plusPoint = recruit._reviews.length === 1 ? 5000 : 1000;
+    const newUser = await User.findByIdAndUpdate(_user, { $inc: { point: plusPoint } }, { new: true });
+
+    createdReview._user = newUser;
+
     res.status(200).send(createdReview);
   } catch (e) {
     if (logger) logger.error('POST /recruits/:recruit_id/reviews | %o', e);
@@ -53,34 +54,35 @@ router.post('/', async (req, res) => {
 router.patch('/:id/images', async (req, res) => {
   try {
     const { id } = req.params;
-    const { err, files, fields } = await formPromise(req);
-    if (err) throw new Error(err);
 
-    const promises = Object.keys(files).map(async fileKey => {
-      const randomNum = Math.floor(Math.random() * 1000000);
-      const s3 = new AWS.S3();
-      await sharp(files[fileKey].path)
-        .rotate()
-        .toFile(`/home/ubuntu/${files[fileKey].name}`);
-      const params = {
-        Bucket: 'dreamary',
-        Key: randomNum + files[fileKey].name,
-        ACL: 'public-read',
-        Body: fs.createReadStream(`/home/ubuntu/${files[fileKey].name}`)
-      };
-      const data = await s3.upload(params).promise();
+    const { fileLocations } = await uploadFile(req);
 
-      fs.unlink(files[fileKey].path);
-      fs.unlink(`/home/ubuntu/${files[fileKey].name}`);
-      return data.Location;
-    });
+    const review = await Review.findById(id);
+    review.images = review.images.concat(fileLocations);
+    await review.save();
 
-    const fileLocations = await Promise.all(promises);
-    const updatedReview = await Review.findByIdAndUpdate(id, { $set: { images: fileLocations } });
+    const newUser = await User.findByIdAndUpdate(review._user, { $inc: { point: 1000 } }, { new: true });
+    review._user = newUser;
 
-    res.status(200).send(updatedReview);
+    res.status(200).send(review);
   } catch (e) {
     if (logger) logger.error('PATCH /recruits/:recruit_id/reviews/:id/images | %o', e);
+    res.status(400).send(e);
+  }
+});
+
+// DELETE /recruits/:recruit_id/reviews/:id/images/:index
+router.delete('/:id/images/:index', async (req, res) => {
+  try {
+    const { id, index } = req.params;
+
+    const review = await Review.findById(id);
+    review.images.splice(+index, 1);
+    await review.save();
+
+    res.status(200).send(review);
+  } catch (e) {
+    if (logger) logger.error('DELETE /recruits/:recruit_id/reviews/:id/images/:index | %o', e);
     res.status(400).send(e);
   }
 });
@@ -111,6 +113,7 @@ router.delete('/:id', async (req, res) => {
     const review = await Review.findById(req.params.id);
     await review.remove();
     await review.removeRelatedDBs();
+
     res.status(200).send({});
   } catch (e) {
     if (logger) logger.error('DELETE /recruits/:recruit_id/reviews/:id | %o', e);

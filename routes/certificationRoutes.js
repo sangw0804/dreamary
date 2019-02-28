@@ -17,6 +17,8 @@ router.post('/', async (req, res) => {
       secret: config.IMP_SECRET
     });
 
+    logger.info(config.IMP_KEY);
+    logger.info(config.IMP_SECRET);
     const result = await iamporter.getCertification(imp_uid);
 
     res.status(200).send(result);

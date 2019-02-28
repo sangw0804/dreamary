@@ -16,19 +16,18 @@ const reservationRoutes = require('./routes/reservationRoutes');
 const kakaoRoutes = require('./routes/kakaoRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const cardRoutes = require('./routes/cardRoutes');
-const firebaseRoutes = require('./routes/firebaseRoutes');
 const inquiryRoutes = require('./routes/inquiryRoutes');
 const couponRoutes = require('./routes/couponRoutes');
 const certificationRoutes = require('./routes/certificationRoutes');
+const noticeRoutes = require('./routes/noticeRoutes');
+const eventRoutes = require('./routes/eventRoutes');
+const withdrawRoutes = require('./routes/withdrawRoutes');
 
 const { logging } = require('./middlewares/log');
 const { auth } = require('./middlewares/auth');
 
 // connect to db
-mongoose.connect(
-  config.MONGODB_URI,
-  { useNewUrlParser: true }
-);
+mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true });
 
 // app config
 app.use(bodyParser.json());
@@ -52,9 +51,11 @@ app.use('/recruits/:recruit_id/reviews', reviewRoutes);
 app.use('/recruits', recruitRoutes);
 app.use('/coupons', couponRoutes);
 app.use('/kakao_login', kakaoRoutes);
-app.use('/firebase', firebaseRoutes);
 app.use('/inquiries', inquiryRoutes);
 app.use('/', cardRoutes);
 app.use('/certification', certificationRoutes);
+app.use('/notices', noticeRoutes);
+app.use('/events', eventRoutes);
+app.use('/withdraws', withdrawRoutes);
 
 module.exports = { app };

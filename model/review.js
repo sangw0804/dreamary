@@ -22,15 +22,18 @@ const reviewSchema = new mongoose.Schema(
       ref: 'Reservation'
     },
     score: {
+      // 점수 - 더이상 사용되지 않음
       type: Number,
       required: true
     },
     content: {
+      // 내용
       type: String,
       required: true
     },
-    images: [String],
+    images: [String], // 리뷰 image url들
     createdAt: {
+      // 생성 시간
       type: Number,
       required: true
     }
@@ -44,53 +47,31 @@ async function validateRelatedDBs() {
   const review = this;
   const recruit = await Recruit.findById(review._recruit);
   const reservation = await Reservation.findById(review._reservation);
-  if (!recruit || !reservation) {
-    throw new Error('recruit || reservation not found!');
-  }
+
+  if (!recruit || !reservation) throw new Error('recruit || reservation not found!');
 }
-
-// async function updateRelatedDBs(doc) {
-//   const review = doc;
-//   const recruit = await Recruit.findById(review._recruit);
-//   const reservation = await Reservation.findById(review._reservation);
-//   reservation._review = review._id;
-//   recruit._reviews = updateIdArray(recruit._reviews, review._id);
-
-//   recruit.score = addScore(recruit.score, review.score, recruit._reviews.length);
-//   await recruit.save();
-//   await reservation.save();
-// }
-
-// async function removeRelatedDBs(doc) {
-//   const review = doc;
-//   const recruit = await Recruit.findById(review._recruit);
-//   await Reservation.findByIdAndRemove(review._reservation, { $set: { _review: null } });
-
-//   recruit.score = removeScore(recruit.score, review.score, recruit._reviews.length);
-//   recruit._reviews = recruit._reviews.filter(rv => rv.toHexString() !== review._id.toHexString());
-
-//   await recruit.save();
-// }
 
 reviewSchema.pre('save', validateRelatedDBs);
 
-reviewSchema.methods.updateRelatedDBs = async function(originalReviewScore) {
+reviewSchema.methods.updateRelatedDBs = async function updateHandler(originalReviewScore) {
   const review = this;
   const recruit = await Recruit.findById(review._recruit);
   const reservation = await Reservation.findById(review._reservation);
-  reservation._review = review._id;
 
+  reservation._review = review._id;
   recruit._reviews = updateIdArray(recruit._reviews, review._id);
 
   // originalReviewScore 가 0 일 수 있으므로
+  // 점수 수정 로직 - 현재 리뷰 점수 사용하지 않고 있습니다!
   if (typeof originalReviewScore === 'number')
     recruit.score = removeScore(recruit.score, originalReviewScore, recruit._reviews.length);
   recruit.score = addScore(recruit.score, review.score, recruit._reviews.length);
+
   await recruit.save();
   await reservation.save();
 };
 
-reviewSchema.methods.removeRelatedDBs = async function() {
+reviewSchema.methods.removeRelatedDBs = async function removeHandler() {
   const review = this;
   const recruit = await Recruit.findById(review._recruit);
   await Reservation.findByIdAndRemove(review._reservation, { $set: { _review: null } });
@@ -100,9 +81,6 @@ reviewSchema.methods.removeRelatedDBs = async function() {
 
   await recruit.save();
 };
-
-// reviewSchema.post('save', updateRelatedDBs);
-// reviewSchema.post('remove', removeRelatedDBs);
 
 const Review = mongoose.model('Review', reviewSchema);
 
