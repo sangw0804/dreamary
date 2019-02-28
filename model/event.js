@@ -5,10 +5,6 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  content: {
-    type: String,
-    required: true
-  },
   until: {
     type: String,
     required: true

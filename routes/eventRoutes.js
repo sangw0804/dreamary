@@ -33,8 +33,8 @@ router.get('/', async (req, res) => {
 // POST /events
 router.post('/', async (req, res) => {
   try {
-    const { title, content, until } = req.body;
-    const createdEvent = await Event.create({ title, content, until, createdAt: new Date().getTime() });
+    const { title, until } = req.body;
+    const createdEvent = await Event.create({ title, until, createdAt: new Date().getTime() });
 
     res.status(200).send(createdEvent);
   } catch (e) {
