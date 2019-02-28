@@ -22,15 +22,18 @@ const reviewSchema = new mongoose.Schema(
       ref: 'Reservation'
     },
     score: {
+      // 점수 - 더이상 사용되지 않음
       type: Number,
       required: true
     },
     content: {
+      // 내용
       type: String,
       required: true
     },
-    images: [String],
+    images: [String], // 리뷰 image url들
     createdAt: {
+      // 생성 시간
       type: Number,
       required: true
     }
@@ -59,6 +62,7 @@ reviewSchema.methods.updateRelatedDBs = async function updateHandler(originalRev
   recruit._reviews = updateIdArray(recruit._reviews, review._id);
 
   // originalReviewScore 가 0 일 수 있으므로
+  // 점수 수정 로직 - 현재 리뷰 점수 사용하지 않고 있습니다!
   if (typeof originalReviewScore === 'number')
     recruit.score = removeScore(recruit.score, originalReviewScore, recruit._reviews.length);
   recruit.score = addScore(recruit.score, review.score, recruit._reviews.length);

@@ -8,18 +8,22 @@ const ticketSchema = new mongoose.Schema(
       ref: 'User'
     },
     price: {
+      // 티켓 가격
       required: true,
       type: Number
     },
     activatedAt: {
+      // 활성회 된 시간
       type: Number,
       default: null
     },
     expiredAt: {
+      // 만료 시간
       type: Number,
       default: null
     },
     createdAt: {
+      // 생성 시간
       type: Number,
       required: true
     }
@@ -40,6 +44,7 @@ ticketSchema.methods.activate = function activateHandler() {
 };
 
 ticketSchema.methods.extend = function extendHandler() {
+  // 한달 연장
   const ticket = this;
 
   ticket.expiredAt += 2678400000;
