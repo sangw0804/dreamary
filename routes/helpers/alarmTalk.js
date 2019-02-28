@@ -6,11 +6,12 @@ const config = require('../../config');
 const { sendMailPromise } = require('./mailer');
 const logger = process.env.NODE_ENV !== 'test' ? require('../../log') : false;
 
-const buttonNames = ['드리머리 예약페이지', '드리머리 예약관리', '드리머리 이용권 관리'];
+const buttonNames = ['드리머리 예약페이지', '드리머리 예약관리', '드리머리 이용권 관리', '드리머리 포트폴리오'];
 const urls = [
   'http://dreamary.net/#/reservations',
   'http://dreamary.net/#/designer/reservations',
-  'https://dreamary.net/users/designer/membership'
+  'https://dreamary.net/users/designer/membership',
+  'https://dreamary.net/users/designer/portfolio'
 ];
 
 const serviceNiceName = {
@@ -33,7 +34,8 @@ const alarmTemplates = {
   designerServiceDone: ['DESI005', buttonNames[1], urls[1], urls[1]],
   designerTicketDone: ['DESI011', buttonNames[2], urls[2], urls[2]],
   designerTicketDoneExtend: ['DESI013', buttonNames[2], urls[2], urls[2]],
-  designerTicketWillDone: ['DESI012', buttonNames[2], urls[2], urls[2]]
+  designerTicketWillDone: ['DESI012', buttonNames[2], urls[2], urls[2]],
+  designerWelcome: ['DESI008', buttonNames[3], urls[3], urls[3]]
 };
 
 const alarmAxios = axios.create({
@@ -269,6 +271,17 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
 감사합니다.`;
         break;
 
+      // 디자이너 승인 완료 시 보내는 알림톡 * * * * * * * * * *
+      case 'designerWelcome':
+        options.MSG = `안녕하세요 ${designer.name}님! 드리머리 예디 승인이 되셨습니다.
+이제 다음 과정만 거치시면 드리머리에서 모델구인을 바로 하실 수 있으십니다.
+1. 지금 채팅방에 예디님 매장명과 예디님의 성함을 작성해서 보내주세요.
+2. 아래 링크를 통해 들어가셔서 포트폴리오를 등록해주세요.
+3. 모델 구인 시작!
+
+드리머리의 하나가 되신 것을 진심으로 축하드립니다.`;
+        break;
+
       default:
         throw new Error('wrong template!!');
         break;
@@ -277,10 +290,10 @@ const alarmTalk = async (template, user_id, designer_id, reservation_id, options
     options.PHONE = alarmTemplates[template][0].includes('USE') ? user.phoneNumber : designer.phoneNumber;
 
     const { data } = await alarmAxios.post('/', querystring.stringify(options));
-	console.log(data);
+    console.log(data);
     if (data.result_code !== '200') throw new Error(data);
   } catch (e) {
-	console.log(e);
+    console.log(e);
     if (logger) logger.error('alarmTalk Error : %o', e);
     if (logger) logger.error('alarmTalk Error : %o', options);
     try {

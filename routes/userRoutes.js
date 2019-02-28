@@ -8,6 +8,7 @@ const { User } = require('../model/user');
 const logger = process.env.NODE_ENV !== 'test' ? require('../log') : false;
 const formPromise = require('./helpers/formidablePromise');
 const { uploadFile } = require('./helpers/fileUpload');
+const { alarmTalk } = require('./helpers');
 
 AWS.config.region = 'ap-northeast-2';
 
@@ -111,6 +112,11 @@ router.patch('/:id', async (req, res) => {
   try {
     const updatedUser = await User.findOneAndUpdate({ _id: req.params.id }, { $set: { ...req.body } }, { new: true });
     if (!updatedUser) throw new Error('user not found!');
+
+    if (req.body.isD && req.body.isApproval) {
+      // 예디 승인 요청인 경우 알람톡 전송
+      await alarmTalk('designerWelcome', undefined, updatedUser._id);
+    }
 
     res.status(200).send(updatedUser);
   } catch (e) {
