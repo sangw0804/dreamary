@@ -6,48 +6,52 @@ const { User } = require('./user');
 const recruitSchema = new mongoose.Schema(
   {
     _designer: {
+      // recruit -> 디자이너 참조값
       required: true,
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
     },
     title: {
+      // 제목
       required: true,
       type: String
     },
     _cards: [
+      // recruit -> 카드들 참조값
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Card'
       }
     ],
-    shops: [String],
-    portfolios: [
-      {
-        type: String
-      }
-    ],
+    shops: [String], // 샵 이름들
     requirement: {
+      // 요청사항
       type: String
     },
     requireTime: {
+      // 시술별 필요 시간
       cut: Number,
       perm: Number,
       dye: Number
     },
     _reviews: [
+      // recruit -> 리뷰들 참조값
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Review'
       }
     ],
     score: {
+      // 더이상 사용하지 않음
       type: Number,
       default: 0.0
     },
     updatedAt: {
+      // 수정 시간 (타임스탬프)
       type: Number
     },
     createdAt: {
+      // 생성 시간 (타임스탬프)
       type: Number,
       required: true
     }
