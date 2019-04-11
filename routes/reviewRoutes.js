@@ -38,7 +38,10 @@ router.post('/', async (req, res) => {
     await createdReview.updateRelatedDBs();
 
     const recruit = await Recruit.findById(body._recruit);
-    const plusPoint = recruit._reviews.length === 1 ? 5000 : 1000;
+    // TODO: 리뷰 포인트 이슈 해결 필요
+    // const plusPoint = recruit._reviews.length === 1 ? 5000 : 1000;
+    const plusPoint = 0;
+
     const newUser = await User.findByIdAndUpdate(_user, { $inc: { point: plusPoint } }, { new: true });
 
     createdReview._user = newUser;
@@ -61,7 +64,9 @@ router.patch('/:id/images', async (req, res) => {
     review.images = review.images.concat(fileLocations);
     await review.save();
 
-    const newUser = await User.findByIdAndUpdate(review._user, { $inc: { point: 1000 } }, { new: true });
+    // TODO: 리뷰 포인트 이슈 해결 필요
+    // const newUser = await User.findByIdAndUpdate(review._user, { $inc: { point: 1000 } }, { new: true });
+    const newUser = await User.findByIdAndUpdate(review._user, { $inc: { point: 0 } }, { new: true });
     review._user = newUser;
 
     res.status(200).send(review);
